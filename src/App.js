@@ -7,7 +7,7 @@ import Cities from './component/Cities';
 
 function App() {
   return (
-    <div className="App">
+    <div >
       <Routes>
         <Route exact path="/" element={<Countries />} />
         <Route path="/:country" element={<Cities />} />

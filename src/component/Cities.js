@@ -17,35 +17,56 @@ export default function Cities() {
     })
       .then((val) => setcityList(val.data?.data || []))
       .catch((errro) => {
-        setErr("---not present---")
+        setErr("---not present")
+        
       })
       ;
   }, [])
 
+
+ useEffect(()=>{const debounce=setTimeout(()=>setList(city),400)
+  return()=>clearTimeout(debounce)}
+ ,[city])
+
+function setList(city){
+
+  const newCity = cityList.filter(val => val.toLowerCase().includes(city.toLowerCase()))
+  setFilterCity(newCity)
+ 
+
+}
+
   function search(value) {
-    const newCity = cityList.filter(val => val.toLowerCase().includes(value.toLowerCase()))
-    setFilterCity(newCity)
+ 
     setCity(value)
+   
     setCondition(true)
+    
   }
 
-
+ 
 
   return (
-    <div className=" justify-content-end w-100">
-      <div className=" p-4 row-2'">
-        <div className=" column ">
-          <div className=" justify-content-end w-100">
-            <button className="btn btn-dark p-2 mb-2 " onClick={() => back('/')}>Select Country</button>
-          </div>
-          <h1 className="p-3 round rounded-2  bg-warning">Cities of {country} are:</h1>
-          <input placeholder='Enter city name' onChange={(e) => search(e.target.value)} value={city}></input>
+    <div className=" justify-content-center w-100">
+     
+          <div className="px-5 mx-5 pt-5 w">
 
-          {condition ? filterCity.map(val => <li className="p-2 m-2 text-white  round rounded-4 border border-dark bg-success">{val}</li>) : cityList.map(val => <li className="p-2 m-2 text-white  round rounded-4 border border-dark bg-success">{val}</li>)}
-          <h2 className='text-danger'>{err} </h2>
+          <h1 className="p-2  round rounded-2  bg-white border border-warning w-100">Cities of {country} are:</h1>
+          <input className='w-25 border border-warning round rounded-2  p-2' placeholder='Enter city name' onChange={(e) => search(e.target.value)} value={city}></input>
+            <button className="btn btn-warning py-2  mx-2 mb-1 " onClick={() => back('/')}>Back</button>
+          </div>
+
+
+          <div className='   mx-5  w-100 justify-content-center'>
+
+          {condition ? filterCity.map(val => <h3 className="px-5 mx-5 w-25 text-center text-white border border-white round rounded-4   " >{val}</h3>) : cityList.map(val => <h3 className="px-5 mx-5 w-25 text-center text-white border border-white round rounded-4  ">{val}</h3>)}
+          </div>
+
+          <h2 className='mx-5 px-5 text-warning'>{err} </h2>
+         {cityList.length==0&&!err? <h2 className='mx-5 px-5 text-warning'>Loading...</h2>:null}
+         {filterCity.length==0&&city? <h2 className='mx-5 px-5 text-warning'>*not present*</h2>:null}
         </div>
-      </div>
-    </div>
+     
   )
 
 }
