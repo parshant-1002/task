@@ -17,13 +17,13 @@ export default function Countries() {
     };
 
     function next() {
-        if(current==""){
+        if (current == "") {
             setErr("...Select the country first")
         }
         nextPage(`${current}`)
     }
 
-  
+
 
 
     function getData() {
@@ -43,16 +43,14 @@ export default function Countries() {
         <>
             <div className="p-5 px-5 mx-5  justify-content-center">
                 <div>
-
-                <h1 className="p-2  round rounded-2  bg-white border border-info  w-100">Select country</h1>
+                    <h1 className="p-2  round rounded-2  bg-white border border-info  w-100">Select country</h1>
                 </div>
                 <div>
-
-                <select className="form-select-lg border border-info " onKeyDown={handleKeyDownforSubmit} onChange={(e) => handleSubmit(e.target.value)} >
-                    <option>select country</option>
-                    {country.map((val) => <option >{val.name}</option>)}
-                </select>
-                <button className="btn btn-info mx-2 " onClick={() => next()}>Next</button>
+                    <select className="form-select-lg border border-info " onKeyDown={handleKeyDownforSubmit} onChange={(e) => handleSubmit(e.target.value)} >
+                        <option>select country</option>
+                        {country.map((val) => <option >{val.name}</option>)}
+                    </select>
+                    <button className="btn btn-info mx-2 " onClick={() => next()}>Next</button>
                 </div>
                 <div>
                     <h1 className=" px-5 text-warning">{err}</h1>
