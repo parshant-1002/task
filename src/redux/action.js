@@ -1,0 +1,2 @@
+export const SENDUSER1="SENDUSER1"
+export const SENDUSER2="SENDUSER2"

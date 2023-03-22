@@ -1,0 +1,19 @@
+.SearchBar{
+    text-align: center;
+    width: 100%;
+    
+    margin-bottom: 10px;
+    
+}
+.Header{
+    border-bottom: solid;
+    border-width: thin;
+    background-color:#350d36;
+}
+.searchinput{
+    margin-top: 10px;
+    border-width: thin;
+    height: 20px;
+    border-radius: 5px;
+    width:30%
+}
