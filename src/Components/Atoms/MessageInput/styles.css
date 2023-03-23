@@ -1,0 +1,19 @@
+.messageInput{
+    height:30px;
+    width:75%;
+ border:none;
+    border-bottom-style: groove;
+    background-color: #f0dbf1;
+    ;
+    border-radius: 10px;
+
+}
+.Send{
+    height:35px;
+    margin-left: 5px;
+    width:10%;
+    border-radius: 10px;
+    background: #581a59;
+    color: white;
+
+}

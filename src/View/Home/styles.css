@@ -1,0 +1,16 @@
+.main {
+    display: flex
+}
+
+.content {
+    position: absolute;
+    bottom: 0;
+
+    width: 75%;
+    margin-bottom: 20px;
+
+    margin-left: 30%;
+
+
+
+}

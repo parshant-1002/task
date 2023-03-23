@@ -1,19 +1,26 @@
 .SearchBar{
-    text-align: center;
-    width: 100%;
+    width: inherit;
     
     margin-bottom: 10px;
     
+    border-width: thin;
+    height: 40px;
+    border-radius: 5px;
+    display: flex;
+  justify-content: space-evenly;
+
+
 }
 .Header{
     border-bottom: solid;
     border-width: thin;
-    background-color:#350d36;
+    background-color:#581a59;
+    width: 100%;
 }
-.searchinput{
-    margin-top: 10px;
-    border-width: thin;
-    height: 20px;
-    border-radius: 5px;
-    width:30%
+.Heading{
+    color: aliceblue;
+    font-size: xx-large;
+  font-weight: 600;
+  padding: 10px;
+
 }
