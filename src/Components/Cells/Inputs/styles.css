@@ -1,0 +1,39 @@
+.inputdata {
+    height: 50px;
+    background-color: white;
+
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.messageinput {
+    height:60px;
+    width:80%;
+ border:none;
+    border-bottom-style: groove;
+    background-color: #f0dbf1;
+    
+    border-radius: 10px;
+}
+
+
+.send {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.messimage {
+    height: 24px;
+    cursor: pointer;
+}
+
+.sendbutton {
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    background-color: #8da4f1;
+    cursor: pointer;
+}

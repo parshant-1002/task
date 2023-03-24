@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from "./Context/AuthContext";
+import { ChatContextProvider } from "./Context/ChatContext";
 import { Provider } from 'react-redux';
 import { Store } from './Redux/Store';
 
@@ -11,12 +12,12 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={Store}>
 
-  <AuthContextProvider>
-
+<AuthContextProvider>
+    <ChatContextProvider>
       <React.StrictMode>
         <App />
       </React.StrictMode>
-
+    </ChatContextProvider>
   </AuthContextProvider>
   </Provider>
 );

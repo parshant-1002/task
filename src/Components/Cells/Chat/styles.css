@@ -1,0 +1,60 @@
+.chat {
+    flex: 2;
+    height: 100%;
+    
+}
+    .chatInfo {
+      height: 40px;
+      background-color: #362443;
+      display: flex;
+      align-items: center;
+      /* justify-content: space-between; */
+      padding: 10px;
+      color: lightgray;
+      border-bottom: solid;
+      border-color: lightgray;
+      border-width: thin;
+    }
+
+    .chatIcons {
+      display: flex;
+      gap: 5px;
+    
+      margin-left: 80%;
+
+    }
+    .img1{
+      height: 24px;
+      cursor: pointer;
+    }
+    .dp{
+        size: 30px;
+        cursor: pointer;
+      }
+      .userName{
+        margin-left: 10px;
+        font-size: large;
+      }
+
+
+      .directMessage{
+        font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        color: antiquewhite;
+        margin:50px;
+        text-align: center;
+      }
+      .divDirect{
+        background-color: #82458b;
+        padding: 20px 60px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+         margin-top: 180px;
+         margin-left: 28%;
+         margin-right: 20%;
+         height:200px;
+         width:400px
+     
+      }

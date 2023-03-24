@@ -1,9 +1,12 @@
 import React from 'react'
-import Content from '../../Components/Cells/Content'
-import Header from '../../Components/Cells/Header'
+
+
+import Header from '../../Components/Atoms/Header'
 import Sidebar from '../Sidebar'
 import "./styles.css"
+import Chat from '../../Components/Cells/Chat'
 export default function Home() {
+
   return (
     <div >
 
@@ -14,8 +17,7 @@ export default function Home() {
         <Sidebar/>
 
         <div className='content'>
-
-        <Content/>
+      <Chat/>
         </div>
         </div>
     </div>

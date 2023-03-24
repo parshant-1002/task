@@ -14,8 +14,11 @@ export default function Navbar() {
     <div className='navbar'>
     
       <div className="user">
-        <img className='img' src={currentUser.photoURL} alt="" />
-        <span className='name'>{currentUser.displayName}</span>
+        <img className='profilepic' src={currentUser.photoURL} alt="" />
+        <div className='pname'>
+
+        <span className='profilename'>{currentUser.displayName}</span>
+        </div>
         <button className='button' onClick={()=>signOut(auth)}>logout</button>
       </div>
     </div>
