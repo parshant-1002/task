@@ -14,8 +14,8 @@ import {
 import { db } from "../../../firebase";
 import { AuthContext } from "../../../Context/AuthContext";
 import "./styles.css"
-import { useDispatch, useSelector } from "react-redux";
-import { searchUser } from "../../../Redux/Action";
+// import { useDispatch, useSelector } from "react-redux";
+// import { searchUser } from "../../../Redux/Action";
 
 
 
@@ -25,7 +25,7 @@ const Search = () => {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
-  const dispatch=useDispatch
+  // const dispatch=useDispatch
 
   const { currentUser } = useContext(AuthContext);
 
@@ -84,7 +84,8 @@ const Search = () => {
     } catch (err) {}
 
     setUser(null);
-    dispatch(searchUser(""))
+    // dispatch(searchUser(""))
+    setUsername("")
   };
   return (
     <div className="search">

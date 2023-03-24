@@ -8,8 +8,6 @@ import { AuthContext } from "./Context/AuthContext";
 import { useSelector } from "react-redux";
 function App() {
 
-  const searchData=useSelector(State=>State.reducer.searchData)
-  console.log(searchData,"searchData")
   const { currentUser } = useContext(AuthContext);
   const ProtectedRoute = ({ children }) => {
     if (!currentUser) {
