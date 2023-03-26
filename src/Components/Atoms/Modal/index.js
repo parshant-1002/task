@@ -1,10 +1,10 @@
 import React from 'react'
-// import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 // import "font-awesome/css/font-awesome.min.css";
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 
-export  function Modal1({show,setShow}){
+export default function Modal1({show,setShow}){
   return (
     <div>
     <Modal show={show} onHide={() => setShow(false)} animation={true}>

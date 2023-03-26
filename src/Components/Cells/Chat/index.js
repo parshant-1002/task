@@ -11,7 +11,7 @@ const Chat = () => {
 
   console.log(data?.chatId, data?.chatId =="null", "  data")
   return (
-    <div className="chat">
+    <div className="mess">
       {data?.chatId =="null"?
         <div className="divDirect">
         <h1 className="directMessage">Select the person to chat</h1>

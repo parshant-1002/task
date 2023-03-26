@@ -1,4 +1,13 @@
-
+.chats {
+  flex: 2;
+  height: 18vmax;
+  border: solid;
+  border-width: thin;
+  border-color: lightgray;
+  overflow-y: scroll;
+}.chats::-webkit-scrollbar {
+      width: 5px;               /* width of the entire scrollbar */
+    }
 .userChat {
     padding: 10px;
     display: flex;

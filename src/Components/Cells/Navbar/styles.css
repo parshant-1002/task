@@ -4,13 +4,13 @@
     width: 30px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 10px;
+    margin: 5px;
   }
   .navbar {
     display: flex;
     align-items: center;
     background-color: #82458b;
-    height: 40px;
+    height: 50px;
     padding: 10px;
     justify-content: space-between;
     color: #ddddf7;
@@ -28,20 +28,20 @@
       .button {
         background-color: #362443;
         color: #ddddf7;
-        font-size: 10px;
+        font-size: 12px;
         border: none;
         cursor: pointer;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin-top: 2px;
         border-radius: 5px;
         border:solid;
         border-color: #ddddf7;
         border-width: thin;
+        height: 30px;
 
      
       }
     .profilename{
-        margin-top: 15px;
+        margin-top: 5px;
         font-size: large;
         margin-left:5px ;
         

@@ -1,7 +1,7 @@
 .inputdata {
     height: 50px;
     background-color: white;
-
+margin-top: 40px;
     padding: 10px;
     display: flex;
     align-items: center;
