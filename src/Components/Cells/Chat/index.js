@@ -19,7 +19,7 @@ const Chat = () => {
           : <div className="chat">
           <div className="chatInfo">
             <img className="dp" src={data?.user?.photoURL} alt="" />
-            <label className="userName">    {data?.user?.displayName}</label>
+            <label className="userName">    {data?.user?.displayName}</label> <label className="userName">    {data?.channelName}</label>
             <div className="chatIcons">
               <img className="img1" src={Cam} alt="" />
               <img className="img1" src={Add} alt="" />

@@ -22,7 +22,7 @@ const Register = () => {
     try {
     
       const res = await createUserWithEmailAndPassword(auth, email, password);
-
+      
   
       const date = new Date().getTime();
       const storageRef = ref(storage, `${displayName + date}`);
@@ -43,6 +43,7 @@ const Register = () => {
               photoURL: downloadURL,
             });
 
+            await setDoc(doc(db, "userChannels", res.user.uid),{groups: []});
             //create empty user chats on firestore
             await setDoc(doc(db, "userChats", res.user.uid), {});
             navigate("/");

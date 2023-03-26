@@ -5,16 +5,17 @@ import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
 const Channels = () => {
-  const [chats, setChats] = useState([]);
+  const [channels, setChannels] = useState([]);
   const [visible, setVisible] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {
-    const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
-        setChats(doc.data());
+  
+    const getChannels = () => {
+      const unsub = onSnapshot(doc(db, "userChannels", currentUser.uid), (doc) => {
+        setChannels(doc.data())
         doc.exists()&&setVisible(true)
       });
 
@@ -23,7 +24,7 @@ const Channels = () => {
       };
     };
 
-    currentUser.uid && getChats();
+    currentUser.uid && getChannels();
   }, [currentUser.uid]);
 
   const handleSelect = (u) => {
@@ -36,18 +37,21 @@ const Channels = () => {
      !visible
    ? <label className="warnmessage">Loading ...</label>
    :<div className="chats">
-      {Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
+      {Object.entries(channels)?.sort((a,b)=>b[1].date - a[1].date).map((channels) => (
+         
           <div
           className="userChat"
-          key={chat[0]}
-          onClick={() => handleSelect(chat[1].userInfo)}
+          key={channels[0]}
+          onClick={() => handleSelect(channels[1].channelInfo)}
           >
+        { console.log(channels)}
 
            
-          <img src={chat[1].userInfo.photoURL} alt="" />
+          {/* <img src={chat[1].userInfo.photoURL} alt="" /> */}
           <div className="userChatInfo">
-            <span className="info">{chat[1].userInfo.displayName}</span>
-            <p className="lastmessage">{chat[1].lastMessage?.text}</p>
+
+            <span className="info">{channels[1].channelInfo.channelName}</span>
+            {/* <p className="lastmessage">{chat[1].lastMessage?.text}</p> */}
           </div>
         </div>
       ))}

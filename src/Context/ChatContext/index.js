@@ -19,6 +19,7 @@ export const ChatContextProvider = ({ children }) => {
       case "CHANGE_USER":
         return {
           user: action.payload,
+          channelName:action.payload.channelName,
           chatId:
             currentUser.uid > action.payload.uid
               ? currentUser.uid + action.payload.uid
