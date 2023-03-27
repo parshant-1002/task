@@ -7,9 +7,9 @@ import "./styles.css"
 const Messages = () => {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
-
+const id=data.groupId||data.chatId
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
+    const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
   
       doc.exists() && setMessages(doc.data().messages);
     });
@@ -17,7 +17,7 @@ const Messages = () => {
     return () => {
       unSub();
     };
-  }, [data.chatId]);
+  }, [data.chatId,data.groupId]);
 
   
   return (

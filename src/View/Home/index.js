@@ -5,6 +5,7 @@ import Header from '../../Components/Atoms/Header'
 import Sidebar from '../Sidebar'
 import "./styles.css"
 import Chat from '../../Components/Cells/Chat'
+
 export default function Home() {
 
   return (
@@ -18,6 +19,7 @@ export default function Home() {
 
         <div className='content'>
       <Chat/>
+
         </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Img from "../../../assets/img.png";
 import Attach from "../../../assets/attach.png";
 import { AuthContext } from "../../../Context/AuthContext";
@@ -21,8 +21,13 @@ const Input = () => {
   const time=`${date.getHours()}:${date.getMinutes()}`
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
-
+  useEffect(() => {
+   setText("")
+   setImg(null)
+  }, [data])
+  
   const handleSend = async () => {
+    
     if (img) {
       const storageRef = ref(storage, uuid());
   
@@ -47,28 +52,28 @@ const Input = () => {
         }
       );
     } else {
-      await updateDoc(doc(db, "chats", data.chatId), {
+      await updateDoc(doc(db, "chats", data.groupId||data.chatId), {
         messages: arrayUnion({
           id: uuid(),
-          text,
+          text, 
           senderId: currentUser.uid,
           date: time,
         }),
       });
     }
 
-    await updateDoc(doc(db, "userChats", currentUser.uid), {
-      [data.chatId + ".lastMessage"]: {
+    (!data.chatId.includes("undefined"))&&   await updateDoc(doc(db, "userChats", currentUser.uid), {
+      [data.groupId||data?.chatId + ".lastMessage"]: {
         text,
       },
-      [data.chatId + ".date"]: serverTimestamp(),
+      [data.groupId||data?.chatId + ".date"]: serverTimestamp(),
     });
 
-    await updateDoc(doc(db, "userChats", data.user.uid), {
-      [data.chatId + ".lastMessage"]: {
+    (!data.chatId.includes("undefined"))&&  await updateDoc(doc(db, "userChats", data.user.uid),{
+      [data?.chatId + ".lastMessage"]: {
         text,
       },
-      [data.chatId + ".date"]: serverTimestamp(),
+      [data.groupId&&data?.chatId + ".date"]: serverTimestamp(),
     });
 
     setText("");

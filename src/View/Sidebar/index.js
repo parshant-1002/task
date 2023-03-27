@@ -1,5 +1,5 @@
 import React from 'react'
-import AddChannels from '../../Components/Atoms/AddChannels'
+import AddChannels from '../../Components/Cells/AddChannels'
 import Channels from '../../Components/Cells/Channels'
 import Chats from '../../Components/Cells/Chats'
 import Navbar from '../../Components/Cells/Navbar'

@@ -43,8 +43,8 @@ const Register = () => {
               photoURL: downloadURL,
             });
 
-            await setDoc(doc(db, "userChannels", res.user.uid),{groups: []});
-            //create empty user chats on firestore
+            await setDoc(doc(db, "userChannels", res.user.uid),{});
+            // await setDoc(doc(db, "channels", res.user.uid))
             await setDoc(doc(db, "userChats", res.user.uid), {});
             navigate("/");
           } catch (err) {

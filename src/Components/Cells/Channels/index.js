@@ -44,7 +44,6 @@ const Channels = () => {
           key={channels[0]}
           onClick={() => handleSelect(channels[1].channelInfo)}
           >
-        { console.log(channels)}
 
            
           {/* <img src={chat[1].userInfo.photoURL} alt="" /> */}

@@ -1,0 +1,24 @@
+
+.details{
+    position:absolute;
+    right:0;
+    height:68%;
+    width:20%;
+    background-color: aliceblue;
+}
+.detailsHeading{
+    margin-left:20px;
+    display: flex;
+}
+.headingDetails{
+    margin: 10px;
+}
+.members{
+    margin: 10px;
+}
+.head{
+    display: flex;
+}
+.img{
+    margin:10px
+}
