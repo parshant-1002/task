@@ -2,6 +2,22 @@
     border-right: solid;
     border-width: thin;
     width:20%;
-    height:45vmax;
+    height:42vmax;
     background-color:#581a59;
+}
+.directMessageShow{
+    color: white;
+   width:75%;
+    padding:5px
+}
+.directDiv{
+    height:40px;
+}
+.close{
+    height: 20px;
+    width:20px;
+    border: solid;
+    border-width: thin;
+    border-color: white;
+    padding: 3px;
 }

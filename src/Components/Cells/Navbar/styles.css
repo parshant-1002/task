@@ -1,53 +1,56 @@
 .profilepic {
-    background-color: #ddddf7;
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 5px;
-  }
-  .navbar {
-    display: flex;
-    align-items: center;
-    background-color: #82458b;
-    height: 50px;
-    padding: 10px;
-    justify-content: space-between;
-    color: #ddddf7;
-    border-bottom: 1px solid gray;
-  }
-   
+  background-color: #ddddf7;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 5px;
+}
 
-    .user {
-      display: flex;
-      gap: 10px;
-     
-      width: 100%;
-    }
-   
-      .button {
-        background-color: #362443;
-        color: #ddddf7;
-        font-size: 12px;
-        border: none;
-        cursor: pointer;
-        margin-top: 2px;
-        border-radius: 5px;
-        border:solid;
-        border-color: #ddddf7;
-        border-width: thin;
-        height: 30px;
+.navbar {
+  display: flex;
+  align-items: center;
+  background-color: #82458b;
+  height: 50px;
+  padding: 10px;
+  justify-content: space-between;
+  color: #ddddf7;
+  border-bottom: 1px solid gray;
+}
 
-     
-      }
-    .profilename{
-        margin-top: 5px;
-        font-size: large;
-        margin-left:5px ;
-        
 
-    }
-    .pname{
-      display: flex;
-      width:60%
-    }
+.user {
+  display: flex;
+  gap: 10px;
+
+  width: 100%;
+}
+
+.button {
+  background-color: #362443;
+  color: #ddddf7;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  margin-top: 2px;
+  border-radius: 5px;
+  border: solid;
+  border-color: #ddddf7;
+  border-width: thin;
+  height: 30px;
+
+
+}
+
+.profilename {
+  margin-top: 5px;
+  font-size: large;
+  margin-left: 5px;
+
+
+}
+
+.pname {
+  display: flex;
+  width: 60%
+}

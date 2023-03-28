@@ -45,10 +45,10 @@ const Chats = () => {
           >
 
            
-         <img src={chat[1].userInfo.photoURL} alt="" />
+         <img src={chat[1]?.userInfo?.photoURL} alt="" />
           <div className="userChatInfo">
-            <span className="info">{chat[1].userInfo.displayName}</span>
-            <p className="lastmessage">{chat[1].lastMessage?.text}</p>
+            <span className="info">{chat[1]?.userInfo?.displayName}</span>
+            <p className="lastmessage">{chat[1]?.lastMessage?.text}</p>
           </div>
         </div>
       ))}

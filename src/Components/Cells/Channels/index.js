@@ -36,7 +36,7 @@ const Channels = () => {
    <div>{
      !visible
    ? <label className="warnmessage">Loading ...</label>
-   :<div className="chats">
+   :<div className="channels">
       {Object.entries(channels)?.sort((a,b)=>b[1].date - a[1].date).map((channels) => (
          
           <div

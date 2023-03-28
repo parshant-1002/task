@@ -17,6 +17,8 @@ import "./styles.css"
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
+  const [pdf, setPdf] = useState(null);
+  const [pdfName, setPdfName] = useState("");
   const date =new Date()
   const time=`${date.getHours()}:${date.getMinutes()}`
   const { currentUser } = useContext(AuthContext);
@@ -25,13 +27,13 @@ const Input = () => {
    setText("")
    setImg(null)
   }, [data])
-  
+  console.log(uuid(),"hi")
   const handleSend = async () => {
     
     if (img) {
       const storageRef = ref(storage, uuid());
   
-      const uploadTask = uploadBytesResumable(storageRef, img);
+      const uploadTask = uploadBytesResumable(storageRef, img||pdf);
 
       uploadTask.on(
         (error) => {
@@ -39,20 +41,51 @@ const Input = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            await updateDoc(doc(db, "chats", data.chatId), {
+
+            await updateDoc(doc(db, "chats", data.groupId|| data.chatId), {
               messages: arrayUnion({
                 id: uuid(),
                 text,
                 senderId: currentUser.uid,
                 date: time,
-                img: downloadURL,
+                img: img&&downloadURL,
+              
               }),
             });
           });
         }
       );
-    } else {
-      await updateDoc(doc(db, "chats", data.groupId||data.chatId), {
+
+
+    }
+    else if (pdf) {
+      const storageRef = ref(storage, uuid());
+  
+      const uploadTask =  uploadBytesResumable(storageRef, pdf);
+
+
+      uploadTask.then(
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            await updateDoc(doc(db, "chats", data.groupId||data.chatId), {
+              messages: arrayUnion({
+                id: uuid(),
+                text,
+                senderId: currentUser.uid,
+                date: time,
+                file:pdf&&downloadURL,
+                fileName:pdfName&&pdfName
+              }),
+            });
+          });
+        }
+      );
+    }
+
+    
+    
+    else {
+      text&&await updateDoc(doc(db, "chats", data.groupId||data.chatId), {
         messages: arrayUnion({
           id: uuid(),
           text, 
@@ -78,6 +111,8 @@ const Input = () => {
 
     setText("");
     setImg(null);
+    setPdf(null);
+    setPdfName("")
   };
   return (
     <div className="inputdata">
@@ -88,17 +123,37 @@ const Input = () => {
         value={text}
       />
       <div className="send">
-        {/* <img  className="messimage" src={Attach} alt="" /> */}
-        <input
+      <input
           type="file"
           style={{ display: "none" }}
-          id="file"
-          onChange={(e) => setImg(e.target.files[0])}
+          id="pdf"
+          onChange={(e) => {
+            console.log(e.target.value,"r")
+            // console.log(e.target.files[0].type,"image/png")
+            if(e.target.value!=""){
+
+              e.target.files[0].type=="image/png"||e.target.files[0].type=="image/jpeg"&&setImg(e.target.files[0])
+            setPdf(e.target.files[0])
+          setPdfName(e.target.files[0].name)
+            }
+          }}
+
         />
-        <label htmlFor="file">
-          <img src={Img} alt="" />
+      <label htmlFor="pdf">
+      <img  className="messimage" src={Attach} alt="" />
         </label>
-        <button className="sendbutton" onClick={handleSend}>Send</button>
+      
+        {/* <input
+          type="file"
+          style={{ display: "none" }}
+          id="img"
+          onChange={(e) => setImg(e.target.files[0])}
+
+        />
+        <label htmlFor="img">
+          <img src={Img} alt="" />
+        </label> */}
+       {text.trim()||img||pdf?<button className="sendbutton" onClick={handleSend}>Send</button>:null}
       </div>
     </div>
   );

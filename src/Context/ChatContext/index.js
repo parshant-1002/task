@@ -18,13 +18,13 @@ export const ChatContextProvider = ({ children }) => {
     switch (action.type) {
       case "CHANGE_USER":
         return {
-          user: action.payload,
-          channelName:action.payload.channelName,
-          groupId:action.payload.groupId,
+          user: action?.payload,
+          channelName:action?.payload?.channelName,
+          groupId:action?.payload?.groupId,
           chatId:
-            currentUser.uid > action.payload.uid
-              ? currentUser.uid + action.payload.uid
-              : action.payload.uid + currentUser.uid,
+            currentUser?.uid > action?.payload?.uid
+              ? currentUser?.uid + action.payload?.uid
+              : action?.payload?.uid + currentUser?.uid,
         };
 
       default:

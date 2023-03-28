@@ -1,7 +1,10 @@
 .chat {
     flex: 2;
-    height: 43vmax;
-    
+    height: 42vmax;
+    background-image:url("/home/chicmic/Documents/Slack_App/slack/src/assets/bgimage.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 .mess{
   flex: 2;
@@ -18,13 +21,15 @@
       border-bottom: solid;
       border-color: lightgray;
       border-width: thin;
+      width:1100px;
     }
 
     .chatIcons {
       display: flex;
       gap: 5px;
-    
-      margin-left: 80%;
+      position:absolute;
+      right:0;
+      margin-right: 20px;
 
     }
     .img1{
@@ -75,4 +80,11 @@
     
     
         }
-    
+    .bgImage{
+     height:42vmax;
+     width:80vmax;
+      border-radius: 0;
+      
+      opacity: 0.3;
+ 
+    }

@@ -3,7 +3,7 @@ import "./styles.css"
 // import { useDispatch } from 'react-redux';
 // import { searchUser } from '../../../Redux/Action';
 export default function Header() {
-  const [search,setSearch]=useState("");
+
 
   
   return (
