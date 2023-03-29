@@ -8,7 +8,7 @@ margin-left: 25px;
     align-items: center;
     justify-content: space-between;
     border-bottom-style: groove;
-    background-color: #f0dbf1;
+   
     width: 90%;
     border-radius: 10px;
 }
@@ -44,4 +44,7 @@ margin-left: 25px;
     background-color: #8da4f1;
     cursor: pointer;
     border-radius: 10px;
+}
+.inputText{
+    width:800px
 }

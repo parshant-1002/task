@@ -7,16 +7,14 @@ import "./styles.css"
 const Chats = () => {
   const [chats, setChats] = useState([]);
   const [visible, setVisible] = useState(false);
-
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {
-  
     const getChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
         setChats(doc.data())
-        doc.exists()&&setVisible(true)
+        doc.exists() && setVisible(true)
       });
 
       return () => {
@@ -32,28 +30,26 @@ const Chats = () => {
   };
 
   return (
-   
-   <div>{
-     !visible
-   ? <label className="warnmessage">Loading ...</label>
-   :<div className="chats">
-      {Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
-          <div
-          className="userChat"
-          key={chat[0]}
-          onClick={() => handleSelect(chat[1].userInfo)}
-          >
 
-           
-         <img src={chat[1]?.userInfo?.photoURL} alt="" />
-          <div className="userChatInfo">
-            <span className="info">{chat[1]?.userInfo?.displayName}</span>
-            <p className="lastmessage">{chat[1]?.lastMessage?.text}</p>
-          </div>
-        </div>
-      ))}
-    </div>}
-      </div>
+    <div>{
+      !visible
+        ? <label className="warnmessage">Loading ...</label>
+        : <div className="chats">
+          {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
+            <div
+              className="userChat"
+              key={chat[0]}
+              onClick={() => handleSelect(chat[1].userInfo)}
+            >
+              <img src={chat[1]?.userInfo?.photoURL} alt="" />
+              <div className="userChatInfo">
+                <span className="info">{chat[1]?.userInfo?.displayName}</span>
+                <p className="lastmessage">{chat[1]?.lastMessage?.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>}
+    </div>
   );
 };
 

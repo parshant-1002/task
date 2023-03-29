@@ -1,9 +1,9 @@
 .channels {
     flex: 2;
-    height: 14vmax;
-    border: solid;
+    height: 13vmax;
+    border-bottom: solid;
     border-width: thin;
-    border-color: lightgray;
+    border-color: gray;
     overflow-y: scroll;
 }.channels::-webkit-scrollbar {
         width: 5px;               /* width of the entire scrollbar */

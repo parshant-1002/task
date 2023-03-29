@@ -7,10 +7,15 @@
 }
 .directMessageShow{
     color: white;
-   width:75%;
-    padding:5px
+   width:90%;
+    padding:5px;
+    
 }
 .directDiv{
+    border-bottom: solid;
+    border-width: thin;
+    border-color:lightgray;
+
     height:40px;
 }
 .close{
@@ -20,4 +25,5 @@
     border-width: thin;
     border-color: white;
     padding: 3px;
+
 }

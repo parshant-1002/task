@@ -5,7 +5,7 @@ import Register from "./View/Register";
 import Login from "./View/Login";
 import { useContext } from "react";
 import { AuthContext } from "./Context/AuthContext";
-import { useSelector } from "react-redux";
+
 function App() {
 
   const { currentUser } = useContext(AuthContext);
@@ -30,6 +30,7 @@ function App() {
           />
           <Route path="register" element={<Register />}></Route>
           <Route path="login" element={<Login />}></Route>
+   
         </Route>
       </Routes>
 

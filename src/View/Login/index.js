@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
+import { ChatContext } from '../../Context/ChatContext'
 import "./styles.css"
 const Login = () => {
+
+  const { dispatch } = useContext(ChatContext);
+  
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
@@ -11,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
-
+    dispatch({ type: "RESET" });
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/")

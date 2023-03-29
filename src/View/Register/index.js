@@ -20,10 +20,8 @@ const Register = () => {
     const file = e.target[3].files[0];
 
     try {
-    
+
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      
-  
       const date = new Date().getTime();
       const storageRef = ref(storage, `${displayName + date}`);
 
@@ -43,7 +41,7 @@ const Register = () => {
               photoURL: downloadURL,
             });
 
-            await setDoc(doc(db, "userChannels", res.user.uid),{});
+            await setDoc(doc(db, "userChannels", res.user.uid), {});
             // await setDoc(doc(db, "channels", res.user.uid))
             await setDoc(doc(db, "userChats", res.user.uid), {});
             navigate("/");
@@ -69,9 +67,9 @@ const Register = () => {
           <input className="input" required type="text" placeholder="display name" />
           <input className="input" required type="email" placeholder="email" />
           <input className="input" required type="password" placeholder="password" />
-          <input className="input"  required style={{ display: "none" }} type="file" id="file" />
+          <input className="input" required style={{ display: "none" }} type="file" id="file" />
           <label className="label" htmlFor="file">
-            <img  className="img" src={Add} alt="" />
+            <img className="img" src={Add} alt="" />
             <span>Add an avatar</span>
           </label>
           <button className="Signup" disabled={loading}>Sign up</button>

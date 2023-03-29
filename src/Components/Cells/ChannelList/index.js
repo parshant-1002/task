@@ -7,18 +7,15 @@ import "./styles.css"
 const Channels = () => {
   const [channels, setChannels] = useState([]);
   const [visible, setVisible] = useState(false);
-
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {
-  
     const getChannels = () => {
       const unsub = onSnapshot(doc(db, "userChannels", currentUser.uid), (doc) => {
         setChannels(doc.data())
-        doc.exists()&&setVisible(true)
+        doc.exists() && setVisible(true)
       });
-
       return () => {
         unsub();
       };
@@ -32,30 +29,24 @@ const Channels = () => {
   };
 
   return (
-   
-   <div>{
-     !visible
-   ? <label className="warnmessage">Loading ...</label>
-   :<div className="channels">
-      {Object.entries(channels)?.sort((a,b)=>b[1].date - a[1].date).map((channels) => (
-         
-          <div
-          className="userChat"
-          key={channels[0]}
-          onClick={() => handleSelect(channels[1].channelInfo)}
-          >
-
-           
-          {/* <img src={chat[1].userInfo.photoURL} alt="" /> */}
-          <div className="userChatInfo">
-
-            <span className="info">{channels[1].channelInfo.channelName}</span>
-            {/* <p className="lastmessage">{chat[1].lastMessage?.text}</p> */}
-          </div>
-        </div>
-      ))}
-    </div>}
-      </div>
+    <div>{
+      !visible
+        ? <label className="warnmessage">Loading ...</label>
+        : <div className="channels">
+          {Object.entries(channels)?.sort((a, b) => b[1].date - a[1].date).map((channels) => (
+            <div
+              className="userChat"
+              key={channels[0]}
+              onClick={() => handleSelect(channels[1].channelInfo)} >
+              {/* <img src={chat[1].userInfo.photoURL} alt="" /> */}
+              <div className="userChatInfo">
+                <span className="info">{channels[1].channelInfo.channelName}</span>
+                {/* <p className="lastmessage">{chat[1].lastMessage?.text}</p> */}
+              </div>
+            </div>
+          ))}
+        </div>}
+    </div>
   );
 };
 

@@ -1,9 +1,9 @@
 .chats {
   flex: 2;
-  height: 18vmax;
-  border: solid;
+  height: 13vmax;
+  border-bottom: solid;
   border-width: thin;
-  border-color: lightgray;
+  border-color: gray;
   overflow-y: scroll;
 }.chats::-webkit-scrollbar {
       width: 5px;               /* width of the entire scrollbar */

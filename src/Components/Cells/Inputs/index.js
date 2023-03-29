@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import Img from "../../../assets/img.png";
+import  emoji from "../../../assets/emoji.png";
 import Attach from "../../../assets/attach.png";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
+import InputEmoji from 'react-input-emoji'
 import {
   arrayUnion,
   doc,
@@ -14,15 +15,21 @@ import { db, storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import "./styles.css"
+
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
   const [pdf, setPdf] = useState(null);
   const [pdfName, setPdfName] = useState("");
+
+  
   const date =new Date()
   const time=`${date.getHours()}:${date.getMinutes()}`
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
+
+
+
   useEffect(() => {
    setText("")
    setImg(null)
@@ -114,14 +121,28 @@ const Input = () => {
     setPdf(null);
     setPdfName("")
   };
+
+const   handleOnEnter=()=>{
+  handleSend()
+}
+
+
+
+
   return (
     <div className="inputdata">
-      <input className="messageinput"
-        type="text"
-        placeholder="Type something..."
-        onChange={(e) => setText(e.target.value)}
+       <div className="inputText" >
+
+       <InputEmoji
         value={text}
-      />
+        onChange={setText}
+        cleanOnEnter
+        onEnter={handleOnEnter}
+        placeholder="Type a message"
+        borderColor="white"
+        
+        />
+        </div>
       <div className="send">
       <input
           type="file"
@@ -143,16 +164,8 @@ const Input = () => {
       <img  className="messimage" src={Attach} alt="" />
         </label>
       
-        {/* <input
-          type="file"
-          style={{ display: "none" }}
-          id="img"
-          onChange={(e) => setImg(e.target.files[0])}
-
-        />
-        <label htmlFor="img">
-          <img src={Img} alt="" />
-        </label> */}
+      
+ 
        {text.trim()||img||pdf?<button className="sendbutton" onClick={handleSend}>Send</button>:null}
       </div>
     </div>
