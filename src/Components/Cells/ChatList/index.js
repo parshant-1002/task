@@ -4,17 +4,22 @@ import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
-const Chats = () => {
+const Chats = ({showDirectMessage}) => {
   const [chats, setChats] = useState([]);
   const [visible, setVisible] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
+
+
+
 
   useEffect(() => {
     const getChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
         setChats(doc.data())
         doc.exists() && setVisible(true)
+        console.log(showDirectMessage,doc.exists(),(Object.values(doc.data())),"hope ")
+        showDirectMessage&&dispatch({type:"GET USER" ,payload:(Object.values(doc.data()))})
       });
 
       return () => {
@@ -29,6 +34,9 @@ const Chats = () => {
     dispatch({ type: "CHANGE_USER", payload: u });
   };
 
+
+
+
   return (
 
     <div>{
@@ -41,6 +49,7 @@ const Chats = () => {
               key={chat[0]}
               onClick={() => handleSelect(chat[1].userInfo)}
             >
+              
               <img src={chat[1]?.userInfo?.photoURL} alt="" />
               <div className="userChatInfo">
                 <span className="info">{chat[1]?.userInfo?.displayName}</span>

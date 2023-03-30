@@ -13,8 +13,8 @@ export const ChatContextProvider = ({ children }) => {
     chatId: "null",
     user: {},
     channelName:"",
-    groupId:""
-
+    groupId:"",
+    users:[]
   };
 
   const chatReducer = (state, action) => {
@@ -29,6 +29,10 @@ export const ChatContextProvider = ({ children }) => {
               ? currentUser?.uid + action.payload?.uid
               : action?.payload?.uid + currentUser?.uid,
         };
+        case "GET USER":
+          return{
+          ...state,  users:action?.payload
+          }
         case  "RESET":
           return  {
             user: {},

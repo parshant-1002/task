@@ -6,7 +6,7 @@ import bg from "../../../assets/bg.png"
 import Messages from "../Messages";
 import Input from "../Inputs";
 import { ChatContext } from "../../../Context/ChatContext";
-import {doc, getDoc } from "firebase/firestore";
+import {collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { AuthContext } from "../../../Context/AuthContext";
 import SearchingUser from "../SearchingUser";
@@ -17,12 +17,31 @@ const Chat = () => {
   const { data } = useContext(ChatContext);
   const [details, setDetails] = useState(false)
   const [members, setMembers] = useState([])
+  const [users,setUsers]=useState([])
   const { currentUser } = useContext(AuthContext);
   const combinedId = currentUser.uid + data?.channelName
 
  useEffect(() => {
     setDetails(false)
   }, [data])
+
+
+
+  const  handleGetUsers=async()=>{
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"))
+      const r=[]
+      querySnapshot.forEach((doc) => {
+        
+          r.push(doc.data())
+      });
+      setUsers(r);
+  } catch (err) {
+      console.log(err,"Error in getting User Details")
+  }
+   }
+
+
 
   const getDetails = async () => {
     const groupData = await getDoc(doc(db, "userChannels", currentUser.uid))
@@ -43,6 +62,7 @@ const Chat = () => {
               {!data?.user?.photoURL ? <img className="img1" src={Add} alt="" onClick={() => {
                 setShowUserModal(true)
                 setDetails(false)
+                handleGetUsers()
               }} /> : null}
               <img className="img1" src={More} alt="" onClick={() => {
                 setDetails(true)
@@ -50,7 +70,7 @@ const Chat = () => {
               }} />
             </div>
           </div>
-          <SearchingUser showUserModal={showUserModal} setShowUserModal={setShowUserModal} combinedId={combinedId} />
+          <SearchingUser showUserModal={showUserModal} setShowUserModal={setShowUserModal} combinedId={combinedId} users={users}/>
           {details ? <Details
             userName={data?.user?.displayName}
             groupName={data?.channelName}

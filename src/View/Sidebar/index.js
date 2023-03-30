@@ -33,7 +33,7 @@ export default function Sidebar() {
       </div>
       {showDirectMessage && <div>
         <AddUserAndChannel title={"User"} />
-        <Chats />
+        <Chats showDirectMessage={showDirectMessage}/>
       </div>}
     
     </div >

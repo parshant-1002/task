@@ -10,3 +10,20 @@
   
 
 }
+.usersDisplay{
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  overflow-y: scroll;
+}
+
+.userData{
+
+}
+.userImage{
+  border-radius: 2px;
+}
+
+.userName{
+
+}
