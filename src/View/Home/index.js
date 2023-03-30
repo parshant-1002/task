@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 
 
-import Header from '../../Components/Atoms/Header'
+import Header from '../../Components/Cells/Header'
 import Sidebar from '../Sidebar'
 import "./styles.css"
 import Chat from '../../Components/Cells/ChatSection'

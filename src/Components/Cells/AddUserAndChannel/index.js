@@ -61,7 +61,7 @@ export default function AddUserAndChannel({ title }) {
           </div>
         </div>
       </Modal1> */}
-      <Modal show={showChannelModal} setShow={setShowChannelModal}title={title} channelName={channelName} setChannelName={setChannelName} addChannel={addChannel} >
+      <Modal show={showChannelModal} setShow={setShowChannelModal}title={title} channelName={channelName} setChannelName={setChannelName} addChannel={addChannel} showHead={true} showFoot={true} >
       <div>
           <label>Enter {title} name</label>
           <div>

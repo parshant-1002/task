@@ -56,7 +56,7 @@ export default function SearchingUser({showUserModal,setShowUserModal,combinedId
                 await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
                 //create user chats
-                await updateDoc(doc(db, "userChats", currentUser.uid), {
+                (!data.chatId.includes("undefined"))&&  await updateDoc(doc(db, "userChats", currentUser.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: user.uid,
                         displayName: user.displayName,
@@ -65,7 +65,7 @@ export default function SearchingUser({showUserModal,setShowUserModal,combinedId
                     [combinedId + ".date"]: serverTimestamp(),
                 });
 
-                await updateDoc(doc(db, "userChats", user.uid), {
+                (!data.chatId.includes("undefined")) &&  await updateDoc(doc(db, "userChats", user.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: currentUser.uid,
                         displayName: currentUser.displayName,
@@ -99,7 +99,7 @@ export default function SearchingUser({showUserModal,setShowUserModal,combinedId
     return (
 
 
-        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleSelect} addUser={addUser}>
+        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleSelect} addUser={addUser} showHead={true} showFoot={true} >
             <div>
                 <label>Enter user</label>
                 <input value={userName} onChange={(e) => {

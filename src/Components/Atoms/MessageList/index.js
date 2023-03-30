@@ -6,7 +6,7 @@ import { db } from "../../../firebase";
 import "./styles.css"
 import pdfIcon from "../../../assets/download11.png"
 const Message = ({ message }) => {
-  // const [messagetime,setMessageTime]=useState()
+
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const [gotdata, setGotData] = useState()
@@ -25,27 +25,33 @@ const Message = ({ message }) => {
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
-
+  console.log(message.senderId === currentUser.uid,"weugr")
   return (
     <div
       ref={ref}
       className={`message${message.senderId === currentUser.uid && "owner"}`} >
       <div className="messageInfo">
-        {gotdata && <label>    {gotdata.displayName}</label>}
+        <div>
+
         {gotdata && <img className="senderimg"
           src={
             gotdata?.photoURL
           }
           alt=""
-        />}
-        {message?.date == time ? <span>Just Now</span> : <span>{message.date}</span>}
-      </div>
+          />}
+          </div>
       <div className="messageContent">
+        <div>
+
+          {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
+        {message?.date == time ? <span className="atTime">Just Now</span> : <span className="atTime">{message.date}</span>}
+        </div>
         {message?.text && <p className="messgtext">{message.text}</p>}
         {message?.img && <img className="chatimg" src={message.img} alt="" />}
         {message?.file && <a href={message.file} download  ><img className="pdf" src={pdfIcon}></img></a>}
         {message?.fileName && <label className="fileName">{message.fileName}</label>}
 
+      </div>
       </div>
     </div>
   );

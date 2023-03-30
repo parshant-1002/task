@@ -5,6 +5,10 @@
     height:68%;
     width:20%;
     background-color: aliceblue;
+    border: solid;
+    border-radius: 5px;
+    border-width: thin;
+
 }
 .detailsHeading{
     margin-left:20px;
@@ -12,13 +16,16 @@
 }
 .headingDetails{
     margin: 10px;
+    width: 80%;
 }
 .members{
     margin: 10px;
 }
 .head{
     display: flex;
+    width:100%
 }
 .img{
-    margin:10px
+    margin:10px;
+    padding:5px
 }

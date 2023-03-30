@@ -1,21 +1,20 @@
 .profilepic {
-  background-color: #ddddf7;
+
   height: 30px;
   width: 30px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin: 5px;
+  border-radius: 5px;
+
 }
 
 .navbar {
   display: flex;
   align-items: center;
-  background-color: #82458b;
-  height: 50px;
+
+
   padding: 10px;
   justify-content: space-between;
   color: #ddddf7;
-  border-bottom: 1px solid gray;
+
 }
 
 
@@ -26,13 +25,28 @@
   width: 100%;
 }
 
-.button {
+.logout {
   background-color: #362443;
   color: #ddddf7;
   font-size: 12px;
   border: none;
   cursor: pointer;
-  margin-top: 2px;
+  margin: 5px;
+  border-radius: 5px;
+  border: solid;
+  border-color: #ddddf7;
+  border-width: thin;
+  height: 30px;
+
+
+}
+.closeBtn{
+  background-color: #5a585b;
+  color: #ddddf7;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  margin: 5px;
   border-radius: 5px;
   border: solid;
   border-color: #ddddf7;
@@ -44,13 +58,23 @@
 
 .profilename {
   margin-top: 5px;
-  font-size: large;
+  font-size: 60px;
   margin-left: 5px;
+  color: black;
+
 
 
 }
 
 .pname {
   display: flex;
-  width: 60%
+  flex-direction: column;
+  width: 60%;
+  text-align: center;
+  margin-left: 20%;
+}
+.showPic{
+  height:200px;
+  width:200px;
+  border-radius: 2px;
 }

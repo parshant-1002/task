@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import  emoji from "../../../assets/emoji.png";
+import  send from "../../../assets/send.png";
 import Attach from "../../../assets/attach.png";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
@@ -34,7 +34,7 @@ const Input = () => {
    setText("")
    setImg(null)
   }, [data])
-  console.log(uuid(),"hi")
+
   const handleSend = async () => {
     
     if (img) {
@@ -149,8 +149,8 @@ const   handleOnEnter=()=>{
           style={{ display: "none" }}
           id="pdf"
           onChange={(e) => {
-            console.log(e.target.value,"r")
-            // console.log(e.target.files[0].type,"image/png")
+          
+           
             if(e.target.value!=""){
 
               e.target.files[0].type=="image/png"||e.target.files[0].type=="image/jpeg"&&setImg(e.target.files[0])
@@ -166,7 +166,7 @@ const   handleOnEnter=()=>{
       
       
  
-       {text.trim()||img||pdf?<button className="sendbutton" onClick={handleSend}>Send</button>:null}
+       {text.trim()||img||pdf?<img src={send} alt="send" className="sendbutton" onClick={handleSend}></img>:null}
       </div>
     </div>
   );

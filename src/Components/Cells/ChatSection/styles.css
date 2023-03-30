@@ -1,7 +1,7 @@
 .chat {
     flex: 2;
-    height: 42vmax;
-    background-image:url("/home/chicmic/Documents/Slack_App/slack/src/assets/bgimage.png");
+    height: 43.4vmax;
+    /* background-image:url("/home/chicmic/Documents/Slack_App/slack/src/assets/bgimage.png"); */
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -21,7 +21,7 @@
       border-bottom: solid;
       border-color: lightgray;
       border-width: thin;
-      width:1100px;
+      width:1089px;
     }
 
     .chatIcons {
@@ -43,6 +43,7 @@
       .userName{
         margin-left: 10px;
         font-size: large;
+
       }
 
 
@@ -69,6 +70,7 @@
       .name {
         font-size: 18px;
         font-weight: 500;
+       
       }
       .userData {
         padding: 10px;
@@ -77,7 +79,7 @@
         gap: 10px;
         color: black;
         cursor: pointer;
-    
+       
     
         }
     .bgImage{
