@@ -17,12 +17,11 @@ export default function AddUserAndChannel({ title }) {
   const { data } = useContext(ChatContext)
 
   const handleGetUsers = () => {
-    const details=data?.users&&(data?.users)
-
+    const details=data?.users&&(data?.users)||[]
     const g=[]
-   details.map(val=>g.push(val.userInfo.uid)) 
+  details?.length&&details?.map(val=>g.push(val.userInfo.uid)) 
    handleGetUsers1(g)
-    // data?.users?.map(val =>    console.log(val) )
+   console.log(data,"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
   }
 
   const handleGetUsers1 = async (x) => {
@@ -34,8 +33,8 @@ export default function AddUserAndChannel({ title }) {
 
         r.push(doc.data())
       });
-      const y = r.filter(val => !x.some(value=>value==val.uid))
-      console.log(x, y, "crucial data",currentUser.uid)
+      const y = r.filter(val => (!x.some(value=>value==val.uid)&&val.uid!=currentUser.uid))
+   
       setUsers(y);
     } catch (err) {
       console.log(err, "Error in getting User Details")

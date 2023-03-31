@@ -12,34 +12,58 @@ export const ChatContextProvider = ({ children }) => {
   const INITIAL_STATE = {
     chatId: "null",
     user: {},
-    channelName:"",
-    groupId:"",
-    users:[]
+    channelName: "",
+    groupId: "",
+    users: [],
+    members: [],
+    membersAddedStatus: false,
+    // allUsers:[]
   };
 
   const chatReducer = (state, action) => {
+
     switch (action?.type) {
       case "CHANGE_USER":
         return {
           user: action?.payload,
-          channelName:action?.payload?.channelName,
-          groupId:action?.payload?.groupId,
+          channelName: action?.payload?.channelName,
+          groupId: action?.payload?.groupId,
           chatId:
             currentUser?.uid > action?.payload?.uid
               ? currentUser?.uid + action.payload?.uid
               : action?.payload?.uid + currentUser?.uid,
         };
-        case "GET USER":
-          return{
-          ...state,  users:action?.payload
-          }
-        case  "RESET":
-          return  {
-            user: {},
-            channelName:"",
-            groupId:"",
-            chatId:"null"
-          };
+      case "GETUSERS":
+        return {
+          ...state, users: action?.payload
+        }
+      case "GETGROUPMEMBERS":
+
+        return {
+
+          ...state, members: action?.payload
+        }
+      case "MEMBERSADDEDSTATUS":
+
+        return {
+
+          ...state, membersAddedStatus: action?.payload
+        }
+        // case "GETALLUSERSLIST":
+
+        // return {
+
+        //   ...state, allUsers: action?.payload
+        // }
+
+
+      case "RESET":
+        return {
+          user: {},
+          channelName: "",
+          groupId: "",
+          chatId: "null"
+        };
 
       default:
         return state;

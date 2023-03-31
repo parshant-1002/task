@@ -18,8 +18,8 @@ const Chats = ({showDirectMessage}) => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
         setChats(doc.data())
         doc.exists() && setVisible(true)
-        console.log(showDirectMessage,doc.exists(),(Object.values(doc.data())),"hope ")
-        showDirectMessage&&dispatch({type:"GET USER" ,payload:(Object.values(doc.data()))})
+      
+        showDirectMessage&&dispatch({type:"GETUSERS" ,payload:(Object.values(doc.data()))})
       });
 
       return () => {
@@ -32,6 +32,7 @@ const Chats = ({showDirectMessage}) => {
 
   const handleSelect = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
+    dispatch({type:"GETUSERS" ,payload:(Object.values(chats))})
   };
 
 

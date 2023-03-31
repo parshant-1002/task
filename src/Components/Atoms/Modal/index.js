@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
-export default function Modal({ children, show, setShow, title, addChannel, addUser, handleSelect ,showHead,showFoot}) {
+export default function Modal({ children, show, setShow, title,selectedList,setSelectedList, addChannel, addUser, handleSelect ,showHead,showFoot}) {
     // const [state,setState]=useState(false)
 
 
@@ -24,15 +24,16 @@ export default function Modal({ children, show, setShow, title, addChannel, addU
                     </div>
               
                     {showFoot&&<div className="Modal-Footer">
-                        <button className="btnClose" onClick={() => { setShow(false) }}>
+                        <button className="btnClose" onClick={() => { setShow(false) 
+                        setSelectedList([])}}>
                             Close
                         </button>
-                        <button className='btnProceed' onClick={() => {
+                        {selectedList?.length?<button className='btnProceed' onClick={() => {
                             addChannel && addChannel()
                             addUser && data?.groupId && addUser()
                             handleSelect && handleSelect()
                             setShow(false)
-                        }} >Add</button>
+                        }} >Add</button>:null}
                     </div>}
                 </div>
 

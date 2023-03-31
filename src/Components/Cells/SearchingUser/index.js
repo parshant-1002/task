@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Modal1 from '../../Atoms/Modal';
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import deleteTcon from "../../../assets/delete.png"
 import { arrayUnion, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from '@firebase/firestore'
 import { AuthContext } from '../../../Context/AuthContext';
 import { db } from '../../../firebase';
@@ -15,36 +15,43 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     const [userList, setUserList] = useState()
     const [selectedList,setSelectedList]=useState([])
 
-    const { data } = useContext(ChatContext);
-
+    const { data,dispatch } = useContext(ChatContext);
+  const selectedListRef=useRef()
    
 
   useEffect(() => {
 
    !userName&&setUserList(users)
-  }, [users,userName])
+  }, [userName,users])
   
    
   useEffect(() => {
    setSelectedList([])
-
+//    setUserList(users)
 
    }, [])
+   useEffect(() => {
+    selectedListRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [selectedList]);
 
-
+   const handleDeleteSelectedUsers=(x)=>{
+      console.log(x)
+      setSelectedList(selectedList.filter(val=>val.uid!=x.uid))
+      setUserList([...userList,x])
+   }
 
   const handleSelect=(val)=>{
     setSelectedList([...selectedList,val]) 
     const list=userList?.filter(value=>{
-        console.log(value.email,val.email)
-        return(value.email!==val.email)
+   
+        return(value.uid!==val.uid)
     })
     setUserList(list)
  
 }
 
 
-
+console.log("sdfvsghd")
 
 
 
@@ -57,24 +64,28 @@ const addUser=()=>{
 
 
     const addUser1 = async (user) => {
-        try {
-            const res = await getDoc(doc(db, "channels", combinedId))
-        } catch {
-            console.log("not admin")
-        }
+       
         await updateDoc(doc(db, "channels", combinedId),
             {
                 participants: arrayUnion({
                     name: user.displayName,
-                    uid: user.uid
+                    uid: user.uid,
                 })
             })
-       
+            await updateDoc(doc(db, "userChannels", user.uid), {
+                [data?.channelName + ".channelInfo"]: {
+                  channelName:data?.channelName,
+                  groupId: combinedId,
+                  date: serverTimestamp()
+                }
+              });
 
         setUserName("")
+        setUserList(userList.filter(val=>selectedList.some(value=>value.uid!=val.uid)))
+
         setSelectedList([])
     }
-
+   
     const handleAdd=()=>{
      selectedList?.map(val=>handleAdd2(val))
     }
@@ -112,7 +123,7 @@ const addUser=()=>{
             }
         } catch (err) { }
 
-      
+      dispatch({type:"MEMBERSADDEDSTATUS",payload:false})
 
         setUserName("")
         setSelectedList([])
@@ -134,32 +145,37 @@ const addUser=()=>{
 
 
     };
-    console.log(userList, "fff")
+   
     return (
         //
 
-        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleAdd}  addUser={addUser} showHead={true} showFoot={true} >
-            <div >
+        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleAdd} setSelectedList={setSelectedList} selectedList={selectedList}  addUser={addUser} showHead={true} showFoot={true} >
+           {users?.length? 
+           <div>
+           <div >
                 <label>Enter user</label>
                 <input value={userName} onChange={(e) => {
                     setUserName(e.target.value)
                     handleSearch()
                 }
                 }></input>
-                <button className='findButton' onClick={handleSearch}>find</button>
+         
             </div>
-            {err && <span>User not found!</span>}
+          {  err && <span>User not found!</span>}
             <h3> Selected User</h3>
             <div className='usersDisplay'>
 
             {selectedList?.length && selectedList.map(val => {
                 return (
 
-                    <div className="userData" >
-                        <img className="userImage" src={val.photoURL} alt="" />
+                    <div className="selectedUsers" >
+                      <li ref={selectedListRef} className="SelectedList"> 
                         <div className="userChatInfo">
+                        <img className="userImage" src={val.photoURL} alt="" />
                             <span className="userName">{val.displayName}</span>
                         </div>
+                        <img className="deleteBtnnn"   src={deleteTcon} alt="delete" onClick={()=>handleDeleteSelectedUsers(val)}></img>
+                        </li> 
                     </div>
                 )
             })}
@@ -179,6 +195,8 @@ const addUser=()=>{
                 )
             })}
             </div>
+            </div>
+            :<h1>No User Left</h1>}
         </Modal>
     )
 }

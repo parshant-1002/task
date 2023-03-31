@@ -110,10 +110,10 @@ const Input = () => {
     });
 
     (!data.chatId.includes("undefined"))&&  await updateDoc(doc(db, "userChats", data.user.uid),{
-      [data?.chatId + ".lastMessage"]: {
+      [data.groupId||data?.chatId + ".lastMessage"]: {
         text,
       },
-      [data.groupId&&data?.chatId + ".date"]: serverTimestamp(),
+      [data.groupId||data?.chatId + ".date"]: serverTimestamp(),
     });
 
     setText("");

@@ -14,7 +14,7 @@
 /* Modal Content/Box */
 .modalContent {
   background-color: #fefefe;
-  margin-top:5%; /* 15% from the top and centered */
+  margin-top:0%; /* 15% from the top and centered */
   margin-left:30%;
   padding: 20px;
   border: 1px solid #888;

@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import "./styles.css"
+import deleteIcon from "../../../assets/delete.png"
 import cross from "../../../assets/cross.png"
-export default function Details({userName,groupName,userImage,members,setDetails,createdBy}) {
-    console.log("hi",{userName,groupName,userImage,members})
+import { ChatContext } from '../../../Context/ChatContext'
+export default function Details({userName,groupName,userImage,members,setDetails,createdBy,handleDeleteGroupMembers}) {
+  const {data,dispatch}=useContext(ChatContext)
   return (
     <div className='details'>
         <div className='head'>
 
         {userImage? <h3 className='headingDetails'> User Details</h3>:<h3 className='headingDetails'> Group Details</h3>}
-        <img className='img' src={cross} onClick={()=>{setDetails(false)}}></img>
+        <img className='img' src={cross} onClick={()=>{setDetails(false)
+         dispatch({type:"MEMBERSADDEDSTATUS",payload:true})
+        }}></img>
         </div>
         <div className='detailsHeading'>
         {userImage?<img src={userImage} alt=""></img>:<label>#</label>}
@@ -17,7 +21,8 @@ export default function Details({userName,groupName,userImage,members,setDetails
         {!userImage&&<div className='members'>
             <h5>Created By : {createdBy}</h5>
         <h5>Members</h5>
-        {members?members?.map(val=><li>{val.name}</li>):null}
+        {members?.length?members?.map(val=><div><li>{val.name} <img src={deleteIcon} alt="" onClick={()=>{handleDeleteGroupMembers(val.uid)
+       }}></img></li></div>):null}
         </div>}
         
     </div>
