@@ -2,11 +2,12 @@ import React, { useContext, useState } from 'react'
 import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
-export default function Modal({ children, show, setShow, title,selectedList,setSelectedList, addChannel, addUser, handleSelect ,showHead,showFoot}) {
+export default function Modal({ children, show,setEditedGroupName,editedGroupName, handleGroupNameEdit,setShow,channelName, title,selectedList,setSelectedList, addChannel, addUser, handleSelect ,showHead,showFoot}) {
     // const [state,setState]=useState(false)
 
 
-    const { data } = useContext(ChatContext);
+    const { data,dispatch } = useContext(ChatContext);
+    console.log(data?.membersAddedStatus)
     return (
         <div>
 
@@ -25,14 +26,19 @@ export default function Modal({ children, show, setShow, title,selectedList,setS
               
                     {showFoot&&<div className="Modal-Footer">
                         <button className="btnClose" onClick={() => { setShow(false) 
-                        setSelectedList([])}}>
+                        setSelectedList&&setSelectedList([])
+                        setEditedGroupName&&setEditedGroupName("")
+                        dispatch({type:"MEMBERSADDEDSTATUS",payload:false})
+                        }}>
                             Close
                         </button>
-                        {selectedList?.length?<button className='btnProceed' onClick={() => {
+                        {selectedList?.length||channelName||editedGroupName?<button className='btnProceed' onClick={() => {
                             addChannel && addChannel()
                             addUser && data?.groupId && addUser()
                             handleSelect && handleSelect()
-                            setShow(false)
+                            setShow&&setShow(false)
+                            handleGroupNameEdit&&handleGroupNameEdit()
+                            dispatch({type:"MEMBERSADDEDSTATUS",payload:false})
                         }} >Add</button>:null}
                     </div>}
                 </div>

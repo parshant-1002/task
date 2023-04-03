@@ -103,6 +103,7 @@ const Chat = () => {
             userName={data?.user?.displayName}
             groupName={data?.channelName}
             userImage={data?.user?.photoURL}
+            userMail={data?.user?.email}
             members={members["participants"]}
             handleDeleteGroupMembers={handleDeleteGroupMembers}
             setDetails={setDetails

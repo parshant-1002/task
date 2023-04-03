@@ -73,7 +73,7 @@ const addUser=()=>{
                 })
             })
             await updateDoc(doc(db, "userChannels", user.uid), {
-                [data?.channelName + ".channelInfo"]: {
+                [data?.channelNameId + ".channelInfo"]: {
                   channelName:data?.channelName,
                   groupId: combinedId,
                   date: serverTimestamp()
@@ -108,6 +108,7 @@ const addUser=()=>{
                         uid: user.uid,
                         displayName: user.displayName,
                         photoURL: user.photoURL,
+                        email:user.email
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
@@ -117,6 +118,7 @@ const addUser=()=>{
                         uid: currentUser.uid,
                         displayName: currentUser.displayName,
                         photoURL: currentUser.photoURL,
+                        email:currentUser.email
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });

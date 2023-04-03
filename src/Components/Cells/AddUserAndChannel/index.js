@@ -21,7 +21,7 @@ export default function AddUserAndChannel({ title }) {
     const g=[]
   details?.length&&details?.map(val=>g.push(val.userInfo.uid)) 
    handleGetUsers1(g)
-   console.log(data,"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+
   }
 
   const handleGetUsers1 = async (x) => {
@@ -60,6 +60,7 @@ export default function AddUserAndChannel({ title }) {
         //create user chats
         await updateDoc(doc(db, "userChannels", currentUser.uid), {
           [channelName + ".channelInfo"]: {
+            channelId:channelName,
             channelName,
             groupId: combinedId,
             date: serverTimestamp()

@@ -44,7 +44,7 @@ const Message = ({ message }) => {
         <div>
 
           {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
-        {message?.date == time ? <span className="atTime">Just Now</span> : <span className="atTime">{message.date}</span>}
+      <span className="atTime">{message.date}</span>
         </div>
         {message?.text && <p className="messgtext">{message.text}</p>}
         {message?.img && <img className="chatimg" src={message.img} alt="" />}
