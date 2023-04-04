@@ -12,6 +12,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     // const [user, setUser] = useState()
     const [err, setErr] = useState()
     const [userList, setUserList] = useState()
+    const [string, setString] = useState(false)
     const [selectedList, setSelectedList] = useState([])
     const { data, dispatch } = useContext(ChatContext);
     const selectedListRef = useRef()
@@ -44,6 +45,7 @@ console.log(users,"users")
     }
 
     const addUsersInChannel = () => {
+        setString(true);
         selectedList?.map(val => addUsersInChannelOneByOne(val))
     }
 
@@ -51,8 +53,8 @@ console.log(users,"users")
 
 
     const addUsersInChannelOneByOne = async (user) => {
-
-        await updateDoc(doc(db, "channels", combinedId),
+   
+        await updateDoc(doc(db, "channels", data?.groupId),
             {
                 participants: arrayUnion({
                     name: user.displayName,
@@ -76,9 +78,13 @@ console.log(users,"users")
     }
 
     const handleAdd = () => {
+        setString(false);
+        if(selectedList?.length)
         selectedList?.map(val => handleAdd2(val))
+        console.log(selectedList,"selected")
     }
     const handleAdd2 = async (user) => {
+        console.log(currentUser,user,"currentUsercurrentUser<><>")
         //check whether the group(chats in firestore) exists, if not create
         const combinedId =
             currentUser.uid > user.uid
@@ -86,13 +92,12 @@ console.log(users,"users")
                 : user.uid + currentUser.uid;
         try {
             const res = await getDoc(doc(db, "chats", combinedId));
-
+            console.log(combinedId, "combinedId")
+            console.log(currentUser.uid,user.uid,!res.exists(),user,"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk88888888888")
             if (!res.exists()) {
                 //create a chat in chats collection
-                await setDoc(doc(db, "chats", combinedId), { messages: [] });
-
                 //create user chats
-                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser.uid), {
+                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: user.uid,
                         displayName: user.displayName,
@@ -101,8 +106,8 @@ console.log(users,"users")
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
-
-                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", user.uid), {
+                
+                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", user?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: currentUser.uid,
                         displayName: currentUser.displayName,
@@ -111,8 +116,9 @@ console.log(users,"users")
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
+                (!data.chatId.includes("undefined")) && await setDoc(doc(db, "chats", combinedId), { messages: [] });
             }
-        } catch (err) { }
+        } catch (err) {console.log(err,"err<><><><><><>>,") }
 
         dispatch({ type: "MEMBERSADDEDSTATUS", payload: false })
         setUserName("")
@@ -132,7 +138,7 @@ console.log(users,"users")
 
     return (
         //
-        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleAdd} setSelectedList={setSelectedList} selectedList={selectedList} addUser={addUsersInChannel} showHead={true} showFoot={true} >
+        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleAdd} string={string} setSelectedList={setSelectedList} selectedList={selectedList} addUser={addUsersInChannel} showHead={true} showFoot={true} >
             {users?.length ?
                 <div>
                     <div >

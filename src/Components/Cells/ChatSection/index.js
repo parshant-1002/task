@@ -42,7 +42,7 @@ const Chat = () => {
      data?.groupId&&unSub ();
     };
   }, [data?.chatId, data?.groupId,editedGroupName]);
-console.log(groupName[data?.channelNameId].channelInfo.channelName,"kkkkkkkkk")
+// console.log(groupName[data?.channelNameId]?.channelInfo.channelName,"kkkkkkkkk")
   useEffect(() => {
   
     const unSub = data?.groupId&&onSnapshot(doc(db, "channels",data?.groupId), (doc) => {
@@ -134,7 +134,7 @@ const handleEditGroupNamePerMember=async(x)=>{
         : <div className="chat">
           <div className="chatInfo">
             {data?.user?.photoURL ? <img className="dp" src={data?.user?.photoURL} alt="" /> : <label>#</label>}
-            <label className="userName">    {data?.user?.displayName}</label> <label className="userName">    {groupName[data?.channelNameId].channelInfo.channelName}</label>
+            <label className="userName">    {data?.user?.displayName}</label> <label className="userName">    {groupName&&groupName[data?.channelNameId]?.channelInfo?.channelName}</label>
             <div className="chatIcons">
               {data?.groupId && data?.groupId?.includes(currentUser.uid) && !data?.user?.photoURL ? <div><label>Admin</label><img className="img1" src={Add} alt="" onClick={() => {
                 setShowUserModal(true)
