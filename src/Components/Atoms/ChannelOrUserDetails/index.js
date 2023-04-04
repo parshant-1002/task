@@ -18,7 +18,7 @@ export default function Details({ userName, groupName, userImage,groupMembers, s
 
 
    useEffect(() => {
-    const unSub = onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
+    const unSub =data?.groupId&& onSnapshot(doc(db, "channels",data?.groupId), (doc) => {
       doc?.exists()&&setGroupData(doc?.data()["participants"])
     });
 

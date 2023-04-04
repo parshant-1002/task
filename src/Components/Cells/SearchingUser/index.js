@@ -6,21 +6,21 @@ import { db } from '../../../firebase';
 import { ChatContext } from '../../../Context/ChatContext';
 import Modal from '../../Atoms/Modal';
 import "./styles.css"
-export default function SearchingUser({ showUserModal, setShowUserModal, combinedId, users }) {
+export default function SearchingUser({ showUserModal, setShowUserModal, combinedId, users,groupName }) {
     const { currentUser } = useContext(AuthContext);
     const [userName, setUserName] = useState("")
     // const [user, setUser] = useState()
     const [err, setErr] = useState()
     const [userList, setUserList] = useState()
-    const [string, setString] = useState(false)
+
     const [selectedList, setSelectedList] = useState([])
     const { data, dispatch } = useContext(ChatContext);
     const selectedListRef = useRef()
-console.log(users,"users")
+
     useEffect(() => {
         !userName && setUserList(users)
     }, [userName, users])
-
+  
 
     useEffect(() => {
         setSelectedList([])
@@ -45,7 +45,7 @@ console.log(users,"users")
     }
 
     const addUsersInChannel = () => {
-        setString(true);
+      
         selectedList?.map(val => addUsersInChannelOneByOne(val))
     }
 
@@ -63,9 +63,9 @@ console.log(users,"users")
                 })
             })
         await updateDoc(doc(db, "userChannels", user.uid), {
-            [data?.channelName + ".channelInfo"]: {
+            [data?.channelNameId + ".channelInfo"]: {
                 channelNameId:data?.channelNameId,
-                channelName: data?.channelName,
+                channelName: groupName,
                 groupId: combinedId,
                 date: serverTimestamp()
             }
@@ -78,7 +78,7 @@ console.log(users,"users")
     }
 
     const handleAdd = () => {
-        setString(false);
+        
         if(selectedList?.length)
         selectedList?.map(val => handleAdd2(val))
         console.log(selectedList,"selected")
@@ -93,7 +93,6 @@ console.log(users,"users")
         try {
             const res = await getDoc(doc(db, "chats", combinedId));
             console.log(combinedId, "combinedId")
-            console.log(currentUser.uid,user.uid,!res.exists(),user,"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk88888888888")
             if (!res.exists()) {
                 //create a chat in chats collection
                 //create user chats
@@ -138,7 +137,7 @@ console.log(users,"users")
 
     return (
         //
-        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleAdd} string={string} setSelectedList={setSelectedList} selectedList={selectedList} addUser={addUsersInChannel} showHead={true} showFoot={true} >
+        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleAdd} setSelectedList={setSelectedList} selectedList={selectedList} addUser={addUsersInChannel} showHead={true} showFoot={true} >
             {users?.length ?
                 <div>
                     <div >
@@ -159,10 +158,15 @@ console.log(users,"users")
 
                                 <div className="selectedUsers" >
                                     <li ref={selectedListRef} className="SelectedList">
-                                        <div className="userChatInfo">
+                                        
                                             <img className="userImage" src={val.photoURL} alt="" />
+
+                                        
                                             <span className="userName">{val.displayName}</span>
-                                        </div>
+                                            <span className="userName">{val.email}</span>
+                                      
+                                        
+                                        
                                         <img className="deleteBtnnn" src={deleteTcon} alt="delete" onClick={() => handleDeleteSelectedUsers(val)}></img>
                                     </li>
                                 </div>
@@ -178,7 +182,10 @@ console.log(users,"users")
                                     <div className="userData" onClick={() => { handleSelect(val) }}>
                                         <img className="userImage" src={val.photoURL} alt="" />
                                         <div className="userChatInfo">
+                                          
                                             <span className="userName">{val.displayName}</span>
+                                            <span className="userName">{val.email}</span>
+                                      
                                         </div>
                                     </div>
                                 )

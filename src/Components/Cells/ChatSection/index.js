@@ -24,6 +24,7 @@ const Chat = () => {
   const [groupMembers, setGroupMembers] = useState([])
   const [groupName, setGroupName] = useState([])
   const [users, setUsers] = useState([])
+
   const { currentUser } = useContext(AuthContext);
   const combinedId = currentUser.uid + data?.channelNameId
 
@@ -35,7 +36,9 @@ const Chat = () => {
   
     const unSub = data?.groupId&&onSnapshot(doc(db, "userChannels",currentUser.uid), (doc) => {
       setGroupName(doc?.data())
-  
+      if(!doc?.data()[data?.channelNameId]?.channelInfo?.channelName){
+      dispatch({type:"RESET"})
+      }
     });
 
     return () => {
@@ -47,6 +50,7 @@ const Chat = () => {
   
     const unSub = data?.groupId&&onSnapshot(doc(db, "channels",data?.groupId), (doc) => {
       setGroupMembers(doc?.data())
+      
   
     });
 
@@ -141,6 +145,7 @@ const handleEditGroupNamePerMember=async(x)=>{
                 setDetails(false)
                 handleGetUsers()
                 dispatch({ type: "MembersADDEDSTATUS", payload: true })
+        
               }} />
               
               <img src={edit} alt="edit" onClick={()=>{setEditModal(true)}} ></img>
@@ -159,7 +164,7 @@ const handleEditGroupNamePerMember=async(x)=>{
             </div>
 
           </Modal>
-          <SearchingUser showUserModal={showUserModal} setShowUserModal={setShowUserModal} combinedId={combinedId} users={users} groupMembers={groupMembers} />
+          <SearchingUser groupName={groupName[data?.channelNameId]?.channelInfo?.channelName} showUserModal={showUserModal} setShowUserModal={setShowUserModal} combinedId={combinedId} users={users} groupMembers={groupMembers} />
           {details ? <Details
             userName={data?.user?.displayName}
             groupName={data?.channelName}

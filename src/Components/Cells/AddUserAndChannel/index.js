@@ -15,7 +15,8 @@ export default function AddUserAndChannel({ title }) {
   const { currentUser } = useContext(AuthContext);
   const [users, setUsers] = useState([])
   const [error, setError] = useState("")
-  const { data } = useContext(ChatContext)
+  const [string, setString] = useState("")
+  const { data,dispatch } = useContext(ChatContext)
 
   const handleGetRegisteredUsers = () => {
     const details = data?.users && (data?.users) || []
@@ -81,9 +82,13 @@ export default function AddUserAndChannel({ title }) {
   return (
     <div className='addChannel'>
       <label className='channelLabel'>Add {title}</label>
-      {title == "Channel" ? <button className='channelButton' onClick={() => { setShowChannelModal(true) }} >Add</button> : <button className='channelButton' onClick={() => {
+      {title == "Channel" ? <button className='channelButton' onClick={() => { setShowChannelModal(true)
+      
+       }} >Add</button> : <button className='channelButton' onClick={() => {
         setShowUserModal(true)
         handleGetRegisteredUsers()
+        setString(false)
+        dispatch({ type: "RESET" });
       }} >Add</button>}
 
       <Modal show={showChannelModal} setShow={setShowChannelModal} error={error} setError={setError} title={title} channelName={channelName} setChannelName={setChannelName} addChannel={addChannel} showHead={true} showFoot={true} >
@@ -99,7 +104,7 @@ export default function AddUserAndChannel({ title }) {
         </div>
       </Modal>
 
-      <SearchingUser showUserModal={showUserModal} setShowUserModal={setShowUserModal} users={users} />
+      <SearchingUser  string={string} showUserModal={showUserModal} setShowUserModal={setShowUserModal} users={users} />
 
     </div>
   )

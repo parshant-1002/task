@@ -3,10 +3,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
+import eye from "../../../assets/eye.png.ico"
 import "./styles.css"
 const Channels = () => {
   const [channels, setChannels] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [selected, setSelected] = useState(false);
+  
   const [channelName, setChannelName] = useState([])
   const { currentUser } = useContext(AuthContext);
   const { dispatch, data } = useContext(ChatContext);
@@ -50,20 +53,21 @@ const Channels = () => {
       !visible
         ? <label className="warnmessage">Loading ...</label>
         : <div className="channels">
-          {Object.entries(channels)?.sort((a, b) => b[1].date - a[1].date).map((channels) => (
+          {Object.entries(channels)?.sort((a, b) => b[1].channelInfo.date - a[1].channelInfo.date).map((channels) => (
             <div
               className="userChat"
               key={channels[0]}
               onClick={() => {
+                setSelected(channels[1].channelInfo.channelNameId)
                 handleSelect(channels[1].channelInfo);
                 setChannelName(channels[1].channelInfo.channelName)
                 
               }} >
-              {console.log(channels[1].channelInfo.channelNameId,"0000000000000000000000000000000000000000")}
-              <div className="userChatInfo">
-                <span className="info">{channels[1].channelInfo.channelName}</span>
-                {/* <p className="lastmessage">{chat[1].lastMessage?.text}</p> */}
-              </div>
+              
+              <ol className="userChannalInfo">
+                <span className="channelInfo"># {channels[1].channelInfo.channelName}</span>
+              </ol>
+                {channels[1].channelInfo.channelNameId==selected&&<img src={eye} alt=""></img>}
             </div>
           ))}
         </div>}

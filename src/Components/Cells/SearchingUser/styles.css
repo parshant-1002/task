@@ -52,3 +52,8 @@
   border-radius:10px;
  
 }
+
+.userChatInfo{
+  display: flex;
+  flex-direction: column;
+}

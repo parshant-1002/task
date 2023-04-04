@@ -12,11 +12,13 @@ export default function Navbar() {
   return (
     <div className='navbar'>
       <div className="user">
+      <span className='profileNavName'>{currentUser.displayName}</span>
         <img className='profilepic' src={currentUser.photoURL} alt=""  onClick={()=>{setShow(true)}}/>
         <Modal show={show} setShow={setShow}showHead={false} showFoot={false} >
         <img className='showPic' src={currentUser.photoURL} alt=""  />
         <div className='pname'>
           <span className='profilename'>{currentUser.displayName}</span>
+          <label className='profilemail'>{currentUser.email}</label>
         <button className='logout' onClick={() => signOut(auth)}>logout</button>
         <button className='closeBtn' onClick={() => setShow(false)}>Close</button>
         </div>

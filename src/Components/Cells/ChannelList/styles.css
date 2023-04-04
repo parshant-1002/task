@@ -9,9 +9,15 @@
         width: 5px;               /* width of the entire scrollbar */
       }
 
-  
+  .channelInfo{
+    font-size: large;
+  }
 
-
+.userChannalInfo{
+  display: flex;
+  justify-content: space-between;
+  width:70%
+}
 
     .img1{
       height: 24px;

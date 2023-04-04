@@ -4,11 +4,13 @@ import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
+import eye from "../../../assets/eye.png.ico"
 const Chats = ({ showDirectMessage }) => {
   const [chats, setChats] = useState({});
   const [visible, setVisible] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
+  const [selected, setSelected] = useState(false);
 
   useEffect(() => {
     const getChats = () => {
@@ -41,7 +43,9 @@ const Chats = ({ showDirectMessage }) => {
             return <div
             className="userChat"
             key={chat[0]}
-            onClick={() => handleSelect(chat[1].userInfo)}
+            onClick={() =>{ handleSelect(chat[1].userInfo)
+              setSelected(chat[1].userInfo.uid)
+            }}
             >
 
               <img src={chat[1]?.userInfo?.photoURL} alt="" />
@@ -50,7 +54,9 @@ const Chats = ({ showDirectMessage }) => {
                { chat[1]?.lastMessage?.text&& <p className="lastmessage">{chat[1]?.lastMessage?.text}</p>}
                {  !chat[1]?.lastMessage?.text&&chat[1]?.lastMessage?.img?<p className="lastmessage">{chat[1]?.lastMessage?.img}</p>:null}
                { !chat[1]?.lastMessage?.text&& chat[1]?.lastMessage?.pdf? <p className="lastmessage">{chat[1]?.lastMessage?.pdf}</p>:null}
+           
               </div>
+               {chat[1].userInfo.uid==selected&&<img src={eye} alt=""></img>}
             </div>
           })}
         </div>}
