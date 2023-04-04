@@ -61,8 +61,8 @@ export default function AddUserAndChannel({ title }) {
           )
           //create user chats
           await updateDoc(doc(db, "userChannels", currentUser.uid), {
-            [channelName + ".channelInfo"]: {
-
+            [channelName+ ".channelInfo"]: {
+              channelNameId:   channelName,
               channelName,
               groupId: combinedId,
               date: serverTimestamp()

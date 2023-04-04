@@ -15,7 +15,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     const [selectedList, setSelectedList] = useState([])
     const { data, dispatch } = useContext(ChatContext);
     const selectedListRef = useRef()
-
+console.log(users,"users")
     useEffect(() => {
         !userName && setUserList(users)
     }, [userName, users])
@@ -62,6 +62,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
             })
         await updateDoc(doc(db, "userChannels", user.uid), {
             [data?.channelName + ".channelInfo"]: {
+                channelNameId:data?.channelNameId,
                 channelName: data?.channelName,
                 groupId: combinedId,
                 date: serverTimestamp()

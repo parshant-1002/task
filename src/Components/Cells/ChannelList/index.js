@@ -57,8 +57,9 @@ const Channels = () => {
               onClick={() => {
                 handleSelect(channels[1].channelInfo);
                 setChannelName(channels[1].channelInfo.channelName)
+                
               }} >
-              {/* <img src={chat[1].userInfo.photoURL} alt="" /> */}
+              {console.log(channels[1].channelInfo.channelNameId,"0000000000000000000000000000000000000000")}
               <div className="userChatInfo">
                 <span className="info">{channels[1].channelInfo.channelName}</span>
                 {/* <p className="lastmessage">{chat[1].lastMessage?.text}</p> */}

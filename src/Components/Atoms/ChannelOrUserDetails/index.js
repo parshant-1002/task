@@ -1,18 +1,32 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import "./styles.css"
 import deleteIcon from "../../../assets/delete.png"
 import cross from "../../../assets/favpng_close-icon.png"
 import { ChatContext } from '../../../Context/ChatContext'
 import Modal from '../Modal'
 import { AuthContext } from '../../../Context/AuthContext'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { db } from '../../../firebase'
 export default function Details({ userName, groupName, userImage,groupMembers, setDetails, createrMail,createdBy, userMail, handleDeleteGroupMembers, createrId }) {
   const { data, dispatch } = useContext(ChatContext)
   const { currentUser } = useContext(AuthContext)
-
+  const [groupData,setGroupData]=useState([])
    const handleCloseDetails=()=>{
     setDetails(false)
     dispatch({ type: "MEMBERSADDEDSTATUS", payload: true })
    }
+
+
+   useEffect(() => {
+    const unSub = onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
+      doc?.exists()&&setGroupData(doc?.data()["participants"])
+    });
+
+    return () => {
+      data?.groupId&& unSub();
+    };
+  }, [data?.chatId, data?.groupId,groupMembers]);
+
 
   return (
     <Modal show={true}    >
@@ -53,8 +67,8 @@ export default function Details({ userName, groupName, userImage,groupMembers, s
             
             
             </h5>
-          {groupMembers?.length ? <h5 className='memberHeading'>Members</h5> : <h5 className='memberHeading'>No Members !!!</h5>}
-          {groupMembers?.length ? groupMembers?.map(val => <ol className='memberDetails'>
+          {groupData?.length ? <h5 className='memberHeading'>Members</h5> : <h5 className='memberHeading'>No Members !!!</h5>}
+          {groupData?.length ? groupData?.map(val => <ol className='memberDetails'>
             <div>
             {val.name} 
             <div>

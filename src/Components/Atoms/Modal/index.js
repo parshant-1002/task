@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
-export default function Modal({ children, show, setEditedGroupName,error,setError, editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel, addUser, handleSelect, showHead, showFoot }) {
+export default function Modal({ children, show, setEditedGroupName,error, handleEditGroupName,editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel, addUser, handleSelect, showHead, showFoot }) {
     const { data, dispatch } = useContext(ChatContext);
 
     return (
@@ -32,12 +32,12 @@ export default function Modal({ children, show, setEditedGroupName,error,setErro
                             addChannel && addChannel()
                             addUser && data?.groupId && addUser()
                             handleSelect && handleSelect()
-                          error&&!error&&setShow && setShow(false)
-                         
+                            setShow && setShow(false)
+                          handleEditGroupName&&handleEditGroupName()
                             handleGroupNameEdit && handleGroupNameEdit()
                             dispatch({ type: "MEMBERSADDEDSTATUS", payload: false })
                         }} >Add</button> : null}
-                        {console.log( !error,setShow,"999999999999999999999999999999999999999999")}
+                   
                     </div>}
                 </div>
             </div>}

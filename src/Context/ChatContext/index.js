@@ -27,6 +27,7 @@ export const ChatContextProvider = ({ children }) => {
         return {
           user: action?.payload,
           channelName: action?.payload?.channelName,
+          channelNameId:action?.payload?.channelNameId,
           groupId: action?.payload?.groupId,
           chatId:
             currentUser?.uid > action?.payload?.uid
