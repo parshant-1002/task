@@ -4,24 +4,19 @@ import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
-const Chats = ({showDirectMessage}) => {
+const Chats = ({ showDirectMessage }) => {
   const [chats, setChats] = useState([]);
   const [visible, setVisible] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
-
-
-
 
   useEffect(() => {
     const getChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
         setChats(doc.data())
         doc.exists() && setVisible(true)
-      
-        showDirectMessage&&dispatch({type:"GETUSERS" ,payload:(Object.values(doc.data()))})
+        showDirectMessage && dispatch({ type: "GETUSERS", payload: (Object.values(doc.data())) })
       });
-
       return () => {
         unsub();
       };
@@ -32,14 +27,10 @@ const Chats = ({showDirectMessage}) => {
 
   const handleSelect = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
-    dispatch({type:"GETUSERS" ,payload:(Object.values(chats))})
+    dispatch({ type: "GETUSERS", payload: (Object.values(chats)) })
   };
 
-
-
-
   return (
-
     <div>{
       !visible
         ? <label className="warnmessage">Loading ...</label>
@@ -50,11 +41,13 @@ const Chats = ({showDirectMessage}) => {
               key={chat[0]}
               onClick={() => handleSelect(chat[1].userInfo)}
             >
-              
+
               <img src={chat[1]?.userInfo?.photoURL} alt="" />
               <div className="userChatInfo">
                 <span className="info">{chat[1]?.userInfo?.displayName}</span>
-                <p className="lastmessage">{chat[1]?.lastMessage?.text}</p>
+               { chat[1]?.lastMessage?.text&& <p className="lastmessage">{chat[1]?.lastMessage?.text}</p>}
+               {  !chat[1]?.lastMessage?.text&&chat[1]?.lastMessage?.img?<p className="lastmessage">{chat[1]?.lastMessage?.img}</p>:null}
+               { !chat[1]?.lastMessage?.text&& chat[1]?.lastMessage?.pdf? <p className="lastmessage">{chat[1]?.lastMessage?.pdf}</p>:null}
               </div>
             </div>
           ))}

@@ -24,3 +24,6 @@
     border-radius: 5px;
     border-width: thin;
 }
+.error{
+    color:red
+}

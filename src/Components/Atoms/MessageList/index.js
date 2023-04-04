@@ -8,12 +8,9 @@ import pdfIcon from "../../../assets/download11.png"
 const Message = ({ message }) => {
 
   const { currentUser } = useContext(AuthContext);
-  const { data } = useContext(ChatContext);
   const [gotdata, setGotData] = useState()
   const date = new Date()
-  const time = `${date.getHours()}:${date.getMinutes()}`
   const ref = useRef();
-
   useEffect(() => {
     const get = async () => {
       const res = await getDoc(doc(db, "users", message.senderId))
@@ -21,11 +18,10 @@ const Message = ({ message }) => {
     }
     get()
   }, []);
-
-  useEffect(() => {
+ useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
-  console.log(message.senderId === currentUser.uid,"weugr")
+  console.log(message.senderId === currentUser.uid, "weugr")
   return (
     <div
       ref={ref}
@@ -33,25 +29,23 @@ const Message = ({ message }) => {
       <div className="messageInfo">
         <div>
 
-        {gotdata && <img className="senderimg"
-          src={
-            gotdata?.photoURL
-          }
-          alt=""
+          {gotdata && <img className="senderimg"
+            src={
+              gotdata?.photoURL
+            }
+            alt=""
           />}
-          </div>
-      <div className="messageContent">
-        <div>
-
-          {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
-      <span className="atTime">{message.date}</span>
         </div>
-        {message?.text && <p className="messgtext">{message.text}</p>}
-        {message?.img && <img className="chatimg" src={message.img} alt="" />}
-        {message?.file && <a href={message.file} download  ><img className="pdf" src={pdfIcon}></img></a>}
-        {message?.fileName && <label className="fileName">{message.fileName}</label>}
-
-      </div>
+        <div className="messageContent">
+          <div>
+            {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
+            <span className="atTime">{message.date}</span>
+          </div>
+          {message?.text && <p className="messgtext">{message.text}</p>}
+          {message?.img && <img className="chatimg" src={message.img} alt="" />}
+          {message?.file && <a href={message.file} download  ><img className="pdf" src={pdfIcon}></img></a>}
+          {message?.fileName && <label className="fileName">{message.fileName}</label>}
+        </div>
       </div>
     </div>
   );
