@@ -1,0 +1,73 @@
+
+
+/* channel Content/Box */
+.channelContent {
+    position:absolute;
+    top:0;
+    left:0;
+  width: 40%; /* Full width */
+  height: 70%; /* Full height */
+  background-color: #fefefe;
+  margin-top:0%; /* 15% from the top and centered */
+  margin-left:30%;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+  transition: background-color .5s ease-in-out;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+   animation:fadein 1s;
+  border-radius: 10px;
+}
+@keyframes fadein {
+	from {
+		opacity:0;
+	}
+	to {
+		opacity:1;
+	}
+}
+/* The Close Button */
+.closeIcon {
+font-size: 28px;
+  font-weight: bold;
+}
+.channel-Header{
+
+    border-bottom: solid;
+    border-width: thin;
+    border-color: rgb(148, 147, 148);
+}
+.channel-Title{
+    font-size: 30px;
+}
+
+.channel-Body{
+    border-bottom: solid;
+    border-width: thin;
+    border-color: rgb(148, 147, 148);
+    padding: 20px;
+}
+.channel-Footer{
+    text-align: end;
+    padding:10px
+}
+.btnClose{
+    margin:10px;
+    background-color: #888;
+    border-radius: 3px;
+    color: white;
+    border-color: white;
+    border-width: thin;
+    padding-left:10px;
+    padding-right:10px;
+}
+.btnProceed{
+    margin:10px;
+    background-color: #1d7eed;
+    border-radius: 3px;
+    color: white;
+    border-color: white;
+    border-width: thin;
+    padding-left:10px;
+    padding-right:10px;
+}

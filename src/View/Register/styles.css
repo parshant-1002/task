@@ -35,7 +35,7 @@
     gap: 15px;
 }
 
-   .input {
+   .inputRegister {
       padding: 15px;
       border: none;
       width: 250px;
@@ -67,4 +67,8 @@
     color: #5d5b8d;
     font-size: 12px;
     margin-top: 10px;
+  }
+
+  .registerError{
+    color:red
   }
