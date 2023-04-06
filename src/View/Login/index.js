@@ -12,9 +12,19 @@ const Login = () => {
   const [passwordBlankInput, setPasswordBlankInput] = useState(false);
   const [passwordErrMessage, setPasswordErrMessage] = useState(false);
   const [err, setErr] = useState("");
+  
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+
+ if(auth?.currentUser){
+  if(!auth?.currentUser?.emailVerified){
+    setErr("email not verified")
+  }
+ }
+ else{
+
+ 
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
@@ -36,15 +46,17 @@ const Login = () => {
         setPasswordErrMessage("password is invalid (Enter more than 4 characters and include both number and character)");
       }
       else{
-
+      
         try {
-          await signInWithEmailAndPassword(auth, email, password);
-          navigate("/")
+          const res= await signInWithEmailAndPassword(auth, email, password);
+          console.log(auth,"llllll")
+        navigate("/")
+        
         } catch (err) {
           setErr(err.message);
         }
       }
-    }
+    }}
   };
   return (
     <div className="formContainer">

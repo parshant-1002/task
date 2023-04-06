@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import Add from "../../assets/download.png";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile,sendEmailVerification } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
@@ -18,7 +18,8 @@ const Register = () => {
   const [emailBlankInput, setEmailBlankInput] = useState(false);
   const [passwordBlankInput, setPasswordBlankInput] = useState(false);
   const [fileBlankInput, setFileBlankInput] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [mailNotificationMessage, setMailNotificationMessage] = useState(false);
   const navigate = useNavigate();
   const { dispatch } = useContext(ChatContext);
   const [displayName, setDisplayName] = useState("")
@@ -28,7 +29,7 @@ const Register = () => {
 
 
   const handleSubmit = async () => {
-
+    
 
     dispatch({ type: "RESET" });
     if (displayName.trim() == "") {
@@ -67,11 +68,21 @@ const Register = () => {
         setPasswordBlankInput(false)
         setFileBlankInput(false)
         try {
-
+          setLoading(true)
           const res = await createUserWithEmailAndPassword(auth, email, password);
+          // console.log(res,auth,"jijijiji")
+          const actionCodeSettings = {
+          url: 'http://https://slackapp-chicmic.netlify.app/login:3000',
+       
+            handleCodeInApp: true
+        };
+           await sendEmailVerification(res.user,actionCodeSettings)
+           setLoading(false)
+           setMailNotificationMessage(true)
+        
           const date = new Date().getTime();
           const storageRef = ref(storage, `${displayName + date}`);
-
+       
           file && await uploadBytesResumable(storageRef, file).then(() => {
             getDownloadURL(storageRef).then(async (downloadURL) => {
               try {
@@ -91,7 +102,7 @@ const Register = () => {
                 await setDoc(doc(db, "userChannels", res.user.uid), {});
                 // await setDoc(doc(db, "channels", res.user.uid))
                 await setDoc(doc(db, "userChats", res.user.uid), {});
-                navigate("/");
+                
               } catch (err) {
                 console.log(err);
                 setErr(true);
@@ -119,6 +130,7 @@ const Register = () => {
           setDisplayName(e.target.value.trim())
           setNameBlankInput(false)
           setNameErrMessage(false)
+          setLoading(false)
         }} />
         {nameBlankInput && <label className="registerError">*UserName Required</label>}
         {nameErrMessage && <label className="registerError">{nameErrMessage}</label>}
@@ -127,6 +139,7 @@ const Register = () => {
           setEmail(e.target.value)
           setEmailBlankInput(false)
           setEmailErrMessage(false)
+          setLoading(false)
         }} />
         {emailBlankInput && <label className="registerError">*Email Required</label>}
         {emailErrMessage && <label className="registerError">{emailErrMessage}</label>}
@@ -135,6 +148,7 @@ const Register = () => {
           setPassword(e.target.value)
           setPasswordBlankInput(false)
           setPasswordErrMessage(false)
+          setLoading(false)
         }} />
         {passwordBlankInput && <label className="registerError">*Password Required</label>}
         {passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
@@ -143,6 +157,7 @@ const Register = () => {
           setFile(e.target.files[0])
           setFileBlankInput(false)
           setFileErrMessage(false)
+          setLoading(false)
         }} />
         <label className="label" htmlFor="file">
           <img className="img" src={Add} alt="" />
@@ -152,7 +167,8 @@ const Register = () => {
         {fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
 
         <button className="Signup" onClick={() => { handleSubmit() }}>Sign up</button>
-
+        {mailNotificationMessage&&<label className="registerError">Verification link sent</label>}
+        {!err&&loading&&<label className="registerError">Sending verification Link</label>}
 
         {err && <label className="registerError">{err}</label>}
 

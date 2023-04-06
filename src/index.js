@@ -12,9 +12,9 @@ root.render(
 
 <AuthContextProvider>
     <ChatContextProvider>
-  
-        <App />
  
+        <App />
+
     </ChatContextProvider>
   </AuthContextProvider>
 

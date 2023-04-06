@@ -17,6 +17,7 @@ export const ChatContextProvider = ({ children }) => {
     users: [],
     members: [],
     membersAddedStatus: false,
+    userData:""
     // allUsers:[]
   };
 
@@ -50,12 +51,12 @@ export const ChatContextProvider = ({ children }) => {
 
           ...state, membersAddedStatus: action?.payload
         }
-        // case "GETALLUSERSLIST":
+        case "SETUSERDATA":
 
-        // return {
+        return {
 
-        //   ...state, allUsers: action?.payload
-        // }
+          ...state, userData: action?.payload
+        }
 
 
       case "RESET":
