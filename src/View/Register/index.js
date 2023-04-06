@@ -70,9 +70,9 @@ const Register = () => {
         try {
           setLoading(true)
           const res = await createUserWithEmailAndPassword(auth, email, password);
-          // console.log(res,auth,"jijijiji")
+        
           const actionCodeSettings = {
-          url: 'http://https://slackapp-chicmic.netlify.app/login:3000',
+          url: 'https://slackapp-chicmic.netlify.app/register',
        
             handleCodeInApp: true
         };
