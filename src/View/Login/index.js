@@ -5,6 +5,7 @@ import { auth } from "../../firebase";
 import { ChatContext } from '../../Context/ChatContext'
 import { validEmail } from "../../Shared/Utilities";
 import "./styles.css"
+import { AuthContext } from "../../Context/AuthContext";
 const Login = () => {
   const [emailErrMessage, setEmailErrMessage] = useState(false);
   const { dispatch } = useContext(ChatContext);
@@ -17,27 +18,27 @@ const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
+  const handleSendVerificationCode = async () => {
+    setLoading(true)
+    const res = await signInWithEmailAndPassword(auth, email, password);
 
-  const handleSendVerificationCode=async()=>{
-   setLoading(true)
-   const res = await signInWithEmailAndPassword(auth, email, password);
- 
-   const actionCodeSettings = {
-   url: 'https://slackapp-chicmic.netlify.app/register',
- 
-     handleCodeInApp: true
- };
-    await sendEmailVerification(res.user,actionCodeSettings)
+    const actionCodeSettings = {
+      url: 'https://slackapp-chicmic.netlify.app/login',
+
+      handleCodeInApp: true
+    };
+    await sendEmailVerification(res.user, actionCodeSettings)
     setLoading(false)
   }
   const handleSubmit = async (e) => {
 
-
-
-
     e.preventDefault();
+
+
+
     const email = e.target[0].value;
-   setEmail(email)
+    setEmail(email)
     const password = e.target[1].value;
     setPassword(password)
     dispatch({ type: "RESET" });
@@ -61,18 +62,12 @@ const Login = () => {
 
         try {
           const res = await signInWithEmailAndPassword(auth, email, password);
-
-       
           if (!res.user.emailVerified) {
             setErr("email not verified")
             setShowVerificationButton(true)
-          }else{
-          
+          } else {
             navigate("/")
           }
-
-        
-
         } catch (err) {
           setErr(err.message);
         }
@@ -100,8 +95,8 @@ const Login = () => {
           <button className="Signin">Sign in</button>
           {err && <span className="loginError">{err}</span>}
         </form>
-        {loading&&<label className="registerError">Sending verification Link</label>}
-        {showVerificationButton&&<button className="Verification" onClick={handleSendVerificationCode} >send Verification again</button>}
+        {loading && <label className="registerError">Sending verification Link</label>}
+        {showVerificationButton && <button className="Verification" onClick={handleSendVerificationCode} >send Verification again</button>}
         <p className="p">You don't have an account? <Link to="/register">Register</Link></p>
       </div>
     </div>

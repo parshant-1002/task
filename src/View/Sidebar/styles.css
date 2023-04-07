@@ -9,13 +9,13 @@
     color: white;
    width:90%;
     padding:5px;
-    
+    cursor: pointer;
 }
 .directDiv{
     border-bottom: solid;
     border-width: thin;
     border-color:lightgray;
-
+  
     height:40px;
 }
 .close{
@@ -25,5 +25,6 @@
     border-width: thin;
     border-color: white;
     padding: 3px;
+    cursor: pointer;
 
 }

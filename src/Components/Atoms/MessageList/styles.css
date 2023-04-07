@@ -22,36 +22,50 @@
    display: flex;
    /* flex-direction: column; */
    color: gray;
-   font-weight: 300;
+   font-weight: 400;
  }
 
  .senderimg {
-   width: 40px;
-   height: 40px;
+   width: 20px;
+   height: 20px;
    border-radius: 4px;
    object-fit: cover;
    margin-top: 5px;
  }
 
  .messageContent {
-   max-width: 600px;
+   max-width: 500px;
    display: flex;
    flex-direction: column;
 
 
  }
 
- .messgtext {
+ .messgtextowner {
   color:black;
-   background-color: white;
+   background-color: rgb(220, 188, 227);
+   padding: 10px;
 margin-left: 10px;
    max-width: 500px;
    border-radius: 0px 10px 10px 10px;
    /* display:inline-block; */
-   font-size: small;
+   font-size: medium;
    word-wrap: break-word;
 
  }
+ .messgtextfalse {
+  color:white;
+   background-color: #644b76;
+   padding: 10px;
+margin-left: 10px;
+   max-width: 500px;
+   border-radius: 0px 10px 10px 10px;
+   /* display:inline-block; */
+   font-size: medium;
+   word-wrap: break-word;
+
+ }
+
 
  .messgtext::-webkit-scrollbar {
    width: 5px;
@@ -81,11 +95,11 @@ margin-left: 10px;
   color:black;
   margin-left: 10px;
   font-weight: 500;
-  font-size: large;
+  font-size: small;
  }
  .atTime{
   color:black;
   margin-left: 10px;
   font-weight: 500;
-  font-size: 15px;
+  font-size: small;
  }

@@ -67,7 +67,7 @@ const Input = () => {
               messages: arrayUnion({
                 id: uuid(),
                 text,
-                senderId: currentUser.uid,
+                senderId: currentUser?.uid,
                 date: time,
                 img: img && downloadURL,
                 fileName: imgName && imgName
@@ -96,7 +96,7 @@ const Input = () => {
               messages: arrayUnion({
                 id: uuid(),
                 text,
-                senderId: currentUser.uid,
+                senderId: currentUser?.uid,
                 date: time,
                 file: pdf && downloadURL,
                 fileName: pdfName && pdfName
@@ -116,13 +116,13 @@ const Input = () => {
         messages: arrayUnion({
           id: uuid(),
           text,
-          senderId: currentUser.uid,
+          senderId: currentUser?.uid,
           date: time,
         }),
       });
     }
 
-    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser.uid), {
+    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
       [data.groupId || data?.chatId + ".lastMessage"]: {
         text,
         img: img && "img",
@@ -173,6 +173,8 @@ const Input = () => {
                 setInvalid(true)
               }
               else {
+
+
                 document.getElementsByClassName("react-input-emoji--input")?.[0].focus()
                 // setFileStatus(true)
                 if (e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpeg") {

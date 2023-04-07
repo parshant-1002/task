@@ -6,7 +6,7 @@
   border-color: gray;
   overflow-y: scroll;
 }.chats::-webkit-scrollbar {
-      width: 5px;               /* width of the entire scrollbar */
+      width: 0px;               /* width of the entire scrollbar */
     }
 .userChat {
     padding: 5px;
@@ -31,8 +31,13 @@
         font-weight: 500;
       }
       .lastmessage{
+        width:95%;
+        height:20px;
         font-size: 14px;
         color: lightgray;
+        word-wrap: break-word;
+        overflow: hidden;
+        
       }
     .warnmessage{
         color: aliceblue;
@@ -44,5 +49,18 @@
       background-color: #82458b
     }
     .userChatInfo{
-      width: 65%;
+      width: 75%;
+    }
+    .eyeImg{
+      height:10px;
+      width:10px;
+
+
+    }
+
+    .recent{
+      background-color: red;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
     }

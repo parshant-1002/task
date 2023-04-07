@@ -6,17 +6,20 @@
     border-color: gray;
     overflow-y: scroll;
 }.channels::-webkit-scrollbar {
-        width: 5px;               /* width of the entire scrollbar */
+        width: 0px;               /* width of the entire scrollbar */
       }
 
   .channelInfo{
     font-size: large;
+    margin-top:10px
   }
 
 .userChannalInfo{
   display: flex;
   justify-content: space-between;
-  width:70%
+  width:90%;
+  height:30px
+
 }
 
     .img1{
@@ -24,10 +27,23 @@
       cursor: pointer;
     }
   
-      .userName{
-        margin-left: 10px;
-        font-size: large;
-      }
-
+    
 
   
+      .eyeImg{
+        height:10px;
+        width:10px;
+        
+  
+      }
+      .userChat {
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        cursor: pointer;
+    
+    
+    }
+    

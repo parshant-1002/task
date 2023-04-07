@@ -5,13 +5,15 @@ import Register from "./View/Register";
 import Login from "./View/Login";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "./Context/AuthContext";
+import { auth } from "./firebase";
 
 
 function App() {
   const { currentUser } = useContext(AuthContext);
- console.log(!currentUser,"currentuser")
+
+
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
+    if (!auth?.currentUser?.emailVerified) {
       return <Navigate to="/login" />;
     }
   
@@ -31,6 +33,7 @@ function App() {
       <Routes>
         <Route>
           <Route
+          reload="true"
             index
             element={
               <ProtectedRoute>

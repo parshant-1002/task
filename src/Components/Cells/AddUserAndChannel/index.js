@@ -12,7 +12,7 @@ export default function AddUserAndChannel({ title }) {
   const [showUserModal, setShowUserModal] = useState(false)
   const [showChannelModal, setShowChannelModal] = useState(false)
   const [channelName, setChannelName] = useState()
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser} = useContext(AuthContext);
   const [users, setUsers] = useState([])
   const [error, setError] = useState("")
   const [string, setString] = useState("")
@@ -33,7 +33,7 @@ export default function AddUserAndChannel({ title }) {
 
         r.push(doc.data())
       });
-      const y = r.filter(val => (!x.some(value => value == val.uid) && val.uid != currentUser.uid))
+      const y = r.filter(val => (!x.some(value => value == val.uid) && val.uid != currentUser?.uid))
       setUsers(y);
     } catch (err) {
       console.log(err, "Error in getting User Details")
@@ -46,7 +46,7 @@ export default function AddUserAndChannel({ title }) {
     if (channelName.length > 2 && (channelName.split("").some(val => isNaN(val)))) {
       setError("")
 
-      const combinedId = currentUser.uid + channelName
+      const combinedId = currentUser?.uid + channelName
       try {
         const res = await getDoc(doc(db, "chats", combinedId), { messages: [] });
         if (!res.exists()) {
@@ -54,14 +54,18 @@ export default function AddUserAndChannel({ title }) {
           await setDoc(doc(db, "chats", combinedId), { messages: [] });
           await setDoc(doc(db, "channels", combinedId),
             {
-              createdBy: { name: currentUser.displayName, id: currentUser.uid, email: currentUser.email },
+              createdBy: { name: currentUser?.displayName, id: currentUser?.uid, email: currentUser?.email },
               groupname: channelName,
-              participants: [],
+              participants: [{
+                name: currentUser?.displayName,
+                uid: currentUser?.uid,
+                email:currentUser?.email
+            }],
               createdAt: serverTimestamp(),
             }
           )
           //create user chats
-          await updateDoc(doc(db, "userChannels", currentUser.uid), {
+          await updateDoc(doc(db, "userChannels", currentUser?.uid), {
             [channelName+ ".channelInfo"]: {
               channelNameId:   channelName,
               channelName,

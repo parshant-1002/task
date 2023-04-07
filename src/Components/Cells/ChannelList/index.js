@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
-import eye from "../../../assets/eye.png.ico"
+import eye from "../../../assets/eye.png"
 import "./styles.css"
 const Channels = () => {
   const [channels, setChannels] = useState([]);
@@ -16,7 +16,7 @@ const Channels = () => {
 
   useEffect(() => {
     const getChannels = () => {
-      const unsub = onSnapshot(doc(db, "userChannels", currentUser.uid), (doc) => {
+      const unsub = onSnapshot(doc(db, "userChannels", currentUser?.uid), (doc) => {
         setChannels(doc.data())
         doc.exists() && setVisible(true)
       });
@@ -25,8 +25,8 @@ const Channels = () => {
       };
     };
 
-    currentUser.uid && getChannels();
-  }, [currentUser.uid]);
+    currentUser?.uid && getChannels();
+  }, [currentUser?.uid]);
 
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Channels = () => {
   };
 
    const getGroupMemberDetails = async (x) => {
-    const groupData = await getDoc(doc(db, "userChannels", currentUser.uid))
+    const groupData = await getDoc(doc(db, "userChannels", currentUser?.uid))
     const groupId = groupData.data()[x]["channelInfo"].groupId
     const res = await getDoc(doc(db, "channels", groupId))
      dispatch({ type: "GETGROUPMEMBERS", payload: res.data()["participants"] })
@@ -67,7 +67,7 @@ const Channels = () => {
               <ol className="userChannalInfo">
                 <span className="channelInfo"># {channels[1].channelInfo.channelName}</span>
               </ol>
-                {channels[1].channelInfo.channelNameId==selected&&<img src={eye} alt=""></img>}
+                {channels[1].channelInfo.channelNameId==selected&&<img className="eyeImg"  src={eye} alt=""></img>}
             </div>
           ))}
         </div>}

@@ -1,4 +1,3 @@
-
 /* .details{
     position:absolute;
     right:0;
@@ -10,80 +9,103 @@
     border-width: thin;
 
 } */
-.detailsHeading{
-    margin-left:10px;
+.detailsHeading {
+    margin-left: 10px;
     display: flex;
     font-size: 15px;
     font-weight: 550;
 }
-.headingDetails{
+
+.headingDetails {
     margin: 5px;
     width: 80%;
 }
-.members{
+
+.members {
     margin: 10px;
 }
-.head{
+
+.head {
     display: flex;
-    width:100%
+    width: 100%
 }
-.closeDetails{
-    margin:10px;
-    padding:5px
+
+.closeDetails {
+    margin: 10px;
+    padding: 5px
 }
-.memberDetails{
- padding:5px;
- display: flex;
- justify-content: space-between;
+
+.memberDetails {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
 }
-.deleteIcon{
+
+.deleteIcon {
     background-color: white;
 
- 
+
 }
-.memberDetails{
-    margin:5px;
-    
+
+.memberDetails {
+    margin: 5px;
+
 }
-.memberDetails:hover{
-    padding:10px;
-  background-color: rgb(232, 208, 240);
+
+.memberDetails:hover {
+    padding: 10px;
+    background-color: rgb(232, 208, 240);
 
     font-size: large;
-   }
+}
 
-   .deleteIcon:hover {
+.deleteIcon:hover {
     border-radius: 0px;
-    height:40px;
-    width:40px;
+    height: 40px;
+    width: 40px;
 
-  }
-  .memberHeading{
-    padding:10px;
+}
+
+.memberHeading {
+    padding: 10px;
     border-color: #581a59;
-    border-bottom:solid;
-    border-width:thin
-  }
+    border-bottom: solid;
+    border-width: thin
+}
 
-  .detailsHeader{
+.detailsHeader {
     background-color: #a032a2ae;
     color: white;
     border-radius: 5px;
-  }
-
-  .singleUserDetails{
-    padding:10px;
-   display:flex;
-  
-  }
-
-.singleUserImage{
-   border-radius: 0px;
-   height:150px;
-   width:150px;
-   margin-right:40px
 }
 
-.singleUserName{
+.singleUserDetails {
+    padding: 10px;
+    display: flex;
+
+}
+
+.singleUserImage {
+    border-radius: 0px;
+    height: 150px;
+    width: 150px;
+    margin-right: 40px
+}
+
+.singleUserName {
     padding: 5px;
+}
+
+
+.groupMembersList {
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.deleteGroupButton{
+    background-color: red;
+    border-radius: 5px;
+    border-width: thin;
+    border-color: white;
+    color:white
 }

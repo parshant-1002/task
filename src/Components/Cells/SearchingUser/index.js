@@ -84,12 +84,12 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
         console.log(selectedList,"selected")
     }
     const handleAdd2 = async (user) => {
-        console.log(currentUser,user,"currentUsercurrentUser<><>")
+
         //check whether the group(chats in firestore) exists, if not create
         const combinedId =
-            currentUser.uid > user.uid
-                ? currentUser.uid + user.uid
-                : user.uid + currentUser.uid;
+            currentUser?.uid > user.uid
+                ? currentUser?.uid + user.uid
+                : user.uid + currentUser?.uid;
         try {
             const res = await getDoc(doc(db, "chats", combinedId));
             console.log(combinedId, "combinedId")
@@ -108,10 +108,10 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                 
                 (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", user?.uid), {
                     [combinedId + ".userInfo"]: {
-                        uid: currentUser.uid,
-                        displayName: currentUser.displayName,
-                        photoURL: currentUser.photoURL,
-                        email: currentUser.email
+                        uid: currentUser?.uid,
+                        displayName: currentUser?.displayName,
+                        photoURL: currentUser?.photoURL,
+                        email: currentUser?.email
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
@@ -153,7 +153,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                     <h3> Selected User</h3>
                     <div className='usersDisplay'>
 
-                        {selectedList?.length && selectedList.map(val => {
+                        {selectedList?.length ?selectedList.map(val => {
                             return (
 
                                 <div className="selectedUsers" >
@@ -171,12 +171,12 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                                     </li>
                                 </div>
                             )
-                        })}
+                        }):<h6>No Selected Users!!!</h6>}
                     </div>
                     <h3> Select User</h3>
                     <div className='usersDisplay'>
                         {
-                            userList?.length && userList.map(val => {
+                            userList?.length? userList.map(val => {
                                 return (
 
                                     <div className="userData" onClick={() => { handleSelect(val) }}>
@@ -189,7 +189,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                                         </div>
                                     </div>
                                 )
-                            })}
+                            }):<h6>No Users Left!!!</h6>}
                     </div>
                 </div>
                 : <h1>No User Left</h1>}

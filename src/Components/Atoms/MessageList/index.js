@@ -21,11 +21,11 @@ const Message = ({ message }) => {
  useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
-  console.log(message.senderId === currentUser.uid, "weugr")
+  console.log(message.senderId === currentUser?.uid, "weugr")
   return (
     <div
       ref={ref}
-      className={`message${message.senderId === currentUser.uid && "owner"}`} >
+      className={`message${message.senderId === currentUser?.uid && "owner"}`} >
       <div className="messageInfo">
         <div>
 
@@ -41,9 +41,9 @@ const Message = ({ message }) => {
             {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
             <span className="atTime">{message.date}</span>
           </div>
-          {message?.text && <p className="messgtext">{message.text}</p>}
-          {message?.img && <img className="chatimg" src={message.img} alt="" />}
-          {message?.file && <a href={message.file} download  ><img className="pdf" src={pdfIcon}></img></a>}
+          {message?.text && <p className={`messgtext${message.senderId === currentUser?.uid && "owner"}`}>{message.text}</p>}
+          {message?.img && <a href={message.img}  target="_blank" download  ><img className="chatimg" src={message.img} alt="" /></a>}
+          {message?.file && <a href={message.file} target="_blank" download  ><img className="pdf" src={pdfIcon}></img></a>}
           {message?.fileName && <label className="fileName">{message.fileName}</label>}
         </div>
       </div>

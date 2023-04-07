@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
-export default function Modal({ children, show, setEditedGroupName = ()=>{}, string, handleEditGroupName, editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel, addUser=()=>{}, handleSelect=()=>{}, showHead, showFoot }) {
+export default function Modal({ children, show, setEditedGroupName = ()=>{}, string, type="",handleEditGroupName, editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel, addUser=()=>{}, handleSelect=()=>{}, showHead, showFoot }) {
     const { data, dispatch } = useContext(ChatContext);
 
     return (
@@ -37,8 +37,8 @@ export default function Modal({ children, show, setEditedGroupName = ()=>{}, str
                             handleEditGroupName && handleEditGroupName()
                             handleGroupNameEdit && handleGroupNameEdit()
                             dispatch({ type: "MEMBERSADDEDSTATUS", payload: false })
-                          
-                        }} >Add</button> : null}
+                        
+                        }} >{type=="editGroupName"?<>Edit</>:<>Add</>}</button> : null}
                             {console.log(string==true,string==false,addUser,handleSelect,"addchannel")}
 
                     </div>}

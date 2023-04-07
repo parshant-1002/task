@@ -52,6 +52,7 @@ font-size: 28px;
     border-width: thin;
     border-color: rgb(148, 147, 148);
     padding: 20px;
+    height: fit-content;
 }
 .Modal-Footer{
     text-align: end;
