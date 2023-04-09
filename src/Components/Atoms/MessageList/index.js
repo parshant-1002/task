@@ -4,7 +4,7 @@ import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
-import pdfIcon from "../../../assets/download11.png"
+import { images } from "../../../Images";
 const Message = ({ message }) => {
 
   const { currentUser } = useContext(AuthContext);
@@ -43,7 +43,7 @@ const Message = ({ message }) => {
           </div>
           {message?.text && <p className={`messgtext${message.senderId === currentUser?.uid && "owner"}`}>{message.text}</p>}
           {message?.img && <a href={message.img}  target="_blank" download  ><img className="chatimg" src={message.img} alt="" /></a>}
-          {message?.file && <a href={message.file} target="_blank" download  ><img className="pdf" src={pdfIcon}></img></a>}
+          {message?.file && <a href={message.file} target="_blank" download  ><img className="pdf" src={images.file}></img></a>}
           {message?.fileName && <label className="fileName">{message.fileName}</label>}
         </div>
       </div>

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
-import eye from "../../../assets/eye.png"
+import { images } from "../../../Images";
 import "./styles.css"
 const Channels = () => {
   const [channels, setChannels] = useState([]);
@@ -67,7 +67,7 @@ const Channels = () => {
               <ol className="userChannalInfo">
                 <span className="channelInfo"># {channels[1].channelInfo.channelName}</span>
               </ol>
-                {channels[1].channelInfo.channelNameId==selected&&<img className="eyeImg"  src={eye} alt=""></img>}
+                {channels[1].channelInfo.channelNameId==selected&&<img className="eyeImg"  src={images.eye} alt=""></img>}
             </div>
           ))}
         </div>}

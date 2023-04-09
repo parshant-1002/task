@@ -4,7 +4,7 @@ import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
-import eye from "../../../assets/eye.png"
+import { images } from "../../../Images";
 const Chats = ({ showDirectMessage }) => {
   const [chats, setChats] = useState({});
   const [visible, setVisible] = useState(false);
@@ -58,7 +58,7 @@ setSeenColor("white")
                { !chat[1]?.lastMessage?.text&& chat[1]?.lastMessage?.pdf? <p className="lastmessage">{chat[1]?.lastMessage?.pdf}</p>:null}
               </div>
                {/* {false&&<div className="recent"></div>} */}
-               {chat[1].userInfo.uid==selected&&<img className="eyeImg" src={eye} alt=""></img>}
+               {chat[1].userInfo.uid===selected&&<img className="eyeImg" src={images.eye} alt=""></img>}
             </div>
           })}
         </div>}

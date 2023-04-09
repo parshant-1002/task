@@ -32,7 +32,12 @@
 
 .closeDetails {
     margin: 10px;
-    padding: 5px
+    padding: 5px;
+    cursor:pointer
+}
+.closeDetails:hover{
+    height: 32px;
+    width: 32px;
 }
 
 .memberDetails {

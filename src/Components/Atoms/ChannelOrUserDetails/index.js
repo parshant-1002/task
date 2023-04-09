@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import "./styles.css"
-import deleteIcon from "../../../assets/delete.png"
-import cross from "../../../assets/favpng_close-icon.png"
+import { images } from '../../../Images'
 import { ChatContext } from '../../../Context/ChatContext'
 import Modal from '../Modal'
 import { AuthContext } from '../../../Context/AuthContext'
@@ -44,7 +43,7 @@ export default function Details({ userName, groupName, userImage, groupMembers, 
 
           <div className='head'>
             {userImage ? <h3 className='headingDetails'> User Details</h3> : <h3 className='headingDetails'> Group Details</h3>}
-            <img className='closeDetails' src={cross} alt="" onClick={handleCloseDetails}></img>
+            <img className='closeDetails' src={images.crossWhite} alt="" onClick={handleCloseDetails}></img>
           </div>
 
           <div className='detailsHeading'>
@@ -97,7 +96,7 @@ export default function Details({ userName, groupName, userImage, groupMembers, 
                         ?
                         <button className="deleteGroupButton" onClick={handleDeleteGroup}>Delete Group </button>
                         :
-                        <img className="deleteIcon" src={deleteIcon} alt="" onClick={() => { handleDeleteGroupMembers(val.uid) }} />}
+                        <img className="deleteIcon" src={images.deleteIcon} alt="" onClick={() => { handleDeleteGroupMembers(val.uid) }} />}
                     </div>
                     :
                     null}

@@ -1,0 +1,11 @@
+.uploadImg {
+    margin-left: 50px;
+    height: 300px;
+    width: 300px;
+    border-radius: 0px;
+}
+
+.uploadedImage {
+    display: flex;
+    flex-direction: column;
+}

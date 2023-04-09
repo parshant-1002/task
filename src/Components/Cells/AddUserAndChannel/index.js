@@ -3,9 +3,8 @@ import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../../Context/AuthContext'
 import { ChatContext } from '../../../Context/ChatContext'
 import { db } from '../../../firebase'
-import Modal1 from '../../Atoms/Modal'
 import Modal from '../../Atoms/Modal'
-import SearchingUser from '../SearchingUser'
+import SearchingUser from '../AddingUsers'
 
 import "./styles.css"
 export default function AddUserAndChannel({ title }) {

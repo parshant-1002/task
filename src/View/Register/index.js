@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import Add from "../../assets/download.png";
+import { images } from "../../Images";
 import { createUserWithEmailAndPassword, updateProfile,sendEmailVerification } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -160,7 +160,7 @@ const Register = () => {
           setLoading(false)
         }} />
         <label className="label" htmlFor="file">
-          <img className="img" src={Add} alt="" />
+          <img className="img" src={images.Add} alt="" />
           <span>Add an avatar</span>
         </label>
         {fileBlankInput && <label className="registerError">*Avatar Required</label>}

@@ -1,29 +1,27 @@
 .inputdata {
     height: 100px;
     background-color: white;
- 
-margin-left: 25px;
-   
+
+    margin-left: 25px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border:solid;
-    /* border-style: groove; */
+    border: solid;
     border-width: thin;
     border-color: grey;
-   
     width: 93%;
     border-radius: 10px;
 }
 
 .messageinput {
-    height:60px;
-    width:80%;
-    /* border: 0px solid; */
- border:none;
+    height: 60px;
+    width: 80%;
+    border: none;
     background: transparent;
     border-radius: 10px;
 }
+
 *:focus {
     outline: none;
 }
@@ -32,45 +30,32 @@ margin-left: 25px;
     display: flex;
     align-items: center;
     gap: 10px;
-   
+
 }
 
-.messimage {
-    height: 24px;
-    cursor: pointer;
-    margin-right: 10px;
-}
+
 
 .sendbutton {
     border: none;
     /* padding: 10px 15px; */
 
-   height:50px;
-   width:50px;
+    height: 50px;
+    width: 50px;
     cursor: pointer;
     border-radius: 10px;
     margin-right: 10px;
 }
-.inputText{
-    width:900px;
 
+.inputText {
+    width: 900px;
 }
 
-.react-input-emoji--input{
-        max-height: 62px;
+.react-input-emoji--input {
+    max-height: 62px;
 }
-.react-emoji-picker--wrapper{
+
+.react-emoji-picker--wrapper {
     border: solid;
     border-width: thin;
     border-radius: 5px;
-}
-.uploadImg{
-    margin-left:50px;
-    height:300px;
-    width:300px;
-    border-radius:0px;
-}
-.uploadedImage{
-    display:flex;
-    flex-direction: column;
 }
