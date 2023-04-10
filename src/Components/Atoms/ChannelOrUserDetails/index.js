@@ -40,12 +40,10 @@ export default function Details({ userName, groupName, userImage, groupMembers, 
     <Modal show={true}    >
       <div className='details'>
         <div className='detailsHeader'>
-
           <div className='head'>
             {userImage ? <h3 className='headingDetails'> User Details</h3> : <h3 className='headingDetails'> Group Details</h3>}
             <img className='closeDetails' src={images.crossWhite} alt="" onClick={handleCloseDetails}></img>
           </div>
-
           <div className='detailsHeading'>
             {!userImage && <label> #</label>}
             {!userImage && <label>{" " + groupName}</label>}
@@ -99,7 +97,7 @@ export default function Details({ userName, groupName, userImage, groupMembers, 
                         <img className="deleteIcon" src={images.deleteIcon} alt="" onClick={() => { handleDeleteGroupMembers(val.uid) }} />}
                     </div>
                     :
-                    null}
+                    val.uid === currentUser?.uid&& <button className="deleteGroupButton" onClick={()=>{handleDeleteGroupMembers(val.uid)} }>Leave Group </button>}
                 </div>
               </ol>)
               :

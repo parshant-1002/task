@@ -4,25 +4,18 @@
   width: 30px;
   border-radius: 5px;
   cursor: pointer;
+  object-fit: cover;
 }
 
-.navbar {
-  display: flex;
-  align-items: center;
-
-
-  padding: 10px;
-  justify-content: space-between;
-  color: #ddddf7;
-
-}
 
 
 .user {
   display: flex;
-  gap: 10px;
-
-  width: 100%;
+  gap:10px;
+  position: absolute;
+ right:0;
+ margin-top: 30px;
+ 
 }
 
 .logout {
@@ -58,7 +51,7 @@
 
 .profilename {
   margin-top: 5px;
-  font-size: 60px;
+  font-size: 100%;
   margin-left: 5px;
   color: black;
 
@@ -77,10 +70,12 @@
   height:200px;
   width:200px;
   border-radius: 2px;
+
 }
 .profilemail{
   color: black;
 }
 .profileNavName{
-  color:white
+  color:white;
+  font-size: 100%;
 }

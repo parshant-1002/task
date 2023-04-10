@@ -79,3 +79,13 @@
     border: none;
     cursor: pointer;
   }
+  .passwordInput{
+    display: flex;
+   
+  }
+  .passwordInputLogin{
+    padding: 15px;
+    border: none;
+    width: 230px;
+    border-bottom: 1px solid #a7bcff;
+  }

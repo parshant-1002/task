@@ -39,7 +39,7 @@ const Message = ({ message }) => {
           <div className="userDetails">
             {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
             <span className="atTime">{message.date}</span>
-          {message.senderId==currentUser.uid?message?.status?<div className="seenStatus" ></div>:<div className="unseenStatus" ></div>:null}
+          {message.senderId==currentUser.uid?!message?.status?<img className="seenStatus" src={images.singleTick} ></img>:<img className="seenStatus" src={images.doubleTick} ></img>:null}
           </div>
           {message?.text && <p className={`messgtext${message.senderId === currentUser?.uid && "owner"}`}>{message.text}</p>}
           {message?.img && <a href={message.img}  target="_blank" download   ><img className="chatimg" src={message.img} alt="" /></a>}

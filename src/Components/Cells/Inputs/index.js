@@ -28,156 +28,169 @@ const Input = () => {
   const time = date.getMinutes() < 10 ? `${date.getHours()}:0${date.getMinutes()}` : `${date.getHours()}:${date.getMinutes()}`
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
-  // const [messageList, setMessages] = useState([])
-  // const [unseen, setUnseen] = useState();
+  const [messageList, setMessages] = useState([])
+  const [unseen, setUnseen] = useState();
 
-  // const id = data?.groupId || data?.chatId
-  // useEffect(() => {
-  //   const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
-  //     doc?.exists() && setMessages(doc?.data().messages);
-  //   });
-  //   return () => {
-  //     data?.groupId || data?.chatId&& unSub();
-  //   };
-  // }, [data?.chatId, data?.groupId]);
+  const id = data?.groupId || data?.chatId
+  useEffect(() => {
+    const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
+      doc?.exists() && setMessages(doc?.data().messages);
+    });
+    return () => {
+      data?.groupId || data?.chatId && unSub();
+    };
+  }, [data?.chatId, data?.groupId]);
 
-  // useEffect(() => {
-  //   setText("")
-  //   setImg(null)
-  // }, [data])
-  // useEffect(() => {
-  //   data?.groupId || data?.chatId&& setUnseen(messageList.filter(val=>val.senderId==currentUser.uid&&val.status==false).length)
-  // }, [messageList])
-  
-  const handleSend = async () => {
-    setFileStatus(false)
-    if (img) {
-      setLoading(true)
-      const storageRef = ref(storage, uuid());
-      const uploadTask = uploadBytesResumable(storageRef, img || pdf);
-      uploadTask.on(
-        (error) => {
-          console.log(error, "Error in uploading files")
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            setLoading(false)
-            setImgUrl(downloadURL)
-            await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
-              messages: arrayUnion({
-                id: uuid(),
-                text,
-                senderId: currentUser?.uid,
-                date: time,
-                img: img && downloadURL,
-                fileName: imgName && imgName,
-                status: false
-              }),
-            })
-          });
-        });
-    }
-    else if (pdf || fileUrl) {
-      setLoading(true)
-      const storageRef = ref(storage, uuid());
-      const uploadTask = uploadBytesResumable(storageRef, pdf);
-      uploadTask.then(
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            setLoading(false)
-            setFileUrl(downloadURL)
-            await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
-              messages: arrayUnion({
-                id: uuid(),
-                text,
-                senderId: currentUser?.uid,
-                date: time,
-                file: pdf && downloadURL,
-                fileName: pdfName && pdfName,
-                status: false
-              }),
+
+  useEffect(() => {
+    setText("")
+    setImg(null)
+  }, [data])
+
+  useEffect(() => {
+    setUnseen(messageList.filter(val => val.senderId == currentUser.uid && val.status == false).length)
+  }, [messageList])
+
+  useEffect(() => {
+    updateUnseenStatus(unseen)
+  }, [unseen])
+  const updateUnseenStatus = async (unseenCount) => {
+    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
+
+      [data.groupId || data?.chatId + ".unseen.unseen"]: unseenCount
+
+    })}
+
+
+    const handleSend = async () => {
+      setFileStatus(false)
+      if (img) {
+        setLoading(true)
+        const storageRef = ref(storage, uuid());
+        const uploadTask = uploadBytesResumable(storageRef, img || pdf);
+        uploadTask.on(
+          (error) => {
+            console.log(error, "Error in uploading files")
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+              setLoading(false)
+              setImgUrl(downloadURL)
+              await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
+                messages: arrayUnion({
+                  id: uuid(),
+                  text,
+                  senderId: currentUser?.uid,
+                  date: time,
+                  img: img && downloadURL,
+                  fileName: imgName && imgName,
+                  status: false
+                }),
+              })
             });
           });
+      }
+      else if (pdf || fileUrl) {
+        setLoading(true)
+        const storageRef = ref(storage, uuid());
+        const uploadTask = uploadBytesResumable(storageRef, pdf);
+        uploadTask.then(
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+              setLoading(false)
+              setFileUrl(downloadURL)
+              await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
+                messages: arrayUnion({
+                  id: uuid(),
+                  text,
+                  senderId: currentUser?.uid,
+                  date: time,
+                  file: pdf && downloadURL,
+                  fileName: pdfName && pdfName,
+                  status: false
+                }),
+              });
+            });
+          });
+      }
+
+      else {
+        text.trim() && await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
+          messages: arrayUnion({
+            id: uuid(),
+            text,
+            senderId: currentUser?.uid,
+            date: time,
+            status: false
+          }),
         });
-    }
+      }
 
-    else {
-      text.trim() && await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
-        messages: arrayUnion({
-          id: uuid(),
+      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
+        [data.groupId || data?.chatId + ".lastMessage"]: {
           text,
-          senderId: currentUser?.uid,
-          date: time,
-          status: false
-        }),
+          img: img && "img",
+          pdf: pdf && pdfName
+        },
+        [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
       });
-    }
 
-    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
-      [data.groupId || data?.chatId + ".lastMessage"]: {
-        text,
-        img: img && "img",
-        pdf: pdf && pdfName
-      },
-      [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
-    });
+      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
+        [data.groupId || data?.chatId + ".lastMessage"]: {
+          text,
+        },
+        // [data.groupId || data?.chatId + ".unseen"]: {
+        //   unseen:unseen
+        // },
+        [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
+      });
 
-    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
-      [data.groupId || data?.chatId + ".lastMessage"]: {
-        text,
-      },
-      // [data.groupId || data?.chatId + ".unseen"]: {
-      //   unseen,
-      // },
-      [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
-    });
+      setText("");
+      setImg(null);
+      setPdf(null);
+      setPdfName("")
+      setImgUrl("")
+      setFileUrl("")
+    };
 
-    setText("");
-    setImg(null);
-    setPdf(null);
-    setPdfName("")
-    setImgUrl("")
-    setFileUrl("")
+    return (
+      <div className="inputdata">
+        <div id="Hello"
+          className="inputText" >
+          <InputEmoji
+            value={text}
+            onChange={setText}
+            cleanOnEnter
+            onEnter={() => { handleSend() }}
+            placeholder="Type a message"
+            borderColor="white"
+          />
+        </div>
+        <div className="send">
+          <InputFile
+            setInvalid={setInvalid}
+            setImg={setImg}
+            setImgName={setImgName}
+            setFileStatus={setFileStatus}
+            setPdf={setPdf}
+            setPdfName={setPdfName}
+            text={text}
+            imgUrl={imgUrl}
+            fileUrl={fileUrl}
+            handleSend={handleSend} />
+          {text.trim() || imgUrl || fileUrl ? <img src={images?.send} alt="send" className="sendbutton" onClick={handleSend}></img> : null}
+        </div>
+        <Display show={fileStatus} setShow={setFileStatus} showFoot={true} setImgUrl={setImgUrl} setFileUrl={setFileUrl} handleSend={handleSend}>
+          <AttachmentPreview img={img} file={pdf} imgName={imgName} fileName={pdfName} />
+        </Display>
+        <Modal show={loading}>
+          <label>loading</label>
+        </Modal>
+        <Modal show={invalid} setShow={setInvalid} showFoot={true}>
+          <label>Choosen Data Is Not Supported</label>
+        </Modal>
+      </div>
+    );
   };
 
-  return (
-    <div className="inputdata">
-      <div id="Hello"
-        className="inputText" >
-        <InputEmoji
-          value={text}
-          onChange={setText}
-          cleanOnEnter
-          onEnter={() => { handleSend() }}
-          placeholder="Type a message"
-          borderColor="white"
-        />
-      </div>
-      <div className="send">
-        <InputFile
-          setInvalid={setInvalid}
-          setImg={setImg}
-          setImgName={setImgName}
-          setFileStatus={setFileStatus}
-          setPdf={setPdf}
-          setPdfName={setPdfName}
-          text={text}
-          imgUrl={imgUrl}
-          fileUrl={fileUrl}
-          handleSend={handleSend} />
-        {text.trim() || imgUrl || fileUrl ? <img src={images?.send} alt="send" className="sendbutton" onClick={handleSend}></img> : null}
-      </div>
-      <Display show={fileStatus} setShow={setFileStatus} showFoot={true} setImgUrl={setImgUrl} setFileUrl={setFileUrl} handleSend={handleSend}>
-        <AttachmentPreview img={img} file={pdf} imgName={imgName} fileName={pdfName} />
-      </Display>
-      <Modal show={loading}>
-        <label>loading</label>
-      </Modal>
-      <Modal show={invalid} setShow={setInvalid} showFoot={true}>
-        <label>Choosen Data Is Not Supported</label>
-      </Modal>
-    </div>
-  );
-};
-
-export default Input;
+  export default Input;

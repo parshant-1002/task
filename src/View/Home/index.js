@@ -14,14 +14,18 @@ useEffect(()=>{  if(!currentUser){
   window.location.reload();}},[])
 
   return (
-    <div >
+    <>
       <Header />
       <div className='main'>
+        <div className='sideDiv'>
+ 
         <Sidebar />
+        </div>
         <div className='content'>
           <Chat />
         </div>
       </div>
-    </div>
+    </>
+    
   )
 }

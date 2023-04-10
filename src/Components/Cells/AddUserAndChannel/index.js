@@ -17,6 +17,14 @@ export default function AddUserAndChannel({ title }) {
   const [string, setString] = useState("")
   const { data,dispatch } = useContext(ChatContext)
 
+
+  const handleKey=(e)=>{
+    if(e.code==="Enter"){
+      addChannel()
+      setShowChannelModal()
+    }
+  }
+
   const handleGetRegisteredUsers = () => {
     const details = data?.users && (data?.users) || []
     const g = []
@@ -98,7 +106,7 @@ export default function AddUserAndChannel({ title }) {
         <div>
           <label>Enter {title} name</label>
           <div>
-            <input value={channelName} onChange={(e) => {
+            <input value={channelName} onKeyDown={handleKey} onChange={(e) => {
               setChannelName(e.target.value)
               setError("")
             }}></input>

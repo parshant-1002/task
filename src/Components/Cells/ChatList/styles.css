@@ -1,6 +1,6 @@
 .chats {
   flex: 2;
-  height: 13vmax;
+  height: 15vmax;
   border-bottom: solid;
   border-width: thin;
   border-color: gray;
@@ -12,14 +12,14 @@
     padding: 5px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10%;
     color: white;
     cursor: pointer;
 
 
 }
 
-    img {
+.profilePic {
       width: 30px;
       height: 30px;
       border-radius: 50%;
@@ -52,9 +52,10 @@
       width: 75%;
     }
     .eyeImg{
-      height:10px;
-      width:10px;
-
+      height:12px;
+      width:12px;
+      border-radius: 50%;
+      object-fit: cover;
 
     }
 
@@ -63,4 +64,15 @@
       width: 10px;
       height: 10px;
       border-radius: 5px;
+    }
+    .unseenCount{
+      background-color: red;
+      height:18px;
+      width:20px;
+      border-radius: 10px;
+      padding-left: 4.5px;
+
+      /* color:red; */
+
+
     }

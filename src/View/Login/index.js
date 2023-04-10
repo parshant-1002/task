@@ -6,6 +6,7 @@ import { ChatContext } from '../../Context/ChatContext'
 import { validEmail } from "../../Shared/Utilities";
 import "./styles.css"
 import { AuthContext } from "../../Context/AuthContext";
+import PasswordView from "../../Components/Atoms/passwordView";
 const Login = () => {
   const [emailErrMessage, setEmailErrMessage] = useState(false);
   const { dispatch } = useContext(ChatContext);
@@ -17,10 +18,14 @@ const Login = () => {
   const [err, setErr] = useState("");
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [passwordView,setPasswordView]=useState("password")
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+
+
+
   const handleSendVerificationCode = async () => {
-    setLoading(true)
+    setLoading("Sending Verification Link")
     const res = await signInWithEmailAndPassword(auth, email, password);
 
     const actionCodeSettings = {
@@ -29,7 +34,7 @@ const Login = () => {
       handleCodeInApp: true
     };
     await sendEmailVerification(res.user, actionCodeSettings)
-    setLoading(false)
+    setLoading("Verification Link Sent")
   }
   const handleSubmit = async (e) => {
 
@@ -56,7 +61,7 @@ const Login = () => {
         setEmailErrMessage("email is invalid");
       }
       if (password.trim() == "" || password.length < 6 || !password.split("").some(val => isNaN(val))) {
-        setPasswordErrMessage("password is invalishowVerificationButtond (Enter more than 4 characters and include both number and character)");
+        setPasswordErrMessage("password is invalishowVerificationButtond (Enter more than 6 characters and include both number and character)");
       }
       else {
 
@@ -86,16 +91,20 @@ const Login = () => {
           }} />
           {emailBlankInput && <label className="loginError">*Email Required</label>}
           {emailErrMessage && <label className="loginError">{emailErrMessage}</label>}
-          <input className="input" type="password" placeholder="password" onChange={() => {
+          <div className="passwordInput">
+
+          <input className="passwordInputLogin" type={passwordView} placeholder="password" onChange={() => {
             setPasswordBlankInput(false)
             setPasswordErrMessage(false)
           }} />
+              <PasswordView setPasswordView={setPasswordView}/>
+          </div>
           {passwordBlankInput && <label className="registerError">*Password Required</label>}
           {passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
           <button className="Signin">Sign in</button>
           {err && <span className="loginError">{err}</span>}
         </form>
-        {loading && <label className="registerError">Sending verification Link</label>}
+        {loading && <label className="registerError">{loading}</label>}
         {showVerificationButton && <button className="Verification" onClick={handleSendVerificationCode} >send Verification again</button>}
         <p className="p">You don't have an account? <Link to="/register">Register</Link></p>
       </div>

@@ -10,14 +10,14 @@
     margin-top:4px;
    width: 70%; 
    margin-left: 1px;
-  font-size: 20px;
+  font-size: 100%;
 }
 .channelButton{
     width: 20%;
     margin-left: 40px;
     margin:5px;
     height: 30px;
-    width: 50px;
+    font-size:70%;
     background-color:#362443;
     color: aliceblue;
     border-color: aliceblue;

@@ -1,8 +1,8 @@
  .messageowner {
    padding: 20px;
    display: flex;
-   /* flex-direction: row-reverse; */
-   /* border-bottom: solid; */
+   flex-direction: row-reverse; 
+    /* border-bottom: solid; */
  }
 
  .messagefalse {
@@ -105,20 +105,15 @@ margin-left: 10px;
  }
 
  .seenStatus{
-  background-color: green;
-  height: 10px;
-  width: 10px;
+
+  height: 20px;
+  width: 40px;
   border-radius: 10px;
   margin: 10px;
+  object-fit: contain;
  }
 
- .unseenStatus{
-  background-color: red;
-  height: 10px;
-  width: 10px;
-  border-radius: 10px;
-  margin: 10px;
- }
+
  .userDetails{
   display: flex;
  }

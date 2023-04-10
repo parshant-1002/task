@@ -2,10 +2,11 @@
 .messages {
     
 
-    
+   margin-top: 10px;    
     padding: 10px;
-    height: calc(100% - 160px);
+    height: 65%;
     overflow-y: scroll;
+    margin-bottom: 20px;    
   
  
 }.messages::-webkit-scrollbar {

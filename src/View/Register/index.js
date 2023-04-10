@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { images } from "../../Images";
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
@@ -8,6 +8,7 @@ import {  Link } from "react-router-dom";
 import "./styles.css"
 import { validEmail } from "../../Shared/Utilities";
 import { ChatContext } from "../../Context/ChatContext";
+import PasswordView from "../../Components/Atoms/passwordView";
 const Register = () => {
   const [err, setErr] = useState("");
   const [nameErrMessage, setNameErrMessage] = useState(false);
@@ -20,13 +21,15 @@ const Register = () => {
   const [fileBlankInput, setFileBlankInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mailNotificationMessage, setMailNotificationMessage] = useState(false);
-  // const navigate = useNavigate();
   const { dispatch } = useContext(ChatContext);
   const [displayName, setDisplayName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [file, setFile] = useState("")
+  const [passwordView,setPasswordView]=useState("password")
 
+
+  
   const handleSubmit = async () => {
     dispatch({ type: "RESET" });
     if (displayName.trim() === "") {
@@ -48,8 +51,8 @@ const Register = () => {
       else if (!validEmail.test(email)) {
         setEmailErrMessage("email is invalid");
       }
-      else if (password.length < 4 && !password.split("").some(val => isNaN(val))) {
-        setPasswordErrMessage("password is invalid (Enter more than 4 characters and include both number and character)");
+      else if (password.length < 6 || !password.split("").some(val => isNaN(val))) {
+        setPasswordErrMessage("password is invalid (Enter more than 6 characters and include both number and character)");
       }
       else if (!file) {
         setFileErrMessage("Choose Avatar");
@@ -116,7 +119,7 @@ const Register = () => {
           setLoading(false)
         }} />
         {nameBlankInput && <label className="registerError">*UserName Required</label>}
-        {nameErrMessage && <label className="registerError">{nameErrMessage}</label>}
+        {!nameBlankInput&&nameErrMessage && <label className="registerError">{nameErrMessage}</label>}
         <input className="inputRegister" type="email" placeholder="email" value={email} onChange={(e) => {
           setEmail(e.target.value)
           setEmailBlankInput(false)
@@ -124,15 +127,19 @@ const Register = () => {
           setLoading(false)
         }} />
         {emailBlankInput && <label className="registerError">*Email Required</label>}
-        {emailErrMessage && <label className="registerError">{emailErrMessage}</label>}
-        <input className="inputRegister" type="password" placeholder="password" value={password} onChange={(e) => {
+        {!emailBlankInput&&emailErrMessage && <label className="registerError">{emailErrMessage}</label>}
+        <div className="passwordInput">
+   
+        <input className="passwordInputRegister" type={passwordView} placeholder="password" value={password} onChange={(e) => {
           setPassword(e.target.value)
           setPasswordBlankInput(false)
           setPasswordErrMessage(false)
           setLoading(false)
         }} />
+        <PasswordView setPasswordView={setPasswordView}/>
+        </div>
         {passwordBlankInput && <label className="registerError">*Password Required</label>}
-        {passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
+        {!passwordBlankInput&&passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
         <input className="inputRegister" accept="image/*" style={{ display: "none" }} type="file" id="file" onChange={(e) => {
           setFile(e.target.files[0])
           setFileBlankInput(false)
@@ -140,11 +147,11 @@ const Register = () => {
           setLoading(false)
         }} />
         <label className="label" htmlFor="file">
-          <img className="img" src={images.Add} alt="" />
+         {file? <img className="img" src={URL.createObjectURL(file)} alt="" />: <img className="img" src={images.addAvatar} alt="" />}
           <span>Add an avatar</span>
         </label>
         {fileBlankInput && <label className="registerError">*Avatar Required</label>}
-        {fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
+        {!fileBlankInput&&fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
         <button className="Signup" onClick={() => { handleSubmit() }}>Sign up</button>
         {mailNotificationMessage && <label className="registerError">Verification link sent</label>}
         {!err && loading && <label className="registerError">Sending verification Link</label>}

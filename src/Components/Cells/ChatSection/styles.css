@@ -1,6 +1,6 @@
 .chat {
     flex: 2;
-    height: 43.4vmax;
+    height: 100%;
     /* background-image:url("/home/chicmic/Documents/Slack_App/slack/src/assets/bgimage.png"); */
     background-repeat: no-repeat;
     background-size: cover;
@@ -8,8 +8,8 @@
 }
 .mess{
   flex: 2;
-  height: 33vmax;
   width:100%;
+  height:100%;
 }
     .chatInfo {
       height: 40px;
@@ -38,7 +38,10 @@
       cursor: pointer;
     }
     .dp{
-        size: 30px;
+        height:30px;
+        width:30px;
+        border-radius: 50%;
+        object-fit: cover;
         cursor: pointer;
       }
       .userName{
@@ -84,8 +87,8 @@
     
         }
     .bgImage{
-     height:42vmax;
-     width:80vmax;
+      width: 100%;
+      height: 93vh;
       border-radius: 0;
       
       opacity: 0.3;

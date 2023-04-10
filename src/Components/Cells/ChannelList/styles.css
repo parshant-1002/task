@@ -1,6 +1,6 @@
 .channels {
     flex: 2;
-    height: 13vmax;
+    height: 15vmax;
     border-bottom: solid;
     border-width: thin;
     border-color: gray;
@@ -10,8 +10,8 @@
       }
 
   .channelInfo{
-    font-size: large;
-    margin-top:10px
+    font-size: 100%;
+    margin-top:5%
   }
 
 .userChannalInfo{

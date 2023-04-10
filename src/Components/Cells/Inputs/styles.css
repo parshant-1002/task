@@ -1,12 +1,11 @@
 .inputdata {
-    height: 100px;
+    height: 20%;
     background-color: white;
-
     margin-left: 25px;
-
+    margin-bottom: 25px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+  
     border: solid;
     border-width: thin;
     border-color: grey;
@@ -47,7 +46,7 @@
 }
 
 .inputText {
-    width: 900px;
+    width: 90%;
 }
 
 .react-input-emoji--input {

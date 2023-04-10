@@ -59,9 +59,7 @@
     cursor: pointer;
 
 }
-.img {
-  width: 32px;
-}
+
 
 .p {
     color: #5d5b8d;
@@ -71,4 +69,14 @@
 
   .registerError{
     color:red
+  }
+  .passwordInput{
+    display: flex;
+   
+  }
+  .passwordInputRegister{
+    padding: 15px;
+    border: none;
+    width: 230px;
+    border-bottom: 1px solid #a7bcff;
   }

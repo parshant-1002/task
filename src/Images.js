@@ -11,7 +11,10 @@ import file from "./assets/file.png"
 import more from "./assets/more.png"
 import send from "./assets/send.png"
 import edit from "./assets/edit.png"
-
+import singleTick from "./assets/singleTick.png"
+import doubleTick from "./assets/doubleTick.png"
+import showEye from "./assets/showEye.png"
+import closeEye from "./assets/closeEye.png"
 export const images={
     add ,
     addAvatar,
@@ -25,5 +28,9 @@ export const images={
     file,
     more,
     send,
-    edit
+    edit,
+    doubleTick,
+    singleTick,
+    showEye,
+    closeEye
 }

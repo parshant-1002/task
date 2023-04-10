@@ -36,6 +36,7 @@ const Channels = () => {
 
   const handleSelect = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
+    
 
   };
 

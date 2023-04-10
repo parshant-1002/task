@@ -35,13 +35,20 @@
 
 }
 .userImage{
-  border-radius: 2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .userName{
 
 }
-
+.deleteBtnnn{
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+}
 .deleteBtnnn:hover{
  border-radius: 0px;
  height:40px;
