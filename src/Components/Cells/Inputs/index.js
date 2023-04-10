@@ -3,7 +3,7 @@ import { images } from "../../../Images";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import InputEmoji from 'react-input-emoji'
-import { arrayUnion, doc, serverTimestamp, updateDoc, } from "firebase/firestore";
+import { arrayUnion, doc, onSnapshot, serverTimestamp, updateDoc, } from "firebase/firestore";
 import { db, storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -28,24 +28,33 @@ const Input = () => {
   const time = date.getMinutes() < 10 ? `${date.getHours()}:0${date.getMinutes()}` : `${date.getHours()}:${date.getMinutes()}`
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
+  // const [messageList, setMessages] = useState([])
+  // const [unseen, setUnseen] = useState();
 
-  useEffect(() => {
-    setText("")
-    setImg(null)
-  }, [data])
+  // const id = data?.groupId || data?.chatId
+  // useEffect(() => {
+  //   const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
+  //     doc?.exists() && setMessages(doc?.data().messages);
+  //   });
+  //   return () => {
+  //     data?.groupId || data?.chatId&& unSub();
+  //   };
+  // }, [data?.chatId, data?.groupId]);
 
-
-
-
-
-
+  // useEffect(() => {
+  //   setText("")
+  //   setImg(null)
+  // }, [data])
+  // useEffect(() => {
+  //   data?.groupId || data?.chatId&& setUnseen(messageList.filter(val=>val.senderId==currentUser.uid&&val.status==false).length)
+  // }, [messageList])
+  
   const handleSend = async () => {
     setFileStatus(false)
     if (img) {
       setLoading(true)
       const storageRef = ref(storage, uuid());
       const uploadTask = uploadBytesResumable(storageRef, img || pdf);
-
       uploadTask.on(
         (error) => {
           console.log(error, "Error in uploading files")
@@ -61,22 +70,20 @@ const Input = () => {
                 senderId: currentUser?.uid,
                 date: time,
                 img: img && downloadURL,
-                fileName: imgName && imgName
-
+                fileName: imgName && imgName,
+                status: false
               }),
             })
           });
         });
     }
     else if (pdf || fileUrl) {
-
       setLoading(true)
       const storageRef = ref(storage, uuid());
       const uploadTask = uploadBytesResumable(storageRef, pdf);
       uploadTask.then(
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-
             setLoading(false)
             setFileUrl(downloadURL)
             await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
@@ -86,7 +93,8 @@ const Input = () => {
                 senderId: currentUser?.uid,
                 date: time,
                 file: pdf && downloadURL,
-                fileName: pdfName && pdfName
+                fileName: pdfName && pdfName,
+                status: false
               }),
             });
           });
@@ -100,6 +108,7 @@ const Input = () => {
           text,
           senderId: currentUser?.uid,
           date: time,
+          status: false
         }),
       });
     }
@@ -117,6 +126,9 @@ const Input = () => {
       [data.groupId || data?.chatId + ".lastMessage"]: {
         text,
       },
+      // [data.groupId || data?.chatId + ".unseen"]: {
+      //   unseen,
+      // },
       [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
     });
 

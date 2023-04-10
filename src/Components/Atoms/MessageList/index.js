@@ -28,7 +28,6 @@ const Message = ({ message }) => {
       className={`message${message.senderId === currentUser?.uid && "owner"}`} >
       <div className="messageInfo">
         <div>
-
           {gotdata && <img className="senderimg"
             src={
               gotdata?.photoURL
@@ -37,13 +36,14 @@ const Message = ({ message }) => {
           />}
         </div>
         <div className="messageContent">
-          <div>
+          <div className="userDetails">
             {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
             <span className="atTime">{message.date}</span>
+          {message.senderId==currentUser.uid?message?.status?<div className="seenStatus" ></div>:<div className="unseenStatus" ></div>:null}
           </div>
           {message?.text && <p className={`messgtext${message.senderId === currentUser?.uid && "owner"}`}>{message.text}</p>}
-          {message?.img && <a href={message.img}  target="_blank" download  ><img className="chatimg" src={message.img} alt="" /></a>}
-          {message?.file && <a href={message.file} target="_blank" download  ><img className="pdf" src={images.file}></img></a>}
+          {message?.img && <a href={message.img}  target="_blank" download   ><img className="chatimg" src={message.img} alt="" /></a>}
+          {message?.file && <a href={message.file} target="_blank" download  ><img className="pdf" src={images.file} alt=""></img></a>}
           {message?.fileName && <label className="fileName">{message.fileName}</label>}
         </div>
       </div>

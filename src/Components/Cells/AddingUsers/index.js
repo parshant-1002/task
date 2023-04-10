@@ -29,8 +29,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     }, [selectedList]);
 
     const handleDeleteSelectedUsers = (x) => {
-        console.log(x)
-        setSelectedList(selectedList.filter(val => val.uid != x.uid))
+               setSelectedList(selectedList.filter(val => val.uid != x.uid))
         setUserList([...userList, x])
     }
 
@@ -70,8 +69,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     const handleAdd = () => {
         if (selectedList?.length)
             selectedList?.map(val => handleAdd2(val))
-        console.log(selectedList, "selected")
-    }
+          }
     const handleAdd2 = async (user) => {
         const combinedId = currentUser?.uid > user.uid
             ? currentUser?.uid + user.uid
