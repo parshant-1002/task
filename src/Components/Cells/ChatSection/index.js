@@ -4,7 +4,7 @@ import { images } from "../../../Images";
 import Messages from "../Messages";
 import Input from "../Inputs";
 import { ChatContext } from "../../../Context/ChatContext";
-import { collection, deleteField, doc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import { arrayUnion, collection, deleteField, doc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { AuthContext } from "../../../Context/AuthContext";
 import SearchingUser from "../AddingUsers";
@@ -46,7 +46,9 @@ const Chat = () => {
 
   useEffect(() => {
     setDetails(false)
+
   }, [data])
+
 
   const handleKey = (e) => {
     if (e.code === "Enter") {

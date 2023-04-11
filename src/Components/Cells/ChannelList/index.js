@@ -1,4 +1,4 @@
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
@@ -9,7 +9,7 @@ const Channels = () => {
   const [channels, setChannels] = useState([]);
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState(false);
-  
+  const [messages, setMessages] = useState([])
   const [channelName, setChannelName] = useState([])
   const { currentUser } = useContext(AuthContext);
   const { dispatch, data } = useContext(ChatContext);
@@ -28,6 +28,43 @@ const Channels = () => {
     currentUser?.uid && getChannels();
   }, [currentUser?.uid]);
 
+  useEffect(() => {
+ 
+    const unSub = onSnapshot(doc(db, "chats", data?.groupId || data?.chatId), (doc) => {
+      console.log("🚀 ~ file: index.js:34 ~ unSub ~ data:", data)
+      doc?.exists() && setMessages(doc?.data().messages);
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [data?.chatId, data?.groupId]);
+
+
+
+
+  useEffect(() => {
+    data?.groupId && updateSeenStatusOfMember()
+  }, [messages])
+
+  const updateSeenStatusOfMember = async () => {
+    const seenData = JSON.parse(JSON.stringify(messages))
+    messages?.length && seenData?.map(val =>
+      {
+
+        if(val.senderId != currentUser?.uid&&!val.membersSeenGroupText.includes(currentUser?.uid)){
+          
+          val.membersSeenGroupText.push(currentUser?.uid)
+        } 
+      })
+        
+      
+    seenData?.length && await updateDoc(doc(db, "chats", data?.groupId), {
+      messages: seenData
+    })
+  }
+
+
 
   useEffect(() => {
 
@@ -36,15 +73,15 @@ const Channels = () => {
 
   const handleSelect = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
-    
+
 
   };
 
-   const getGroupMemberDetails = async (x) => {
+  const getGroupMemberDetails = async (x) => {
     const groupData = await getDoc(doc(db, "userChannels", currentUser?.uid))
-    const groupId = groupData.data()[x]["channelInfo"].groupId
-    const res = await getDoc(doc(db, "channels", groupId))
-     dispatch({ type: "GETGROUPMEMBERS", payload: res.data()["participants"] })
+    const groupId = groupData?.data()?.[x]?.["channelInfo"]?.groupId
+    const res = groupId && await getDoc(doc(db, "channels", groupId))
+    dispatch({ type: "GETGROUPMEMBERS", payload: res?.data()?.["participants"] })
 
   }
 
@@ -62,13 +99,13 @@ const Channels = () => {
                 setSelected(channels[1].channelInfo.channelNameId)
                 handleSelect(channels[1].channelInfo);
                 setChannelName(channels[1].channelInfo.channelName)
-                
+
               }} >
-              
+
               <ol className="userChannalInfo">
                 <span className="channelInfo"># {channels[1].channelInfo.channelName}</span>
               </ol>
-                {channels[1].channelInfo.channelNameId==selected&&<img className="eyeImg"  src={images.eye} alt=""></img>}
+              {channels[1].channelInfo.channelNameId == selected && <img className="eyeImg" src={images.eye} alt=""></img>}
             </div>
           ))}
         </div>}

@@ -117,3 +117,30 @@ margin-left: 10px;
  .userDetails{
   display: flex;
  }
+ .messageSeenDetails{
+  height:30px;
+  width: 30px;
+  border-radius: 50%;
+  object-fit: contain;
+ }
+ .crossBlack{
+  height:20px;
+  width: 20px;
+  border-radius: 50%;
+  object-fit: contain;
+ }
+ .closeSeenDetailsButton{
+  position: absolute;
+  right: 0;
+  margin-right: 10%;
+ }
+
+ .seenByMembers{
+  color:black
+ }
+ .seenByMembersDetails{
+  border-bottom: solid;
+  border-width: thin;
+  border-color: black;
+  margin-bottom: 3%;
+ }

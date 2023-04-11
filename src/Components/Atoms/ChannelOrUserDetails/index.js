@@ -24,6 +24,7 @@ export default function Details({ userName, groupName, userImage, groupMembers, 
 
   const handleDeleteGroup = async () => {
     await deleteDoc(doc(db, "channels", (createrId + groupName)))
+    await deleteDoc(doc(db, "chats", (createrId + groupName)))
     groupData?.length && groupData?.map(val => handleDeleteGroupData(val.uid))
   }
 

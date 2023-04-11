@@ -32,3 +32,14 @@
     margin: 10px;
   
 }
+
+.totalUnseenCount{
+    background-color: red;
+    height:fit-content;
+    width:fit-content;
+    border-radius: 10px;
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+    margin: 2.5%;
+    color:white
+}

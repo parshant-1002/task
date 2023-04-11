@@ -22,41 +22,31 @@ const Login = () => {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
-
-
   const handleSendVerificationCode = async () => {
     setLoading("Sending Verification Link")
     const res = await signInWithEmailAndPassword(auth, email, password);
 
     const actionCodeSettings = {
       url: 'https://slackapp-chicmic.netlify.app/login',
-
       handleCodeInApp: true
     };
     await sendEmailVerification(res.user, actionCodeSettings)
     setLoading("Verification Link Sent")
   }
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
-
-
     const email = e.target[0].value;
     setEmail(email)
     const password = e.target[1].value;
     setPassword(password)
     dispatch({ type: "RESET" });
     if (email.trim() == "") {
-
       setEmailBlankInput(true)
     }
     if (password.trim() == "") {
-
       setPasswordBlankInput(true)
     }
     else {
-
       if (!validEmail.test(email)) {
         setEmailErrMessage("email is invalid");
       }
@@ -64,7 +54,6 @@ const Login = () => {
         setPasswordErrMessage("password is invalishowVerificationButtond (Enter more than 6 characters and include both number and character)");
       }
       else {
-
         try {
           const res = await signInWithEmailAndPassword(auth, email, password);
           if (!res.user.emailVerified) {
@@ -92,7 +81,6 @@ const Login = () => {
           {emailBlankInput && <label className="loginError">*Email Required</label>}
           {emailErrMessage && <label className="loginError">{emailErrMessage}</label>}
           <div className="passwordInput">
-
           <input className="passwordInputLogin" type={passwordView} placeholder="password" onChange={() => {
             setPasswordBlankInput(false)
             setPasswordErrMessage(false)

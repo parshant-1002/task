@@ -17,15 +17,6 @@ const Chats = ({ showDirectMessage }) => {
  
   const { data } = useContext(ChatContext);
   const id = data?.groupId || data?.chatId
-  useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
-      doc?.exists() && setMessages(doc?.data().messages);
-    });
-
-    return () => {
-      unSub();
-    };
-  }, [data?.chatId, data?.groupId]);
 
 
   useEffect(() => {
@@ -44,11 +35,25 @@ const Chats = ({ showDirectMessage }) => {
   }, [currentUser?.uid]);
 
   useEffect(() => {
+    const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
+      doc?.exists() && setMessages(doc?.data().messages);
+    });
+
+
+    return () => {
+      unSub();
+    };
+  }, [data?.chatId, data?.groupId]);
+
+  useEffect(() => {
    chatId&& updateStatus()
   }, [messageList])
+
   
  const updateStatus=async()=>{
+
   messageList?.map((val,i)=>{if(messageList[i].senderId!=currentUser.uid){messageList[i]["status"]=true}})
+
    await updateDoc(doc(db,"chats",chatId),{
     messages:messageList
 });

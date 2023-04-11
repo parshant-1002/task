@@ -48,7 +48,7 @@ const Input = () => {
   }, [data])
 
   useEffect(() => {
-    setUnseen(messageList.filter(val => val.senderId == currentUser.uid && val.status == false).length)
+    setUnseen(messageList?.filter(val => val.senderId == currentUser.uid && val.status == false).length)
   }, [messageList])
 
   useEffect(() => {
@@ -84,7 +84,8 @@ const Input = () => {
                   date: time,
                   img: img && downloadURL,
                   fileName: imgName && imgName,
-                  status: false
+                  status: false,
+                  membersSeenGroupText:[]
                 }),
               })
             });
@@ -107,7 +108,8 @@ const Input = () => {
                   date: time,
                   file: pdf && downloadURL,
                   fileName: pdfName && pdfName,
-                  status: false
+                  status: false,
+                  membersSeenGroupText:[]
                 }),
               });
             });
@@ -121,7 +123,8 @@ const Input = () => {
             text,
             senderId: currentUser?.uid,
             date: time,
-            status: false
+            status: false,
+            membersSeenGroupText:[]
           }),
         });
       }
@@ -129,19 +132,17 @@ const Input = () => {
       (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
         [data.groupId || data?.chatId + ".lastMessage"]: {
           text,
-          img: img && "img",
+          img: img && imgName,
           pdf: pdf && pdfName
         },
         [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
       });
 
-      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
+      (!data.chatId.includes("undefined"))&&text.trim() && await updateDoc(doc(db, "userChats", data.user.uid), {
         [data.groupId || data?.chatId + ".lastMessage"]: {
           text,
         },
-        // [data.groupId || data?.chatId + ".unseen"]: {
-        //   unseen:unseen
-        // },
+    
         [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
       });
 
