@@ -30,7 +30,8 @@ const Input = () => {
   const { data } = useContext(ChatContext);
   const [messageList, setMessages] = useState([])
   const [unseen, setUnseen] = useState();
-
+  const [count,setCount]=useState(0)
+  const [groupMembers, setGroupMembers] = useState([])
   const id = data?.groupId || data?.chatId
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
@@ -40,7 +41,14 @@ const Input = () => {
       data?.groupId || data?.chatId && unSub();
     };
   }, [data?.chatId, data?.groupId]);
-
+  useEffect(() => {
+    const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
+      doc?.exists()&&setGroupMembers(doc?.data()["participants"])
+    });
+    return () => {
+      data?.groupId && unSub();
+    };
+  }, [data]);
 
   useEffect(() => {
     setText("")
@@ -48,30 +56,62 @@ const Input = () => {
   }, [data])
 
   useEffect(() => {
-    setUnseen(messageList?.filter(val => val.senderId == currentUser.uid && val.status == false).length)
+    setUnseen(messageList?.length?messageList?.filter(val => val.senderId == currentUser.uid && val.status == false).length:0)
   }, [messageList])
 
   useEffect(() => {
     updateUnseenStatus(unseen)
   }, [unseen])
   const updateUnseenStatus = async (unseenCount) => {
-    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
+    (!data.chatId.includes("undefined")) &&unseenCount&& await updateDoc(doc(db, "userChats", data.user.uid), {
 
       [data.groupId || data?.chatId + ".unseen.unseen"]: unseenCount
 
     })}
 
+  //   useEffect(() => {
+  //    setCount(0)
+  //    }, [data?.groupId])
+
+
+  //   useEffect(() => {
+  //     data?.groupId&&data?.members?.map(val=>updateGroupSeenStatus(val.uid))
+  //    }, [messageList])
+  
+  //   const updateGroupSeenStatus=async(val)=>{
+  //     await updateDoc(doc(db,"userChannels",val),{
+  //       [data?.channelNameId+".unseenCount"]:count
+  //     })
+  // }
+   
+  const updateLastTextInGroup=async(ids)=>{
+    (data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChannels", ids), {
+      [data?.channelNameId+ ".lastMessage"]: {
+        text,
+        img: img && imgName,
+        pdf: pdf && pdfName
+      },
+      [data?.channelNameId+ ".date"]: serverTimestamp(),
+    });
+     
+    // (data.chatId.includes("undefined"))&&text.trim() && await updateDoc(doc(db, "userChannels", data.user.uid), {
+    //   [data.groupId || data?.chatId + ".lastMessage"]: {
+    //     text,
+    //   },
+  
+    //   [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
+    // });
+  }
 
     const handleSend = async () => {
+      // data?.groupId&&setCount(count+1)
       setFileStatus(false)
       if (img) {
         setLoading(true)
         const storageRef = ref(storage, uuid());
         const uploadTask = uploadBytesResumable(storageRef, img || pdf);
-        uploadTask.on(
-          (error) => {
-            console.log(error, "Error in uploading files")
-          },
+        uploadTask.then(
+          
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
               setLoading(false)
@@ -129,22 +169,26 @@ const Input = () => {
         });
       }
 
-      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
+      (!data.chatId.includes("undefined"))&& await updateDoc(doc(db, "userChats", data.user.uid), {
         [data.groupId || data?.chatId + ".lastMessage"]: {
-          text,
-          img: img && imgName,
-          pdf: pdf && pdfName
-        },
-        [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
-      });
-
-      (!data.chatId.includes("undefined"))&&text.trim() && await updateDoc(doc(db, "userChats", data.user.uid), {
-        [data.groupId || data?.chatId + ".lastMessage"]: {
-          text,
+          text:text,
+          img: imgName,
+          pdf:  pdfName
         },
     
         [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
       });
+      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
+      
+        [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
+      });
+
+
+
+     groupMembers.map(val=>updateLastTextInGroup(val.uid))
+
+
+ 
 
       setText("");
       setImg(null);

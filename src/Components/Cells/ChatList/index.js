@@ -38,8 +38,6 @@ const Chats = ({ showDirectMessage }) => {
     const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
       doc?.exists() && setMessages(doc?.data().messages);
     });
-
-
     return () => {
       unSub();
     };
@@ -47,22 +45,15 @@ const Chats = ({ showDirectMessage }) => {
 
   useEffect(() => {
    chatId&& updateStatus()
+   if(data?.user?.uid===selected){
+
+    resetSeenStatus()
+  }
   }, [messageList])
 
-  
- const updateStatus=async()=>{
 
-  messageList?.map((val,i)=>{if(messageList[i].senderId!=currentUser.uid){messageList[i]["status"]=true}})
-
-   await updateDoc(doc(db,"chats",chatId),{
-    messages:messageList
-});
  
- }
-  const handleSelect = async(chatId,u) => {
-    setChatId(chatId)
-    dispatch({ type: "CHANGE_USER", payload: u });
-    dispatch({ type: "GETUSERS", payload: (Object.values(chats)) })
+   const resetSeenStatus=async()=>{
     await updateDoc(doc(db,"userChats",currentUser?.uid),{
       [chatId+".unseen"]:{
         unseen:0
@@ -73,7 +64,19 @@ const Chats = ({ showDirectMessage }) => {
         text:""
       }
     })
-      
+   } 
+ const updateStatus=async()=>{
+  messageList?.map((val,i)=>{if(messageList[i].senderId!=currentUser.uid){messageList[i]["status"]=true}})
+   await updateDoc(doc(db,"chats",chatId),{
+    messages:messageList
+});
+ 
+ }
+  const handleSelect = async(chatId,u) => {
+    setChatId(chatId)
+    dispatch({ type: "CHANGE_USER", payload: u });
+    dispatch({ type: "GETUSERS", payload: (Object.values(chats)) })
+    resetSeenStatus()
      }
 
   return (
@@ -92,13 +95,12 @@ const Chats = ({ showDirectMessage }) => {
               <img className="profilePic" src={chat[1]?.userInfo?.photoURL} alt="" />
               <div className="userChatInfo">
                 <span className="info">{chat[1]?.userInfo?.displayName}</span> 
-                  {chat[1]?.unseen?.unseen>0&&chat[1]?.lastMessage?.text && <label className="lastmessage" style={{ color: `lightgreen` }}>{chat[1]?.lastMessage?.text}</label>}
-                {chat[1]?.unseen?.unseen>0&&!chat[1]?.lastMessage?.text && chat[1]?.lastMessage?.img ? <p className="lastmessage">{chat[1]?.lastMessage?.img}</p> : null}
-                {chat[1]?.unseen?.unseen>0&&!chat[1]?.lastMessage?.text && chat[1]?.lastMessage?.pdf ? <p className="lastmessage">{chat[1]?.lastMessage?.pdf}</p> : null}
-             
-              </div>
-              {console.log(chat[1]?.unseen?.unseen,"lklklk")}
-             { chat[1]?.unseen?.unseen>0&&<div className="unseenCount">{chat[1]?.unseen?.unseen}</div>}
+                 {chat[1]?.unseen?.unseen>0&&chat[1]?.lastMessage?.text.trim() && <label className="lastmessage" style={{ color: `gold` }}>{chat[1]?.lastMessage?.text}</label>}
+                {!chat[1]?.lastMessage?.text && chat[1]?.lastMessage?.img ? <p className="lastmessage">{chat[1]?.lastMessage?.img}</p> : null}
+                {!chat[1]?.lastMessage?.text && chat[1]?.lastMessage?.pdf ? <p className="lastmessage">{chat[1]?.lastMessage?.pdf}</p> : null}
+                           </div>
+                   
+              { chat[1]?.unseen?.unseen>0&&<div className="unseenCount">{chat[1]?.unseen?.unseen}</div>}
               {chat[1]?.userInfo?.uid === selected && <img className="eyeImg" src={images.eye} alt=""></img>}
             </div>
           })}

@@ -1,6 +1,6 @@
 
 import Home from "./View/Home";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom"
 import Register from "./View/Register";
 import Login from "./View/Login";
 import { useContext, useEffect } from "react";
@@ -10,10 +10,10 @@ import { auth } from "./firebase";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
-
   const ProtectedRoute = ({ children }) => {
+  
     if (!auth?.currentUser?.emailVerified) {
-      return <Navigate to="/login" />;
+      return <Navigate to="/login"  />;
     }
   
 
@@ -60,8 +60,16 @@ function App() {
               </AuthRoute>
             }
           />
+          <Route
+           path="*" 
+            index
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
     
-   
         </Route>
       </Routes>
 

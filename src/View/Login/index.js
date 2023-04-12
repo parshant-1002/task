@@ -61,6 +61,7 @@ const Login = () => {
             setShowVerificationButton(true)
           } else {
             navigate("/")
+            localStorage.setItem("tokenStatus",res.user.emailVerified)
           }
         } catch (err) {
           setErr(err.message);

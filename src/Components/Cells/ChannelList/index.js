@@ -31,7 +31,6 @@ const Channels = () => {
   useEffect(() => {
  
     const unSub = onSnapshot(doc(db, "chats", data?.groupId || data?.chatId), (doc) => {
-      console.log("🚀 ~ file: index.js:34 ~ unSub ~ data:", data)
       doc?.exists() && setMessages(doc?.data().messages);
     });
 
@@ -56,32 +55,39 @@ const Channels = () => {
           
           val.membersSeenGroupText.push(currentUser?.uid)
         } 
+              
       })
-        
-      
-    seenData?.length && await updateDoc(doc(db, "chats", data?.groupId), {
+      seenData?.length && await updateDoc(doc(db, "chats", data?.groupId), {   
       messages: seenData
     })
+ 
+
   }
 
 
 
   useEffect(() => {
 
-    getGroupMemberDetails(channelName)
+    getGroupMemberDetails(data?.channelNameId)
   }, [channelName, data?.membersAddedStatus])
 
-  const handleSelect = (u) => {
+  const handleSelect =async (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
-
+    // await updateDoc(doc(db,"userChannels",currentUser?.uid),{
+    //   [u?.channelNameId+".unseenCount"]:0
+    // })
 
   };
+
+  
+
+
 
   const getGroupMemberDetails = async (x) => {
     const groupData = await getDoc(doc(db, "userChannels", currentUser?.uid))
     const groupId = groupData?.data()?.[x]?.["channelInfo"]?.groupId
-    const res = groupId && await getDoc(doc(db, "channels", groupId))
-    dispatch({ type: "GETGROUPMEMBERS", payload: res?.data()?.["participants"] })
+    const res = groupId && await getDoc(doc(db, "channels",groupId))
+     dispatch({ type: "GETGROUPMEMBERS", payload: res?.data()?.["participants"] })
 
   }
 
@@ -91,7 +97,7 @@ const Channels = () => {
       !visible
         ? <label className="warnmessage">Loading ...</label>
         : <div className="channels">
-          {Object.entries(channels)?.sort((a, b) => b[1].channelInfo.date - a[1].channelInfo.date).map((channels) => (
+          {Object.entries(channels)?.sort((a, b) => b[1].date - a[1].date).map((channels) => (
             <div
               className="userChat"
               key={channels[0]}
@@ -104,7 +110,11 @@ const Channels = () => {
 
               <ol className="userChannalInfo">
                 <span className="channelInfo"># {channels[1].channelInfo.channelName}</span>
+                {channels[1]?.lastMessage?.text && <label className="lastmessage" style={{ color: `gold` }}>{channels[1]?.lastMessage?.text}</label>}
+                {!channels[1]?.lastMessage?.text && channels[1]?.lastMessage?.img ? <p className="lastmessage">{channels[1]?.lastMessage?.img}</p> : null}
+                {!channels[1]?.lastMessage?.text && channels[1]?.lastMessage?.pdf ? <p className="lastmessage">{channels[1]?.lastMessage?.pdf}</p> : null}
               </ol>
+              {/* {<div className="unseenCount">{channels[1]?.unseenCount}</div>} */}
               {channels[1].channelInfo.channelNameId == selected && <img className="eyeImg" src={images.eye} alt=""></img>}
             </div>
           ))}

@@ -12,7 +12,7 @@ import { AuthContext } from '../../Context/AuthContext'
 export default function Sidebar() {
   const [showDirectMessage, setShowDirectMessage] = useState(false)
   const [showChannels, setShowChannels] = useState(false)
-  const {dispatch}=useContext(ChatContext)
+  const {dispatch,data}=useContext(ChatContext)
   const {currentUser}=useContext(AuthContext)
   const [chatList,setChatList]=useState([])
   const [totalUnseenText,setTotalUnseenText]=useState()
@@ -34,7 +34,7 @@ export default function Sidebar() {
   useEffect(() => {
     setTotalUnseenText(chatList.reduce((acc,val)=>acc+val?.unseen?.unseen,0))
   }, [chatList])
-  // console.log(chatList,"opopopopopopopopopo")
+
 
 
   return (
@@ -65,7 +65,7 @@ export default function Sidebar() {
         }} >
           Direct Message </label>
            
-          {totalUnseenText>0 &&<label className='totalUnseenCount'>{totalUnseenText} </label>}
+          { totalUnseenText>0 &&<label className='totalUnseenCount'>{totalUnseenText} </label>}
 
         {showDirectMessage && <img className='close' src={images.crossWhite} alt="close" onClick={() => 
             { setShowDirectMessage(false)

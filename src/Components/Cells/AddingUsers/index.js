@@ -115,7 +115,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     };
 
     return (
-        <Modal show={showUserModal} setShow={setShowUserModal} title={"Channel"} handleSelect={handleAdd} setSelectedList={setSelectedList} selectedList={selectedList} addUser={addUsersInChannel} showHead={true} showFoot={true} >
+        <Modal show={showUserModal} setShow={setShowUserModal} title={"users"} handleSelect={handleAdd} setSelectedList={setSelectedList} selectedList={selectedList} addUser={addUsersInChannel} showHead={true} showFoot={true}  >
             {users?.length ?
                 <div>
                     <div >

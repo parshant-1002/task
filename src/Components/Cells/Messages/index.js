@@ -26,8 +26,7 @@ const Messages = () => {
     };
   }, [data?.chatId, data?.groupId]);
   
- 
-  
+
  
   return (
     <div className="messages">

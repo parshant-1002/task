@@ -15,8 +15,7 @@
   }
 
 .userChannalInfo{
-  display: flex;
-  justify-content: space-between;
+ 
   width:90%;
   height:30px
 
@@ -46,4 +45,26 @@
     
     
     }
-    
+    .unseenCount{
+      background-color: red;
+      height:fit-content;
+      width:fit-content;
+      border-radius: 10px;
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+      margin: 2.5%;
+      color:white
+
+      /* color:red; */
+
+
+    }
+    .lastmessage{
+      width:95%;
+      height:20px;
+      font-size: 14px;
+      color: lightgray;
+      word-wrap: break-word;
+      overflow: hidden;
+      
+    }

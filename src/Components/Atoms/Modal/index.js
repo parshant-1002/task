@@ -37,7 +37,7 @@ export default function Modal({ children, show, setEditedGroupName = ()=>{}, str
                             handleEditGroupName && handleEditGroupName()
                             handleGroupNameEdit && handleGroupNameEdit()
                             dispatch({ type: "MEMBERSADDEDSTATUS", payload: false })
-                        
+                           title==="User" &&dispatch({ type: "RESET" })
                         }} >{type=="editGroupName"?<>Edit</>:<>Add</>}</button> : null}
                             {console.log(string==true,string==false,addUser,handleSelect,"addchannel")}
 

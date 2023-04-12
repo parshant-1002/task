@@ -16,6 +16,7 @@ export const AuthContextProvider = ({ children }) => {
      
         if(auth?.currentUser?.emailVerified){
           setCurrentUser(user);
+        
         }
       }
       else{
