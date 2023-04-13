@@ -14,19 +14,20 @@
     flex-direction: column;
     gap: 10px;
     align-items: center;
+    width:28%
 }
 .form{
     display: flex;
     flex-direction: column; 
 }
 .logo {
-    color: #5d5b8d;
+    color: #0c4fd5;
     font-weight: bold;
     font-size: 24px;
 
   }
   .title {
-    color: #5d5b8d;
+    color: #0c4fd5;
     font-size: 12px;
   }
   .form {
@@ -39,22 +40,32 @@
       padding: 15px;
       border: none;
       width: 250px;
-      border-bottom: 1px solid #a7bcff;
+      border-bottom: 1px solid #0c4fd5;
      
       }
 .Signup {
-    background-color: #7b96ec;
+  border-radius: 10px;
+    background-color: #0c4fd5;
     color: white;
     padding: 10px;
     font-weight: bold;
     border: none;
     cursor: pointer;
+    width: 100%;
   }
+
+.Signup:hover{
+  background-color: #0c214a;
+}
+.Link:hover{
+  color: #093ba0;
+  font-weight: 500;
+}
   .label {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #8da4f1;
+    color: #0c4fd5;
     font-size: 12px;
     cursor: pointer;
 
@@ -62,7 +73,7 @@
 
 
 .p {
-    color: #5d5b8d;
+    color: #0c4fd5;
     font-size: 12px;
     margin-top: 10px;
   }
@@ -78,5 +89,5 @@
     padding: 15px;
     border: none;
     width: 230px;
-    border-bottom: 1px solid #a7bcff;
+    border-bottom: 1px solid #0c4fd5;
   }

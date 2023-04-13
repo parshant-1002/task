@@ -11,18 +11,10 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const change = onAuthStateChanged(auth,(user) => {
-      if(auth?.currentUser){
-    
-     
-        if(auth?.currentUser?.emailVerified){
-          setCurrentUser(user);
-        
-        }
-      }
-      else{
-        setCurrentUser(user);
-      }
-      // setCurrentUser(user);
+      
+  
+      setCurrentUser(user);
+
     });
 
     return () => {

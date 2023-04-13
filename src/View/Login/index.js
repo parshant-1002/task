@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
+import { sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, updateCurrentUser } from "firebase/auth";
 import { auth } from "../../firebase";
 import { ChatContext } from '../../Context/ChatContext'
 import { validEmail } from "../../Shared/Utilities";
@@ -19,9 +19,24 @@ const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordView,setPasswordView]=useState("password")
+  const [tokenStatus,setTokanStatus]=useState()
+  const [Status,setStatus]=useState(false)
   const navigate = useNavigate();
-  const { currentUser } = useContext(AuthContext);
+  
 
+ 
+
+  useEffect(() => {
+    setTokanStatus(JSON.parse(localStorage.getItem("auth")))
+ 
+  }, [])
+  const triggerResetEmail = async () => {
+    setErr("")
+    setLoading("Sending Password Reset Link ")
+    await sendPasswordResetEmail(auth, email);
+    setLoading(" Password Reset Sent")
+
+  }
   const handleSendVerificationCode = async () => {
     setLoading("Sending Verification Link")
     const res = await signInWithEmailAndPassword(auth, email, password);
@@ -34,12 +49,14 @@ const Login = () => {
     setLoading("Verification Link Sent")
   }
   const handleSubmit = async (e) => {
+    setLoading("")
     e.preventDefault();
     const email = e.target[0].value;
     setEmail(email)
     const password = e.target[1].value;
     setPassword(password)
     dispatch({ type: "RESET" });
+    email&&password?setStatus(true):setStatus(false)
     if (email.trim() == "") {
       setEmailBlankInput(true)
     }
@@ -51,17 +68,23 @@ const Login = () => {
         setEmailErrMessage("email is invalid");
       }
       if (password.trim() == "" || password.length < 6 || !password.split("").some(val => isNaN(val))) {
-        setPasswordErrMessage("password is invalishowVerificationButtond (Enter more than 6 characters and include both number and character)");
+        setPasswordErrMessage("password is invalid (Enter more than 6 characters and include both number and character)");
       }
       else {
         try {
           const res = await signInWithEmailAndPassword(auth, email, password);
-          if (!res.user.emailVerified) {
+       console.log(res?.user?.emailVerified,"res")
+         localStorage.setItem("Token",(res?._tokenResponse?.idToken))
+          if (!res?.user?.emailVerified) {
             setErr("email not verified")
             setShowVerificationButton(true)
-          } else {
+          } 
+          else{
+
+            window.location.reload()
             navigate("/")
-            localStorage.setItem("tokenStatus",res.user.emailVerified)
+            if(auth){
+            }
           }
         } catch (err) {
           setErr(err.message);
@@ -93,9 +116,12 @@ const Login = () => {
           <button className="Signin">Sign in</button>
           {err && <span className="loginError">{err}</span>}
         </form>
+
         {loading && <label className="registerError">{loading}</label>}
         {showVerificationButton && <button className="Verification" onClick={handleSendVerificationCode} >send Verification again</button>}
-        <p className="p">You don't have an account? <Link to="/register">Register</Link></p>
+        <p className="p">You don't have an account? <Link className="Link" to="/register">Register</Link></p>
+       {err==="Firebase: Error (auth/wrong-password)."||err==="Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)."? <button className="resetBtn" type="button" onClick={triggerResetEmail}>Reset password</button>:null}
+       {console.log(email,password)}
       </div>
     </div>
   );

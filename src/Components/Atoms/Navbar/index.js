@@ -12,8 +12,9 @@ export default function Navbar() {
   const navigate=useNavigate()
   
   const logout=()=>{
-    signOut(auth)
+    localStorage.setItem("Token",(""))
     navigate("/login")
+    signOut(auth)
         
   }
   return (

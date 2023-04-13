@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { images } from "../../Images";
-import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import {  Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./styles.css"
 import { validEmail } from "../../Shared/Utilities";
 import { ChatContext } from "../../Context/ChatContext";
@@ -19,17 +19,15 @@ const Register = () => {
   const [emailBlankInput, setEmailBlankInput] = useState(false);
   const [passwordBlankInput, setPasswordBlankInput] = useState(false);
   const [fileBlankInput, setFileBlankInput] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [mailNotificationMessage, setMailNotificationMessage] = useState(false);
+  const [loading, setLoading] = useState("");
   const { dispatch } = useContext(ChatContext);
   const [displayName, setDisplayName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [file, setFile] = useState("")
-  const [passwordView,setPasswordView]=useState("password")
+  const [passwordView, setPasswordView] = useState("password")
 
 
-  
   const handleSubmit = async () => {
     dispatch({ type: "RESET" });
     if (displayName.trim() === "") {
@@ -63,7 +61,7 @@ const Register = () => {
         setPasswordBlankInput(false)
         setFileBlankInput(false)
         try {
-          setLoading(true)
+          setLoading("Sending Verification Link")
           const res = await createUserWithEmailAndPassword(auth, email, password);
           // https://slackapp-chicmic.netlify.app/login
           const actionCodeSettings = {
@@ -71,8 +69,8 @@ const Register = () => {
             handleCodeInApp: true
           };
           await sendEmailVerification(res.user, actionCodeSettings)
-          setLoading(false)
-          setMailNotificationMessage(true)
+          setLoading("Verification Link Sent")
+
           const date = new Date().getTime();
           const storageRef = ref(storage, `${displayName + date}`);
           file && await uploadBytesResumable(storageRef, file).then(() => {
@@ -104,7 +102,8 @@ const Register = () => {
           setErr(err.message);
           // setErrMessage("Email is already taken or invalid")
         }
-      }}
+      }
+    }
   };
 
   return (
@@ -116,48 +115,48 @@ const Register = () => {
           setDisplayName(e.target.value.trim())
           setNameBlankInput(false)
           setNameErrMessage(false)
-          setLoading(false)
+        
         }} />
         {nameBlankInput && <label className="registerError">*UserName Required</label>}
-        {!nameBlankInput&&nameErrMessage && <label className="registerError">{nameErrMessage}</label>}
+        {!nameBlankInput && nameErrMessage && <label className="registerError">{nameErrMessage}</label>}
         <input className="inputRegister" type="email" placeholder="email" value={email} onChange={(e) => {
           setEmail(e.target.value)
           setEmailBlankInput(false)
           setEmailErrMessage(false)
-          setLoading(false)
+       
         }} />
         {emailBlankInput && <label className="registerError">*Email Required</label>}
-        {!emailBlankInput&&emailErrMessage && <label className="registerError">{emailErrMessage}</label>}
+        {!emailBlankInput && emailErrMessage && <label className="registerError">{emailErrMessage}</label>}
         <div className="passwordInput">
-   
-        <input className="passwordInputRegister" type={passwordView} placeholder="password" value={password} onChange={(e) => {
-          setPassword(e.target.value)
-          setPasswordBlankInput(false)
-          setPasswordErrMessage(false)
-          setLoading(false)
-        }} />
-        <PasswordView setPasswordView={setPasswordView}/>
+
+          <input className="passwordInputRegister" type={passwordView} placeholder="password" value={password} onChange={(e) => {
+            setPassword(e.target.value)
+            setPasswordBlankInput(false)
+            setPasswordErrMessage(false)
+ 
+          }} />
+          <PasswordView setPasswordView={setPasswordView} />
         </div>
         {passwordBlankInput && <label className="registerError">*Password Required</label>}
-        {!passwordBlankInput&&passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
+        {!passwordBlankInput && passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
         <input className="inputRegister" accept="image/*" style={{ display: "none" }} type="file" id="file" onChange={(e) => {
           setFile(e.target.files[0])
           setFileBlankInput(false)
           setFileErrMessage(false)
-          setLoading(false)
+
         }} />
         <label className="label" htmlFor="file">
-         {file? <img className="img" src={URL.createObjectURL(file)} alt="" />: <img className="img" src={images.addAvatar} alt="" />}
+          {file ? <img className="img" src={URL.createObjectURL(file)} alt="" /> : <img className="img" src={images.addAvatar} alt="" />}
           <span>Add an avatar</span>
         </label>
         {fileBlankInput && <label className="registerError">*Avatar Required</label>}
-        {!fileBlankInput&&fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
+        {!fileBlankInput && fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
         <button className="Signup" onClick={() => { handleSubmit() }}>Sign up</button>
-        {mailNotificationMessage && <label className="registerError">Verification link sent</label>}
-        {!err && loading && <label className="registerError">Sending verification Link</label>}
-        {err && <label className="registerError">{err}</label>}
+        {console.log(loading, "loading")}
+        {!err&&loading && <label className="registerError">{loading}</label>}
+        {err&&!loading && <label className="registerError">{err}</label>}
         <p className="p">
-          You do have an account? <Link to="/login">Login</Link>
+          You do have an account? <Link className="Link" to="/login">Login</Link>
         </p>
       </div>
     </div>

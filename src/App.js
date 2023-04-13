@@ -9,19 +9,21 @@ import { auth } from "./firebase";
 
 
 function App() {
+    
+  localStorage.setItem("auth",JSON.stringify(auth))
   const { currentUser } = useContext(AuthContext);
+  const token=(localStorage.getItem("Token"))
+  
   const ProtectedRoute = ({ children }) => {
   
-    if (!auth?.currentUser?.emailVerified) {
+    if (!token) {
       return <Navigate to="/login"  />;
     }
-  
-
-    return children
+      return children
   
   };
   const AuthRoute = ({ children }) => {
-    if (currentUser) {
+    if (token) {
       return <Navigate to="/" />;
     }
 
