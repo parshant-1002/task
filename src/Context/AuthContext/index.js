@@ -1,20 +1,19 @@
 import { createContext, useEffect, useState } from "react";
 import { auth, db } from "../../firebase";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, onSnapshot } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 export const AuthContext = createContext();
-
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-   
 
   useEffect(() => {
-    const change = onAuthStateChanged(auth,(user) => {
-      
-  
-      setCurrentUser(user);
-
+    const change = onAuthStateChanged(auth, (user) => {
+      if (auth?.currentUser?.emailVerified) {
+        setCurrentUser(user);
+      }
+      else {
+        setCurrentUser(user);
+      }
     });
 
     return () => {
@@ -24,7 +23,6 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ currentUser }}>
-
       {children}
     </AuthContext.Provider>
   );

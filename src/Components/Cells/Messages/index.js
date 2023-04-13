@@ -10,24 +10,16 @@ const Messages = () => {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
   const id = data?.groupId || data?.chatId
- const {currentUser}=useContext(AuthContext)
- 
- 
- 
- 
- 
+
  useEffect(() => {
    const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
      doc?.exists() && setMessages(doc?.data().messages);
     });
-    
     return () => {
       unSub();
     };
   }, [data?.chatId, data?.groupId]);
   
-
- 
   return (
     <div className="messages">
       {messages?.map((m) => (

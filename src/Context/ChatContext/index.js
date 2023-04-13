@@ -1,8 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useReducer,
-} from "react";
+import {createContext, useContext, useReducer} from "react";
 import { AuthContext } from "../AuthContext";
 
 export const ChatContext = createContext();
@@ -18,11 +14,9 @@ export const ChatContextProvider = ({ children }) => {
     members: [],
     membersAddedStatus: false,
     userData:""
-    // allUsers:[]
   };
 
   const chatReducer = (state, action) => {
-
     switch (action?.type) {
       case "CHANGE_USER":
         return {
@@ -30,8 +24,7 @@ export const ChatContextProvider = ({ children }) => {
           channelName: action?.payload?.channelName,
           channelNameId:action?.payload?.channelNameId,
           groupId: action?.payload?.groupId,
-          chatId:
-            currentUser?.uid > action?.payload?.uid
+          chatId:currentUser?.uid > action?.payload?.uid
               ? currentUser?.uid + action.payload?.uid
               : action?.payload?.uid + currentUser?.uid,
         };
@@ -40,25 +33,17 @@ export const ChatContextProvider = ({ children }) => {
           ...state, users: action?.payload
         }
       case "GETGROUPMEMBERS":
-
         return {
-
           ...state, members: action?.payload
         }
       case "MEMBERSADDEDSTATUS":
-
         return {
-
           ...state, membersAddedStatus: action?.payload
         }
         case "SETUSERDATA":
-
         return {
-
           ...state, userData: action?.payload
         }
-
-
       case "RESET":
         return {
           user: {},

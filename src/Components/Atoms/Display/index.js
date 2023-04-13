@@ -3,11 +3,10 @@ import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
 export default function Display({ children, show, setShow, title, showHead, showFoot ,setImgUrl, setFileUrl,handleSend}) {
-    const { data, dispatch } = useContext(ChatContext);
+    const {dispatch} = useContext(ChatContext);
 
     return (
         <div>
-
             {/* header */}
             {show && <div className='channelData' >
                 <div className='channelContent' >

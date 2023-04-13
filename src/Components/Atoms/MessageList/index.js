@@ -13,9 +13,8 @@ const Message = ({ message }) => {
   const [gotdata, setGotData] = useState()
   const [groupMembers, setGroupMembers] = useState([])
   const [show, setShow] = useState(false)
-  const date = new Date()
-  
-  const ref = useRef();
+  // const date = new Date()
+  const lastMessageLocation = useRef();
   useEffect(() => {
     get()
 
@@ -29,8 +28,8 @@ const Message = ({ message }) => {
     };
   }, [data]);
   useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
-     }, [message]);
+    lastMessageLocation.current?.scrollIntoView({ behavior: "smooth" });
+  }, [message]);
 
   const get = async () => {
     const res = await getDoc(doc(db, "users", message.senderId))
@@ -39,24 +38,19 @@ const Message = ({ message }) => {
 
   return (
     <div
-      ref={ref}
+      ref={lastMessageLocation}
       className={`message${message.senderId === currentUser?.uid && "owner"}`} >
       <div className="messageInfo">
         <div>
           {data?.groupId && message.senderId === currentUser.uid && <img className="messageSeenDetails" src={images.messageSeenDetails} alt="" onClick={() => { setShow(true) }}></img>}
-          {gotdata && <img className="senderimg"
-            src={
-              gotdata?.photoURL
-            }
-            alt=""
-          />}
+          {gotdata && <img className="senderimg" src={gotdata?.photoURL} alt="" />}
         </div>
+
         <div className="messageContent">
           <div className="userDetails">
             {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
             <span className="atTime">{message.date}</span>
             {!data?.groupId && message.senderId == currentUser.uid ? !message?.status ? <img className="seenStatus" src={images.singleTick} ></img> : <img className="seenStatus" src={images.doubleTick} ></img> : null}
-
             {data?.groupId && message.senderId == currentUser.uid ? message?.membersSeenGroupText?.length !== groupMembers?.length - 1 ? <img className="seenStatus" src={images.singleTick} ></img> : <img className="seenStatus" src={images.doubleTick} ></img> : null}
           </div>
           {message?.text && <p className={`messgtext${message.senderId === currentUser?.uid && "owner"}`}>{message.text}</p>}
@@ -68,19 +62,19 @@ const Message = ({ message }) => {
               <img className="crossBlack" src={images.crossBlack} alt="" onClick={() => { setShow(false) }}></img>
             </div>
             <div className="seenByMembers">
-                  {message?.membersSeenGroupText?.length
-             ?message?.membersSeenGroupText?.map((val,i,arr) =>{
-                       return(groupMembers?.map(value =>
+              {message?.membersSeenGroupText?.length
+                ? message?.membersSeenGroupText?.map((val, i, arr) => {
+                  return (groupMembers?.map(value =>
                   (value.uid === val &&
                     <h7 >
-                  <div>
-                    {value?.name}
-                  </div>
-                  <div className="seenByMembersDetails">
-                    {value?.email}
-                  </div>
-                </h7>)))}):<h1>no user</h1>}
-                  
+                      <div>
+                        {value?.name}
+                      </div>
+                      <div className="seenByMembersDetails">
+                        {value?.email}
+                      </div>
+                    </h7>)))
+                }) : <h1>no user</h1>}
             </div>
 
           </Modal>

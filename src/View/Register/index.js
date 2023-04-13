@@ -89,18 +89,15 @@ const Register = () => {
                   photoURL: downloadURL,
                 });
                 await setDoc(doc(db, "userChannels", res.user.uid), {});
-                // await setDoc(doc(db, "channels", res.user.uid))
                 await setDoc(doc(db, "userChats", res.user.uid), {});
               } catch (err) {
                 console.log(err);
                 setErr(true);
-                // setErrMessage("Error in uploading data")
               }
             });
           });
         } catch (err) {
           setErr(err.message);
-          // setErrMessage("Email is already taken or invalid")
         }
       }
     }
@@ -109,13 +106,13 @@ const Register = () => {
   return (
     <div className="formContainer">
       <div className="formWrapper">
+
         <span className="logo">Slack</span>
         <span className="title">Register</span>
         <input className="inputRegister" type="text" placeholder="UserName" value={displayName} onChange={(e) => {
           setDisplayName(e.target.value.trim())
           setNameBlankInput(false)
           setNameErrMessage(false)
-        
         }} />
         {nameBlankInput && <label className="registerError">*UserName Required</label>}
         {!nameBlankInput && nameErrMessage && <label className="registerError">{nameErrMessage}</label>}
@@ -123,7 +120,6 @@ const Register = () => {
           setEmail(e.target.value)
           setEmailBlankInput(false)
           setEmailErrMessage(false)
-       
         }} />
         {emailBlankInput && <label className="registerError">*Email Required</label>}
         {!emailBlankInput && emailErrMessage && <label className="registerError">{emailErrMessage}</label>}
@@ -133,9 +129,9 @@ const Register = () => {
             setPassword(e.target.value)
             setPasswordBlankInput(false)
             setPasswordErrMessage(false)
- 
           }} />
           <PasswordView setPasswordView={setPasswordView} />
+
         </div>
         {passwordBlankInput && <label className="registerError">*Password Required</label>}
         {!passwordBlankInput && passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
@@ -143,7 +139,6 @@ const Register = () => {
           setFile(e.target.files[0])
           setFileBlankInput(false)
           setFileErrMessage(false)
-
         }} />
         <label className="label" htmlFor="file">
           {file ? <img className="img" src={URL.createObjectURL(file)} alt="" /> : <img className="img" src={images.addAvatar} alt="" />}
@@ -152,9 +147,8 @@ const Register = () => {
         {fileBlankInput && <label className="registerError">*Avatar Required</label>}
         {!fileBlankInput && fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
         <button className="Signup" onClick={() => { handleSubmit() }}>Sign up</button>
-        {console.log(loading, "loading")}
-        {!err&&loading && <label className="registerError">{loading}</label>}
-        {err&&!loading && <label className="registerError">{err}</label>}
+        {!err && loading && <label className="registerError">{loading}</label>}
+        {err && !loading && <label className="registerError">{err}</label>}
         <p className="p">
           You do have an account? <Link className="Link" to="/login">Login</Link>
         </p>

@@ -24,23 +24,18 @@ const Channels = () => {
         unsub();
       };
     };
-
     currentUser?.uid && getChannels();
   }, [currentUser?.uid]);
 
   useEffect(() => {
- 
+
     const unSub = onSnapshot(doc(db, "chats", data?.groupId || data?.chatId), (doc) => {
       doc?.exists() && setMessages(doc?.data().messages);
     });
-
     return () => {
       unSub();
     };
   }, [data?.chatId, data?.groupId]);
-
-
-
 
   useEffect(() => {
     data?.groupId && updateSeenStatusOfMember()
@@ -48,46 +43,33 @@ const Channels = () => {
 
   const updateSeenStatusOfMember = async () => {
     const seenData = JSON.parse(JSON.stringify(messages))
-    messages?.length && seenData?.map(val =>
-      {
-
-        if(val.senderId != currentUser?.uid&&!val.membersSeenGroupText.includes(currentUser?.uid)){
-          
-          val.membersSeenGroupText.push(currentUser?.uid)
-        } 
-              
-      })
-      seenData?.length && await updateDoc(doc(db, "chats", data?.groupId), {   
+    messages?.length && seenData?.map(val => {
+      if (val.senderId != currentUser?.uid && !val.membersSeenGroupText.includes(currentUser?.uid)) {
+        val.membersSeenGroupText.push(currentUser?.uid)
+      }
+    })
+    seenData?.length && await updateDoc(doc(db, "chats", data?.groupId), {
       messages: seenData
     })
- 
-
   }
 
-
-
   useEffect(() => {
-
     getGroupMemberDetails(data?.channelNameId)
   }, [channelName, data?.membersAddedStatus])
 
-  const handleSelect =async (u) => {
+  const handleSelect = async (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
-    // await updateDoc(doc(db,"userChannels",currentUser?.uid),{
-    //   [u?.channelNameId+".unseenCount"]:0
-    // })
-
   };
 
-  
+
 
 
 
   const getGroupMemberDetails = async (x) => {
     const groupData = await getDoc(doc(db, "userChannels", currentUser?.uid))
     const groupId = groupData?.data()?.[x]?.["channelInfo"]?.groupId
-    const res = groupId && await getDoc(doc(db, "channels",groupId))
-     dispatch({ type: "GETGROUPMEMBERS", payload: res?.data()?.["participants"] })
+    const res = groupId && await getDoc(doc(db, "channels", groupId))
+    dispatch({ type: "GETGROUPMEMBERS", payload: res?.data()?.["participants"] })
 
   }
 
