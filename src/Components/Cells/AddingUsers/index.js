@@ -48,9 +48,9 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
         await updateDoc(doc(db, "channels", data?.groupId),
             {
                 participants: arrayUnion({
-                    name: user.displayName,
+            
                     uid: user.uid,
-                    email: user.email
+                 
                 })
             })
         await updateDoc(doc(db, "userChannels", user.uid), {
@@ -83,19 +83,14 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                 (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: user.uid,
-                        displayName: user.displayName,
-                        photoURL: user.photoURL,
-                        email: user.email
-                    },
+                                           },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
 
                 (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", user?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: currentUser?.uid,
-                        displayName: currentUser?.displayName,
-                        photoURL: currentUser?.photoURL,
-                        email: currentUser?.email
+                       
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });

@@ -64,12 +64,19 @@ const Login = () => {
       else {
         try {
           const res = await signInWithEmailAndPassword(auth, email, password);
-          localStorage.setItem("Token", (res?._tokenResponse?.idToken))
+          console.log(res?._tokenResponse?.idToken,"sjdfhsdihvidufhuisdhvui")
           if (!res?.user?.emailVerified) {
             setErr("email not verified")
             setShowVerificationButton(true)
           }
-          else {
+          // else if(!res?._tokenResponse?.idToken){
+          //   window.location.reload()
+          //   localStorage.setItem("Token", (res?._tokenResponse?.idToken))
+          //   navigate("/")
+          // }  
+         
+          else{
+            localStorage.setItem("Token", (res?._tokenResponse?.idToken))
             window.location.reload()
             navigate("/")
           }

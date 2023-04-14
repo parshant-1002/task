@@ -1,4 +1,4 @@
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, onSnapshot, query, updateDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
@@ -14,7 +14,7 @@ const Chats = ({ showDirectMessage }) => {
   const [selected, setSelected] = useState(false);
   const [messageList, setMessages] = useState([])
   const [chatId, setChatId] = useState("");
- 
+  const [users, setUsers] = useState([])
   const { data } = useContext(ChatContext);
   const id = data?.groupId || data?.chatId
 
@@ -43,17 +43,33 @@ const Chats = ({ showDirectMessage }) => {
     };
   }, [data?.chatId, data?.groupId]);
 
-  useEffect(() => {
-   chatId&& updateStatus()
-   if(data?.user?.uid===selected){
 
+useEffect(() => {
+  const q = query(collection(db, "users"))
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const r = []
+    querySnapshot.forEach((doc) => {
+        r.push(doc.data());
+    });
+    setUsers(r);})
+return ()=>{
+  unsubscribe()
+}
+
+}, [])
+
+
+
+useEffect(() => {
+  chatId&& updateStatus()
+  if(data?.user?.uid===selected){
     resetSeenStatus()
   }
-  }, [messageList])
+}, [messageList])
 
 
- 
-   const resetSeenStatus=async()=>{
+
+const resetSeenStatus=async()=>{
     await updateDoc(doc(db,"userChats",currentUser?.uid),{
       [chatId+".unseen"]:{
         unseen:0
@@ -89,19 +105,19 @@ const Chats = ({ showDirectMessage }) => {
               className="userChat"
               key={chat[0]}
               onClick={() => {            
-                handleSelect(chat[0],chat[1]?.userInfo)
-                setSelected(chat[1]?.userInfo?.uid)
+                handleSelect(chat[0],(users.find(val=>val.uid===chat[1]?.userInfo?.uid)))
+                setSelected((users.find(val=>val.uid===chat[1]?.userInfo?.uid))?.uid)
               }}>
-              <img className="profilePic" src={chat[1]?.userInfo?.photoURL} alt="" />
+               <img className="profilePic" src={(users.find(val=>val.uid===chat[1]?.userInfo?.uid))?.photoURL} alt=""/>
               <div className="userChatInfo">
-                <span className="info">{chat[1]?.userInfo?.displayName}</span> 
+                <span className="info">{(users.find(val=>val.uid===chat[1]?.userInfo?.uid))?.displayName}</span> 
                  {chat[1]?.unseen?.unseen>0&&chat[1]?.lastMessage?.text.trim() && <label className="lastmessage" style={{ color: `gold` }}>{chat[1]?.lastMessage?.text}</label>}
                 {!chat[1]?.lastMessage?.text && chat[1]?.lastMessage?.img ? <p className="lastmessage">{chat[1]?.lastMessage?.img}</p> : null}
                 {!chat[1]?.lastMessage?.text && chat[1]?.lastMessage?.pdf ? <p className="lastmessage">{chat[1]?.lastMessage?.pdf}</p> : null}
                            </div>
                    
               { chat[1]?.unseen?.unseen>0&&<div className="unseenCount">{chat[1]?.unseen?.unseen}</div>}
-              {chat[1]?.userInfo?.uid === selected && <img className="eyeImg" src={images.eye} alt=""></img>}
+              {(users.find(val=>val.uid===chat[1]?.userInfo?.uid))?.uid === selected && <img className="eyeImg" src={images.eye} alt=""></img>}
             </div>
           })}
         </div>}

@@ -16,6 +16,7 @@ import doubleTick from "./assets/doubleTick.png"
 import showEye from "./assets/showEye.png"
 import closeEye from "./assets/closeEye.png"
 import messageSeenDetails from "./assets/messageSeenDetails.png"
+import profileEdit from "./assets/profileEdit.png"
 export const images={
     add ,
     addAvatar,
@@ -34,5 +35,6 @@ export const images={
     singleTick,
     showEye,
     closeEye,
-    messageSeenDetails
+    messageSeenDetails,
+    profileEdit
 }

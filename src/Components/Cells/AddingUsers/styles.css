@@ -13,7 +13,7 @@
 .usersDisplay{
   display: flex;
   flex-direction: column;
-  height: 120px;
+  height: 150px;
   overflow-y: scroll;
 }
 .SelectedList{
@@ -41,9 +41,7 @@
   object-fit: cover;
 }
 
-.userName{
 
-}
 .deleteBtnnn{
   width: 30px;
   height: 30px;

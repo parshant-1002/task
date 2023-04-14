@@ -18,22 +18,50 @@
  
 }
 
-.logout {
-  background-color: #362443;
-  color: #ddddf7;
-  font-size: 12px;
-  border: none;
-  cursor: pointer;
-  margin: 5px;
-  border-radius: 5px;
-  border: solid;
-  border-color: #ddddf7;
-  border-width: thin;
-  height: 30px;
 
+.logoutbtn {
+  border-radius: 10px;
+   background-color: white;
+   color: #362443;
+   height:30px;
+   font-weight: bold;
+   border: solid;
+   border-width:thin;
+   cursor: pointer;
+   width: 80%;
+   margin-top:10px;
+   margin-bottom:10px;
+   margin-left:10%;
 
+ }
+
+.logoutbtn:hover{
+
+ background-color: #362443;
+ color: white;
 }
-.closeBtn{
+
+.closeBtn {
+  border-radius: 10px;
+   background-color: white;
+   color: #403d41;
+
+   font-weight: bold;
+   margin-bottom:10px;
+   border: solid;
+   border-width:thin;
+   cursor: pointer; 
+   width: 80%;
+   margin-left:10%;
+   height:30px
+ }
+
+.closeBtn:hover{
+
+ background-color: #403d41;
+ color: white;
+}
+.editbtn{
   background-color: #5a585b;
   color: #ddddf7;
   font-size: 12px;

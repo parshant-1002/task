@@ -13,13 +13,15 @@ function App() {
   localStorage.setItem("auth",JSON.stringify(auth))
   const { currentUser } = useContext(AuthContext);
   const token=(localStorage.getItem("Token"))
-  
-  const ProtectedRoute = ({ children }) => {
+    const ProtectedRoute = ({ children }) => {
   
     if (!token) {
       return <Navigate to="/login"  />;
     }
+    else{
       return children
+
+    }
   
   };
   const AuthRoute = ({ children }) => {

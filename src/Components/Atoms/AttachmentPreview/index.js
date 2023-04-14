@@ -9,7 +9,7 @@ export default function AttachmentPreview(props) {
           <label>{props?.imgName}</label>
         </div>}
         {props?.file && <div className="uploadedImage">
-          <object data={URL.createObjectURL(props?.file)} width="300" height="300" ></object>
+          <object data={URL.createObjectURL(props?.file)}  width="300" height="300"  ></object>
           <label>{props?.pdfName}</label>
         </div>}
       </div>

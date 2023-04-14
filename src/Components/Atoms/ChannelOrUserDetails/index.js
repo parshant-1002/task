@@ -4,13 +4,13 @@ import { images } from '../../../Images'
 import { ChatContext } from '../../../Context/ChatContext'
 import Modal from '../Modal'
 import { AuthContext } from '../../../Context/AuthContext'
-import { deleteDoc, deleteField, doc, onSnapshot, updateDoc } from 'firebase/firestore'
+import { collection, deleteDoc, deleteField, doc, onSnapshot, query, updateDoc, } from 'firebase/firestore'
 import { db } from '../../../firebase'
-export default function Details({ userName, groupName, userImage, groupMembers, setDetails, createrMail, createdBy, userMail, handleDeleteGroupMembers, createrId }) {
+export default function Details({ userName, groupName, userImage,userId, groupMembers, setDetails, userMail, handleDeleteGroupMembers, createrId }) {
   const { data, dispatch } = useContext(ChatContext)
   const { currentUser } = useContext(AuthContext)
   const [groupData, setGroupData] = useState([])
-
+  const [users, setUsers] = useState([])
   const handleCloseDetails = () => {
     setDetails(false)
     dispatch({ type: "MEMBERSADDEDSTATUS", payload: true })
@@ -27,7 +27,19 @@ export default function Details({ userName, groupName, userImage, groupMembers, 
     await deleteDoc(doc(db, "chats", (createrId + groupName)))
     groupData?.length && groupData?.map(val => handleDeleteGroupData(val.uid))
   }
-
+  useEffect(() => {
+    const q =query(collection(db, "users"))
+    const unsubscribe =onSnapshot(q, (querySnapshot) => {
+      const r = []
+      querySnapshot.forEach((doc) => {
+          r.push(doc.data());
+      });
+      setUsers(r);})
+  return ()=>{
+    unsubscribe()
+  }
+  
+  }, [data])
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
       doc?.exists() && setGroupData(doc?.data()["participants"])
@@ -42,19 +54,19 @@ export default function Details({ userName, groupName, userImage, groupMembers, 
       <div className='details'>
         <div className='detailsHeader'>
           <div className='head'>
-            {userImage ? <h3 className='headingDetails'> User Details</h3> : <h3 className='headingDetails'> Group Details</h3>}
+            {userId ? <h3 className='headingDetails'> User Details</h3> : <h3 className='headingDetails'> Channel Details</h3>}
             <img className='closeDetails' src={images.crossWhite} alt="" onClick={handleCloseDetails}></img>
           </div>
           <div className='detailsHeading'>
-            {!userImage && <label> #</label>}
-            {!userImage && <label>{" " + groupName}</label>}
+            {!userId && <label> #</label>}
+            {!userId && <label>{" " + groupName}</label>}
           </div>
 
         </div>
 
         {/* individual Details */}
 
-        {userImage && <div className='singleUserDetails'>
+        {userId && <div className='singleUserDetails'>
           <img className="singleUserImage" src={userImage} alt=""></img>
           <div>
             <label className="singleUserName">Name:{" " + userName}</label>
@@ -64,28 +76,37 @@ export default function Details({ userName, groupName, userImage, groupMembers, 
 
         {/* channel Details */}
 
-        {!userImage && <div className='members'>
+        {!userId && <div className='members'>
+       <div className='CreaterDetails'>
+
           <h5>
-            <div>
-              Created By : {createdBy}  {createrId === currentUser?.uid && <>   (you)</>}
-              <div>
-                {createrMail}
+             <h6>Created By: </h6>     
+            <div className="createrName" >
+               Name: {(users?.find(value=>value?.uid===createrId))?.displayName}  {createrId === currentUser?.uid && <>   (you)</>}
+              <div className="createrMail" >
+                {(users?.find(value=>value?.uid===createrId))?.email}
               </div>
             </div>
           </h5>
-
-          {groupData?.length ? <h5 className='memberHeading'>Members</h5> : <h5 className='memberHeading'>No Members !!!</h5>}
+          <img className="createrDp"  src={(users?.find(value=>value.uid===createrId))?.photoURL} alt=""></img>
+          </div>
+          {groupData?.length ? <h5 className='memberHeading'>Members ({groupMembers?.length})</h5> : <h5 className='memberHeading'>No Members !!!</h5>}
           <div className='groupMembersList'>
             {groupData?.length
               ?
               groupData?.map(val => <ol className='memberDetails'>
-                <div>
-                  {val.name}
+             <div className='Member'>
+                 <img className="membersDp"  src={(users?.find(value=>value.uid===val.uid))?.photoURL} alt=""></img>
                   <div>
-                    {val.email}
+
+              <div>
+              <label>{(users?.find(value=>value?.uid===val.uid))?.displayName}   {val.uid === currentUser?.uid && <>(you)</>}</label>
+              </div>
+                <label>{(users?.find(value=>value?.uid===val.uid))?.email}</label>    
                   </div>
+
                 </div>
-                {val.uid === currentUser?.uid && <>(you)</>}
+              
 
                 <div >
                   {data?.groupId.includes(currentUser?.uid)

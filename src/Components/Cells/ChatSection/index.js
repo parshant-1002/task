@@ -4,7 +4,7 @@ import { images } from "../../../Images";
 import Messages from "../Messages";
 import Input from "../Inputs";
 import { ChatContext } from "../../../Context/ChatContext";
-import { arrayUnion, collection, deleteField, doc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import { arrayUnion, collection, deleteField, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { AuthContext } from "../../../Context/AuthContext";
 import SearchingUser from "../AddingUsers";
@@ -23,6 +23,21 @@ const Chat = () => {
   const combinedId = currentUser?.uid + data?.channelNameId
   const [editedGroupName, setEditedGroupName] = useState("")
 
+
+  useEffect(() => {
+    const q =data?.user?.uid&& query(collection(db, "users"),where("uid","==",data?.user?.uid))
+    const unsubscribe =data?.user?.uid&& onSnapshot(q, (querySnapshot) => {
+      const r = []
+      querySnapshot.forEach((doc) => {
+          r.push(doc.data());
+      });
+      setUsers(r);})
+  return ()=>{
+    data?.user?.uid&& unsubscribe()
+  }
+  
+  }, [data])
+console.log(users,"llllllllllllllllllllllllllllllllllllllllll")
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
       setGroupMembers(doc?.data())
@@ -111,10 +126,10 @@ const Chat = () => {
         <img className="bgImage" src={images.bg} alt="" />
         : <div className="chat">
           <div className="chatInfo">
-            {data?.user?.photoURL ? <img className="dp" src={data?.user?.photoURL} alt="" /> : <label>#</label>}
-            <label className="userName">    {data?.user?.displayName}</label> <label className="userName">    {groupName && groupName[data?.channelNameId]?.channelInfo?.channelName}</label>
+            {data?.user?.uid? <img className="dp" src={users[0]?.photoURL} alt="" /> : <label>#</label>}
+           {data?.user?.uid? <label className="userName">    {users[0]?.displayName}</label> :<label className="userName">    {groupName && groupName[data?.channelNameId]?.channelInfo?.channelName}</label>}
             <div className="chatIcons">
-              {data?.groupId && data?.groupId?.includes(currentUser?.uid) && !data?.user?.photoURL
+              {data?.groupId && data?.groupId?.includes(currentUser?.uid) && !data?.user?.uid
                 ?
                 <div>
                   <label>Admin</label>
@@ -143,15 +158,14 @@ const Chat = () => {
           </Modal>
           <SearchingUser groupName={groupName[data?.channelNameId]?.channelInfo?.channelName} showUserModal={showUserModal} setShowUserModal={setShowUserModal} combinedId={combinedId} users={users} groupMembers={groupMembers} />
           {details ? <Details
-            userName={data?.user?.displayName}
-            groupName={data?.channelName}
-            userImage={data?.user?.photoURL}
-            userMail={data?.user?.email}
+            userName={users[0]?.displayName}
+            groupName={groupName[data?.channelNameId]?.channelInfo?.channelName}
+            userImage={users[0]?.photoURL}
+            userMail={users[0]?.email}
+            userId={data?.user?.uid}
             groupMembers={groupMembers && groupMembers["participants"]}
             handleDeleteGroupMembers={handleDeleteGroupMembers}
-            setDetails={setDetails
-            } createdBy={groupMembers && groupMembers["createdBy"]?.name}
-            createrMail={groupMembers && groupMembers["createdBy"]?.email}
+            setDetails={setDetails}
             createrId={groupMembers && groupMembers["createdBy"]?.id}
           /> : null}
           <Messages />

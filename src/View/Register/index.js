@@ -148,7 +148,7 @@ const Register = () => {
         {!fileBlankInput && fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
         <button className="Signup" onClick={() => { handleSubmit() }}>Sign up</button>
         {!err && loading && <label className="registerError">{loading}</label>}
-        {err && !loading && <label className="registerError">{err}</label>}
+        {err  && <label className="registerError">{err}</label>}
         <p className="p">
           You do have an account? <Link className="Link" to="/login">Login</Link>
         </p>

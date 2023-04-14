@@ -1,7 +1,7 @@
 .modalData {
 
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 99999; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -15,10 +15,13 @@
 .modalContent {
   background-color: #fefefe;
   margin-top:0%; /* 15% from the top and centered */
-  margin-left:30%;
+  margin-left:25%;
   padding: 20px;
   border: 1px solid #888;
-  width: 40%;
+  width:50%;
+
+ height:fit-content;
+ max-height: 90%;
   transition: background-color .5s ease-in-out;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
    animation:fadein 1s;
@@ -52,12 +55,12 @@ font-size: 28px;
     border-width: thin;
     border-color: rgb(148, 147, 148);
     padding: 20px;
-    height: fit-content;
+   height:70%
 }
 .Modal-Footer{
     text-align: end;
-    padding:10px
-}
+    padding:10px;
+   }
 .btnClose{
     margin:10px;
     background-color: #888;

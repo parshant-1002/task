@@ -1,14 +1,4 @@
-/* .details{
-    position:absolute;
-    right:0;
-    height:68%;
-    width:20%;
-    background-color: aliceblue;
-    border: solid;
-    border-radius: 5px;
-    border-width: thin;
 
-} */
 .detailsHeading {
     margin-left: 10px;
     display: flex;
@@ -18,7 +8,7 @@
 
 .headingDetails {
     margin: 5px;
-    width: 80%;
+    width: 90%;
 }
 
 .members {
@@ -111,7 +101,7 @@
 
 
 .groupMembersList {
-    height: 300px;
+    height: 40vh;
     overflow-y: scroll;
 }
 
@@ -121,4 +111,34 @@
     border-width: thin;
     border-color: white;
     color:white
+}
+.membersDp{
+    background-color: white;
+    height: 30px;
+    width:30px;
+    border-radius: 50%;
+    object-fit: content;
+    margin:10px
+}
+.createrDp{
+    background-color: white;
+    
+    width:20%;
+    border-radius: 10px;
+    object-fit: content;
+    margin-left:10px;
+    margin-right:20px
+}
+.Member{
+    display: flex;
+    flex-direction: row;
+}
+.CreaterDetails{
+    display: flex;
+}
+.createrName{
+    margin-top: 10px;
+}
+.createrMail{
+    margin-top: 10px;
 }
