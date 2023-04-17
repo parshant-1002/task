@@ -39,7 +39,7 @@
    .inputRegister {
       padding: 15px;
       border: none;
-      width: 250px;
+      width: 100%;
       border-bottom: 1px solid #0c4fd5;
      
       }
@@ -88,6 +88,6 @@
   .passwordInputRegister{
     padding: 15px;
     border: none;
-    width: 230px;
+    width: 100%;
     border-bottom: 1px solid #0c4fd5;
   }

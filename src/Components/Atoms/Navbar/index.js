@@ -32,6 +32,7 @@ export default function Navbar() {
 
   }, [currentUser])
   const logout = () => {
+    window.location.reload()
     localStorage.setItem("Token", (""))
     navigate("/login")
     signOut(auth)

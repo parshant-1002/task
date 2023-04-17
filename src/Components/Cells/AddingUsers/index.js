@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { images } from '../../../Images';
-import { arrayUnion, doc, getDoc, serverTimestamp, setDoc, updateDoc } from '@firebase/firestore'
+import { arrayUnion, doc, getDoc, serverTimestamp, setDoc, updateDoc ,onSnapshot} from '@firebase/firestore'
 import { AuthContext } from '../../../Context/AuthContext';
 import { db } from '../../../firebase';
 import { ChatContext } from '../../../Context/ChatContext';
@@ -13,7 +13,17 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     const [userList, setUserList] = useState()
     const [selectedList, setSelectedList] = useState([])
     const { data, dispatch } = useContext(ChatContext);
+    const [messages, setMessages] = useState([]);
     const selectedListRef = useRef()
+
+    useEffect(() => {
+        const unSub =data?.chatId&& onSnapshot(doc(db, "chats",data?.chatId ), (doc) => {
+            data?.chatId&&doc?.exists() && setMessages(doc?.data()?.messages);
+         });
+         return () => {
+            data?.chatId&&  unSub();
+         };
+       }, [data?.chatId, data?.groupId]);
 
     useEffect(() => {
         !userName && setUserList(users)
@@ -76,8 +86,9 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
             : user.uid + currentUser?.uid;
         try {
             const res = await getDoc(doc(db, "chats", combinedId));
-            console.log(combinedId, "combinedId")
-            if (!res.exists()) {
+            const response = await getDoc(doc(db, "userChats", currentUser?.uid));
+            console.log("llllllllllsfkjdl")
+            if (!res.exists()||!Object.keys(response?.data()).includes(combinedId)) {
                 //create a chat in chats collection
                 //create user chats
                 (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
@@ -94,7 +105,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
-                (!data.chatId.includes("undefined")) && await setDoc(doc(db, "chats", combinedId), { messages: [] });
+                (!data.chatId.includes("undefined")) && await setDoc(doc(db, "chats", combinedId), { messages: [messages] });
             }
         } catch (err) { console.log(err, "err<><><><><><>>,") }
         dispatch({ type: "MEMBERSADDEDSTATUS", payload: false })

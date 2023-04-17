@@ -15,6 +15,8 @@
     gap: 10%;
     color: white;
     cursor: pointer;
+    width:90%;
+
 
 
 }
@@ -29,6 +31,9 @@
       .info{
         font-size: 18px;
         font-weight: 500;
+        max-width: 100px;
+        height: 100%;
+        overflow: hidden;
       }
       .lastmessage{
         width:95%;
@@ -44,9 +49,11 @@
         margin: 20px;
         font-size: larger;
     }
-
-    .userChat:hover{
-      background-color: #82458b
+#chatItem{
+  height:20%
+}
+    #chatItem:hover{
+      background-color: #b58abc
     }
     .userChatInfo{
       width: 75%;
@@ -79,3 +86,35 @@
 
 
     }
+
+    .clearUser{
+      height:85%;
+      width:10%;
+      
+      margin: 2%;
+      object-fit: cover;
+      
+      background-color: #b58abc;
+    }
+    .clearUser:hover{
+      height:18px;
+      width:18px;
+    }
+  #chatItem{
+    display: flex;
+  }
+  #chatItemtrue{
+    display: flex;
+    background-color: #b58abc;
+  }
+
+  .clearUserBtn{
+    height:60%;
+    width:70%;
+    border-radius: 50%;
+    margin-left: 15%;
+    margin-top: 20%;
+    object-fit: cover;
+    
+   
+  }

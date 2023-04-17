@@ -28,7 +28,7 @@ export default function AddUserAndChannel({ title }) {
   const handleGetRegisteredUsers = () => {
     const details = data?.users && (data?.users) || []
     const g = []
-    details?.length && details?.map(val => g.push(val.userInfo.uid))
+    details?.length && details?.map(val => g.push(val?.userInfo?.uid))
     handleGetRegisteredUsersOneByOne(g)
   }
 

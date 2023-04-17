@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, onSnapshot, query, updateDoc } from "firebase/firestore";
+import { collection, deleteField, doc, getDocs, onSnapshot, query, updateDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
@@ -14,6 +14,7 @@ const Chats = ({ showDirectMessage }) => {
   const [selected, setSelected] = useState(false);
   const [messageList, setMessages] = useState([])
   const [chatId, setChatId] = useState("");
+  const [selectedUser, setSelectedUser] = useState(false);
   const [users, setUsers] = useState([])
   const { data } = useContext(ChatContext);
   const id = data?.groupId || data?.chatId
@@ -67,7 +68,14 @@ useEffect(() => {
   }
 }, [messageList])
 
+const removeUser=(id)=>{
+  setSelected(null)
+updateDoc(doc(db,"userChats",currentUser?.uid),{
+  [data?.chatId]:deleteField()
+})
+dispatch({type:"RESET"})
 
+}
 
 const resetSeenStatus=async()=>{
     await updateDoc(doc(db,"userChats",currentUser?.uid),{
@@ -92,7 +100,8 @@ const resetSeenStatus=async()=>{
     setChatId(chatId)
     dispatch({ type: "CHANGE_USER", payload: u });
     dispatch({ type: "GETUSERS", payload: (Object.values(chats)) })
-    resetSeenStatus()
+  
+   selected&& resetSeenStatus()
      }
 
   return (
@@ -101,12 +110,14 @@ const resetSeenStatus=async()=>{
         ? <label className="warnmessage">Loading ...</label>
         : <div className="chats">
           {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat, i) => {
-            return <div
+            return <div id={`chatItem`}>
+              <div
               className="userChat"
               key={chat[0]}
               onClick={() => {            
                 handleSelect(chat[0],(users.find(val=>val.uid===chat[1]?.userInfo?.uid)))
-                setSelected((users.find(val=>val.uid===chat[1]?.userInfo?.uid))?.uid)
+                setSelected(chat[1]?.userInfo?.uid)
+           
               }}>
                <img className="profilePic" src={(users.find(val=>val.uid===chat[1]?.userInfo?.uid))?.photoURL} alt=""/>
               <div className="userChatInfo">
@@ -116,8 +127,12 @@ const resetSeenStatus=async()=>{
                 {!chat[1]?.lastMessage?.text && chat[1]?.lastMessage?.pdf ? <p className="lastmessage">{chat[1]?.lastMessage?.pdf}</p> : null}
                            </div>
                    
-              { chat[1]?.unseen?.unseen>0&&<div className="unseenCount">{chat[1]?.unseen?.unseen}</div>}
-              {(users.find(val=>val.uid===chat[1]?.userInfo?.uid))?.uid === selected && <img className="eyeImg" src={images.eye} alt=""></img>}
+              {chat[1]?.unseen?.unseen>0&&<div className="unseenCount">{chat[1]?.unseen?.unseen}</div>}
+              {chat[1]?.userInfo?.uid === selected && <img className="eyeImg" src={images.eye} alt=""></img>}
+              </div >
+              {chat[1]?.userInfo?.uid === selected &&< div className="clearUser">
+              {chat[1]?.userInfo?.uid === selected && <img className="clearUserBtn" src={images.crossWhite} alt="" onClick={()=>{removeUser(chat[1]?.userInfo?.uid)}}></img>}
+                </div>}
             </div>
           })}
         </div>}
