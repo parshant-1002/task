@@ -90,13 +90,13 @@
     .clearUser{
       height:85%;
       width:10%;
-      
+      border-radius: 5px;
       margin: 2%;
       object-fit: cover;
       
       background-color: #b58abc;
     }
-    .clearUser:hover{
+    .clearUserBtn:hover{
       height:18px;
       width:18px;
     }
@@ -113,8 +113,9 @@
     width:70%;
     border-radius: 50%;
     margin-left: 15%;
-    margin-top: 20%;
+    margin-top: 23%;
     object-fit: cover;
+    cursor: pointer;
     
    
   }

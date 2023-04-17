@@ -21,7 +21,7 @@ const Message = ({ message }) => {
   }, []);
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
-      setGroupMembers(doc?.data()["participants"])
+      doc?.exists()&& setGroupMembers(doc?.data()["participants"])
     });
     return () => {
       data?.groupId && unSub();
