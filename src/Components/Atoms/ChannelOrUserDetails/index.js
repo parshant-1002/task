@@ -6,14 +6,15 @@ import Modal from '../Modal'
 import { AuthContext } from '../../../Context/AuthContext'
 import { collection, deleteDoc, deleteField, doc, onSnapshot, query, updateDoc, } from 'firebase/firestore'
 import { db } from '../../../firebase'
-export default function Details({ userName, groupName, userImage,userId, groupMembers, setDetails, userMail, handleDeleteGroupMembers, createrId }) {
+import { STRINGS } from '../../../Shared/Constants'
+export default function Details({ userName, groupName, userImage, userId, groupMembers, setDetails, userMail, handleDeleteGroupMembers, createrId }) {
   const { data, dispatch } = useContext(ChatContext)
   const { currentUser } = useContext(AuthContext)
   const [groupData, setGroupData] = useState([])
   const [users, setUsers] = useState([])
   const handleCloseDetails = () => {
     setDetails(false)
-    dispatch({ type: "MEMBERSADDEDSTATUS", payload: true })
+    dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: true })
   }
 
   const handleDeleteGroupData = async (x) => {
@@ -28,17 +29,18 @@ export default function Details({ userName, groupName, userImage,userId, groupMe
     groupData?.length && groupData?.map(val => handleDeleteGroupData(val.uid))
   }
   useEffect(() => {
-    const q =query(collection(db, "users"))
-    const unsubscribe =onSnapshot(q, (querySnapshot) => {
+    const q = query(collection(db, "users"))
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const r = []
       querySnapshot.forEach((doc) => {
-          r.push(doc.data());
+        r.push(doc.data());
       });
-      setUsers(r);})
-  return ()=>{
-    unsubscribe()
-  }
-  
+      setUsers(r);
+    })
+    return () => {
+      unsubscribe()
+    }
+
   }, [data])
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
@@ -77,36 +79,36 @@ export default function Details({ userName, groupName, userImage,userId, groupMe
         {/* channel Details */}
 
         {!userId && <div className='members'>
-       <div className='CreaterDetails'>
+          <div className='CreaterDetails'>
 
-          <h5>
-             <h6>Created By: </h6>     
-            <div className="createrName" >
-               Name: {(users?.find(value=>value?.uid===createrId))?.displayName}  {createrId === currentUser?.uid && <>   (you)</>}
-              <div className="createrMail" >
-                {(users?.find(value=>value?.uid===createrId))?.email}
+            <h5>
+              <h6>Created By: </h6>
+              <div className="createrName" >
+                Name: {(users?.find(value => value?.uid === createrId))?.displayName}  {createrId === currentUser?.uid && <>   (you)</>}
+                <div className="createrMail" >
+                  {(users?.find(value => value?.uid === createrId))?.email}
+                </div>
               </div>
-            </div>
-          </h5>
-          <img className="createrDp"  src={(users?.find(value=>value.uid===createrId))?.photoURL} alt=""></img>
+            </h5>
+            <img className="createrDp" src={(users?.find(value => value.uid === createrId))?.photoURL} alt=""></img>
           </div>
           {groupData?.length ? <h5 className='memberHeading'>Members ({groupMembers?.length})</h5> : <h5 className='memberHeading'>No Members !!!</h5>}
           <div className='groupMembersList'>
             {groupData?.length
               ?
               groupData?.map(val => <ol className='memberDetails'>
-             <div className='Member'>
-                 <img className="membersDp"  src={(users?.find(value=>value.uid===val.uid))?.photoURL} alt=""></img>
+                <div className='Member'>
+                  <img className="membersDp" src={(users?.find(value => value.uid === val.uid))?.photoURL} alt=""></img>
                   <div>
 
-              <div>
-              <label>{(users?.find(value=>value?.uid===val.uid))?.displayName}   {val.uid === currentUser?.uid && <>(you)</>}</label>
-              </div>
-                <label>{(users?.find(value=>value?.uid===val.uid))?.email}</label>    
+                    <div>
+                      <label>{(users?.find(value => value?.uid === val.uid))?.displayName}   {val.uid === currentUser?.uid && <>(you)</>}</label>
+                    </div>
+                    <label>{(users?.find(value => value?.uid === val.uid))?.email}</label>
                   </div>
 
                 </div>
-              
+
 
                 <div >
                   {data?.groupId.includes(currentUser?.uid)
@@ -119,7 +121,7 @@ export default function Details({ userName, groupName, userImage,userId, groupMe
                         <img className="deleteIcon" src={images.deleteIcon} alt="" onClick={() => { handleDeleteGroupMembers(val.uid) }} />}
                     </div>
                     :
-                    val.uid === currentUser?.uid&& <button className="deleteGroupButton" onClick={()=>{handleDeleteGroupMembers(val.uid)} }>Leave Group </button>}
+                    val.uid === currentUser?.uid && <button className="deleteGroupButton" onClick={() => { handleDeleteGroupMembers(val.uid) }}>Leave Group </button>}
                 </div>
               </ol>)
               :

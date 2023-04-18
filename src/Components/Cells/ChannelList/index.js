@@ -5,6 +5,7 @@ import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import { images } from "../../../Images";
 import "./styles.css"
+import { STRINGS } from "../../../Shared/Constants";
 const Channels = () => {
   const [channels, setChannels] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -58,7 +59,7 @@ const Channels = () => {
   }, [channelName, data?.membersAddedStatus])
 
   const handleSelect = async (u) => {
-    dispatch({ type: "CHANGE_USER", payload: u });
+    dispatch({ type: STRINGS.CHANGE_USER, payload: u });
   };
 
 
@@ -69,7 +70,7 @@ const Channels = () => {
     const groupData = await getDoc(doc(db, "userChannels", currentUser?.uid))
     const groupId = groupData?.data()?.[x]?.["channelInfo"]?.groupId
     const res = groupId && await getDoc(doc(db, "channels", groupId))
-    dispatch({ type: "GETGROUPMEMBERS", payload: res?.data()?.["participants"] })
+    dispatch({ type: STRINGS.GETGROUPMEMBERS, payload: res?.data()?.["participants"] })
 
   }
 
@@ -81,7 +82,7 @@ const Channels = () => {
         : <div className="channels">
           {Object.entries(channels)?.sort((a, b) => b[1].date - a[1].date).map((channels) => (
             <div
-              className="userChat"
+              className="channelsDiv"
               key={channels[0]}
               onClick={() => {
                 setSelected(channels[1].channelInfo.channelNameId)

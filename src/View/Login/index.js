@@ -6,6 +6,7 @@ import { ChatContext } from '../../Context/ChatContext'
 import { validEmail } from "../../Shared/Utilities";
 import "./styles.css"
 import PasswordView from "../../Components/Atoms/passwordView";
+import { LINK, Messages, STRINGS, URL } from "../../Shared/Constants";
 const Login = () => {
   const [emailErrMessage, setEmailErrMessage] = useState(false);
   const { dispatch } = useContext(ChatContext);
@@ -22,20 +23,20 @@ const Login = () => {
 
   const triggerResetEmail = async () => {
     setErr("")
-    setLoading("Sending Password Reset Link ")
+    setLoading(Messages.sendingPasswordResetLink)
     await sendPasswordResetEmail(auth, email);
-    setLoading(" Password Reset Sent")
+    setLoading(Messages.sentPasswordResetLink)
   }
 
   const handleSendVerificationCode = async () => {
-    setLoading("Sending Verification Link")
+    setLoading(Messages.sendingVerification)
     const res = await signInWithEmailAndPassword(auth, email, password);
     const actionCodeSettings = {
-      url: 'https://slackapp-chicmic.netlify.app/login',
+      url: LINK.REDIRECT_URL_AFTER_VERIFICATION,
       handleCodeInApp: true
     };
     await sendEmailVerification(res.user, actionCodeSettings)
-    setLoading("Verification Link Sent")
+    setLoading(Messages.sentVerification)
   }
 
   const handleSubmit = async (e) => {
@@ -45,7 +46,7 @@ const Login = () => {
     setEmail(email)
     const password = e.target[1].value;
     setPassword(password)
-    dispatch({ type: "RESET" });
+    dispatch({ type: STRINGS.RESET });
 
     if (email.trim() === "") {
       setEmailBlankInput(true)
@@ -56,24 +57,20 @@ const Login = () => {
     else {
 
       if (!validEmail.test(email)) {
-        setEmailErrMessage("email is invalid");
+        setEmailErrMessage(Messages.notValidMail);
       }
       if (password.trim() === "" || password.length < 6 || !password.split("").some(val => isNaN(val))) {
-        setPasswordErrMessage("password is invalid (Enter more than 6 characters and include both number and character)");
+        setPasswordErrMessage(Messages.notValidPassword);
       }
       else {
         try {
           const res = await signInWithEmailAndPassword(auth, email, password);
-          console.log(res?._tokenResponse?.idToken,"sjdfhsdihvidufhuisdhvui")
+      
           if (!res?.user?.emailVerified) {
             setErr("email not verified")
             setShowVerificationButton(true)
           }
-          // else if(!res?._tokenResponse?.idToken){
-          //   window.location.reload()
-          //   localStorage.setItem("Token", (res?._tokenResponse?.idToken))
-          //   navigate("/")
-          // }  
+
          
           else{
             localStorage.setItem("Token", (res?._tokenResponse?.idToken))

@@ -10,6 +10,7 @@ import { AuthContext } from "../../../Context/AuthContext";
 import SearchingUser from "../AddingUsers";
 import "./styles.css"
 import Modal from "../../Atoms/Modal";
+import { STRINGS } from "../../../Shared/Constants";
 
 const Chat = () => {
   const [showUserModal, setShowUserModal] = useState(false)
@@ -51,7 +52,7 @@ console.log(users,"llllllllllllllllllllllllllllllllllllllllll")
     const unSub = data?.groupId && onSnapshot(doc(db, "userChannels", currentUser?.uid), (doc) => {
       setGroupName(doc?.data())
       if (!doc?.data()[data?.channelNameId]?.channelInfo?.channelName) {
-        dispatch({ type: "RESET" })
+        dispatch({ type: STRINGS.RESET })
       }
     });
     return () => {
@@ -137,7 +138,7 @@ console.log(users,"llllllllllllllllllllllllllllllllllllllllll")
                     setShowUserModal(true)
                     setDetails(false)
                     handleGetUsers()
-                    dispatch({ type: "MembersADDEDSTATUS", payload: true })
+                    dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: true })
                   }} />
                   <img className="img1" src={images.edit} alt="edit" onClick={() => {
                     setEditModal(true)

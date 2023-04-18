@@ -19,14 +19,14 @@ export default function InputFile(props) {
           else {
         document.getElementsByClassName("react-input-emoji--input")?.[0].focus()
             // setFileStatus(true)
-            if (e.target.files[0].type == "image/png" || e.target.files[0]?.type == "image/jpeg") {
+            if (e.target.files[0].type === "image/png" || e.target.files[0]?.type === "image/jpeg") {
                 props?.setImg(e.target.files[0])
                 props?.setImgName(e.target.files[0].name)
                 props?.setFileStatus(true)
             }
             else {
-              props?.setPdf(e.target.files[0])
-              props?.setPdfName(e.target.files[0].name)
+              props.setFile(e.target.files[0])
+              props?.setFileName(e.target.files[0].name)
               props?.setFileStatus(true)
             }
           }

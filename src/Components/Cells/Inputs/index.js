@@ -3,7 +3,7 @@ import { images } from "../../../Images";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import InputEmoji from 'react-input-emoji'
-import { arrayUnion, doc, onSnapshot, serverTimestamp, updateDoc, } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, onSnapshot, serverTimestamp, setDoc, updateDoc, } from "firebase/firestore";
 import { db, storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -82,6 +82,25 @@ const Input = () => {
       [data?.channelNameId + ".date"]: serverTimestamp(),
     });
   }
+   const handleAddUser = async () => {
+      
+      
+
+         
+          
+
+                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data?.user?.uid), {
+                    [data?.chatId + ".userInfo"]: {
+                        uid: currentUser?.uid,
+                       
+                    },
+                    [data?.chatId + ".date"]: serverTimestamp(),
+                });
+            
+            
+
+  
+    };
 
   const handleSend = async () => {
     setFileStatus(false)
@@ -123,7 +142,9 @@ const Input = () => {
         }),
       });
     }
-
+    const response = await getDoc(doc(db, "userChats", currentUser?.uid));
+      
+    if (Object.keys(response?.data()).includes(data?.chatId)) {
     (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
       [data.groupId || data?.chatId + ".lastMessage"]: {
         text: text,
@@ -134,7 +155,8 @@ const Input = () => {
     });
     (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
       [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
-    });
+    });}
+    handleAddUser()
     groupMembers.map(val => updateLastTextInGroup(val.uid))
     setText("");
     setImg(null);

@@ -2,8 +2,9 @@ import React, { useContext, useState } from 'react'
 import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
-export default function Display({ children, show, setShow, title, showHead, showFoot ,setImgUrl, setFileUrl,handleSend}) {
-    const {dispatch} = useContext(ChatContext);
+import { STRINGS } from '../../../Shared/Constants';
+export default function Display({ children, show, setShow, title, showHead, showFoot, setImgUrl, setFileUrl, handleSend }) {
+    const { dispatch } = useContext(ChatContext);
 
     return (
         <div>
@@ -21,20 +22,20 @@ export default function Display({ children, show, setShow, title, showHead, show
                     {showFoot && <div className="channel-Footer">
                         <button className="btnClose" onClick={() => {
                             setShow(false)
-                            setImgUrl&&setImgUrl("")
-                            setFileUrl&&setFileUrl("")
-                            dispatch({ type: "MEMBERSADDEDSTATUS", payload: false })
-                           
+                            setImgUrl && setImgUrl("")
+                            setFileUrl && setFileUrl("")
+                            dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
+
                         }}>
                             Cancel
-                        </button  > 
-                     
-                         <button  className='btnProceed' onClick={
-                            ()=>{
-                            handleSend()
-                         }}>
+                        </button  >
+
+                        <button className='btnProceed' onClick={
+                            () => {
+                                handleSend()
+                            }}>
                             Send
-                            </button>  
+                        </button>
                     </div>}
                 </div>
             </div>}

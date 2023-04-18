@@ -7,6 +7,7 @@ import Modal from '../../Atoms/Modal'
 import SearchingUser from '../AddingUsers'
 
 import "./styles.css"
+import { STRINGS } from '../../../Shared/Constants'
 export default function AddUserAndChannel({ title }) {
   const [showUserModal, setShowUserModal] = useState(false)
   const [showChannelModal, setShowChannelModal] = useState(false)
@@ -92,14 +93,14 @@ export default function AddUserAndChannel({ title }) {
 
   return (
     <div className='addChannel'>
-      <label className='channelLabel'>Add {title}</label>
+      <label className='channelLabel'> {title}</label>
       {title == "Channel" ? <button className='channelButton' onClick={() => { setShowChannelModal(true)
       
        }} >Add</button> : <button className='channelButton' onClick={() => {
         setShowUserModal(true)
         handleGetRegisteredUsers()
         setString(false)
-        dispatch({ type: "RESET" });
+        dispatch({ type: STRINGS.RESET });
       }} >Add</button>}
 
       <Modal show={showChannelModal} setShow={setShowChannelModal} error={error} setError={setError} title={title} channelName={channelName} setChannelName={setChannelName} addChannel={addChannel} showHead={true} showFoot={true} >

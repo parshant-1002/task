@@ -54,8 +54,8 @@ const Message = ({ message }) => {
             {data?.groupId && message.senderId == currentUser.uid ? message?.membersSeenGroupText?.length !== groupMembers?.length - 1 ? <img className="seenStatus" src={images.singleTick} ></img> : <img className="seenStatus" src={images.doubleTick} ></img> : null}
           </div>
           {message?.text && <p className={`messgtext${message.senderId === currentUser?.uid && "owner"}`}>{message.text}</p>}
-          {message?.img && <a href={message.img} target="_blank" download   ><img className="chatimg" src={message.img} alt="" /></a>}
-          {message?.file && <a href={message.file} target="_blank" download  ><img className="pdf" src={images.file} alt=""></img></a>}
+          {message?.img && <a href={message.img} target="_blank" download><img className="chatimg" src={message.img} alt="" /></a>}
+          {message?.file && <a href={message.file} target="_blank" download ><img className="pdf" src={images?.file} alt=""></img></a>}
           {message?.fileName && <label className="fileName">{message.fileName}</label>}
           <Modal show={show} setShow={setShow} showHead={"true"} title={"Seen By"}>
             <div className="closeSeenDetailsButton">

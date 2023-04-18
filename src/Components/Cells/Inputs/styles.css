@@ -5,7 +5,7 @@
     margin-bottom: 25px;
     display: flex;
     align-items: center;
-  
+
     border: solid;
     border-width: thin;
     border-color: grey;
@@ -51,7 +51,7 @@
 
 .react-input-emoji--input {
     max-height: 62px;
-   
+
 }
 
 .react-emoji-picker--wrapper {

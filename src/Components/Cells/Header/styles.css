@@ -1,24 +1,25 @@
-
-.Header{
-    border-bottom: solid;
-    border-width: thin;
-    background-color:#581a59;
-    width: 100%;
-    height: 7vh;
-    text-align: center;
-    display: flex;
+.Header {
+  border-bottom: solid;
+  border-width: thin;
+  background-color: #581a59;
+  width: 100%;
+  height: 7vh;
+  text-align: center;
+  display: flex;
 }
-.Heading{
-    color: aliceblue;
-    font-size: 20px;
+
+.Heading {
+  color: aliceblue;
+  font-size: 20px;
   font-weight: 600;
   padding: 6px;
 
 }
-.Nav{
+
+.Nav {
   position: absolute;
-  right:0;
+  right: 0;
   margin-right: 20px;
- 
+
 
 }

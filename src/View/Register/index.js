@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { images } from "../../Images";
-import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
@@ -9,6 +9,7 @@ import "./styles.css"
 import { validEmail } from "../../Shared/Utilities";
 import { ChatContext } from "../../Context/ChatContext";
 import PasswordView from "../../Components/Atoms/passwordView";
+import { LINK, Messages, STRINGS } from "../../Shared/Constants";
 const Register = () => {
   const [err, setErr] = useState("");
   const [nameErrMessage, setNameErrMessage] = useState(false);
@@ -29,7 +30,8 @@ const Register = () => {
 
 
   const handleSubmit = async () => {
-    dispatch({ type: "RESET" });
+    setErr("")
+    dispatch({ type: STRINGS.RESET });
     if (displayName.trim() === "") {
       setNameBlankInput(true)
     }
@@ -44,16 +46,16 @@ const Register = () => {
     }
     else {
       if (!isNaN(displayName)) {
-        setNameErrMessage("Enter valid UserName")
+        setNameErrMessage(Messages.notValidUser)
       }
       else if (!validEmail.test(email)) {
-        setEmailErrMessage("email is invalid");
+        setEmailErrMessage(Messages.notValidMail);
       }
       else if (password.length < 6 || !password.split("").some(val => isNaN(val))) {
-        setPasswordErrMessage("password is invalid (Enter more than 6 characters and include both number and character)");
+        setPasswordErrMessage(Messages.notValidPassword);
       }
       else if (!file) {
-        setFileErrMessage("Choose Avatar");
+        setFileErrMessage(Messages.chooseAvatar);
       }
       else {
         setNameBlankInput(false)
@@ -61,15 +63,15 @@ const Register = () => {
         setPasswordBlankInput(false)
         setFileBlankInput(false)
         try {
-          setLoading("Sending Verification Link")
+          setLoading(Messages.sendingVerification)
           const res = await createUserWithEmailAndPassword(auth, email, password);
-          // https://slackapp-chicmic.netlify.app/login
+
           const actionCodeSettings = {
-            url: 'https://slackapp-chicmic.netlify.app/login',
+            url: LINK.REDIRECT_URL_AFTER_VERIFICATION,
             handleCodeInApp: true
           };
           await sendEmailVerification(res.user, actionCodeSettings)
-          setLoading("Verification Link Sent")
+          setLoading(Messages.sentVerification)
 
           const date = new Date().getTime();
           const storageRef = ref(storage, `${displayName + date}`);
@@ -92,7 +94,7 @@ const Register = () => {
                 await setDoc(doc(db, "userChats", res.user.uid), {});
               } catch (err) {
                 console.log(err);
-                setErr(true);
+             
               }
             });
           });
@@ -106,7 +108,7 @@ const Register = () => {
   return (
     <div className="formContainer">
       <div className="formWrapper">
-
+        
         <span className="logo">Slack</span>
         <span className="title">Register</span>
         <input className="inputRegister" type="text" placeholder="UserName" value={displayName} onChange={(e) => {
@@ -148,7 +150,7 @@ const Register = () => {
         {!fileBlankInput && fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
         <button className="Signup" onClick={() => { handleSubmit() }}>Sign up</button>
         {!err && loading && <label className="registerError">{loading}</label>}
-        {err  && <label className="registerError">{err}</label>}
+        {err && <label className="registerError">{err}</label>}
         <p className="p">
           You do have an account? <Link className="Link" to="/login">Login</Link>
         </p>

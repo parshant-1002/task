@@ -1,5 +1,6 @@
-import {createContext, useContext, useReducer} from "react";
+import { createContext, useContext, useReducer } from "react";
 import { AuthContext } from "../AuthContext";
+import { STRINGS } from "../../Shared/Constants";
 
 export const ChatContext = createContext();
 
@@ -13,38 +14,38 @@ export const ChatContextProvider = ({ children }) => {
     users: [],
     members: [],
     membersAddedStatus: false,
-    userData:""
+    userData: ""
   };
 
   const chatReducer = (state, action) => {
-    switch (action?.type) {
-      case "CHANGE_USER":
+    switch (action?.type) { 
+      case STRINGS.CHANGE_USER:
         return {
           user: action?.payload,
           channelName: action?.payload?.channelName,
-          channelNameId:action?.payload?.channelNameId,
+          channelNameId: action?.payload?.channelNameId,
           groupId: action?.payload?.groupId,
-          chatId:currentUser?.uid > action?.payload?.uid
-              ? currentUser?.uid + action.payload?.uid
-              : action?.payload?.uid + currentUser?.uid,
+          chatId: currentUser?.uid > action?.payload?.uid
+            ? currentUser?.uid + action.payload?.uid
+            : action?.payload?.uid + currentUser?.uid,
         };
-      case "GETUSERS":
+      case STRINGS.GETUSERS:
         return {
           ...state, users: action?.payload
         }
-      case "GETGROUPMEMBERS":
+      case STRINGS.GETGROUPMEMBERS:
         return {
           ...state, members: action?.payload
         }
-      case "MEMBERSADDEDSTATUS":
+      case STRINGS.MEMBERSADDEDSTATUS:
         return {
           ...state, membersAddedStatus: action?.payload
         }
-        case "SETUSERDATA":
+      case STRINGS.SETUSERDATA:
         return {
           ...state, userData: action?.payload
         }
-      case "RESET":
+      case STRINGS.RESET:
         return {
           user: {},
           channelName: "",

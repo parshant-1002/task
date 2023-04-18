@@ -5,117 +5,131 @@
   border-width: thin;
   border-color: gray;
   overflow-y: scroll;
-}.chats::-webkit-scrollbar {
-      width: 0px;               /* width of the entire scrollbar */
-    }
+}
+
+.chats::-webkit-scrollbar {
+  width: 0px;
+  /* width of the entire scrollbar */
+}
+
 .userChat {
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10%;
-    color: white;
-    cursor: pointer;
-    width:90%;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10%;
+  color: white;
+  cursor: pointer;
+  width: 90%;
 
 
 
 }
 
 .profilePic {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-      .info{
-        font-size: 18px;
-        font-weight: 500;
-        max-width: 100px;
-        height: 100%;
-        overflow: hidden;
-      }
-      .lastmessage{
-        width:95%;
-        height:20px;
-        font-size: 14px;
-        color: lightgray;
-        word-wrap: break-word;
-        overflow: hidden;
-        
-      }
-    .warnmessage{
-        color: aliceblue;
-        margin: 20px;
-        font-size: larger;
-    }
-#chatItem{
-  height:20%
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
 }
-    #chatItem:hover{
-      background-color: #b58abc
-    }
-    .userChatInfo{
-      width: 75%;
-    }
-    .eyeImg{
-      height:12px;
-      width:12px;
-      border-radius: 50%;
-      object-fit: cover;
 
-    }
+.info {
+  font-size: 18px;
+  font-weight: 500;
+  max-width: 100px;
+  height: 100%;
+  overflow: hidden;
+}
 
-    .recent{
-      background-color: red;
-      width: 10px;
-      height: 10px;
-      border-radius: 5px;
-    }
-    .unseenCount{
-      background-color: red;
-      height:fit-content;
-      width:fit-content;
-      border-radius: 10px;
-    padding-left: 1.5%;
-    padding-right: 1.5%;
-      margin: 2.5%;
-      color:white
+.lastmessage {
+  width: 95%;
+  height: 20px;
+  font-size: 14px;
+  color: lightgray;
+  word-wrap: break-word;
+  overflow: hidden;
 
-      /* color:red; */
+}
+
+.warnmessage {
+  color: aliceblue;
+  margin: 20px;
+  font-size: larger;
+}
+
+#chatItem {
+  height: 20%
+}
+
+#chatItem:hover {
+  background-color: #b58abc
+}
+
+.userChatInfo {
+  width: 75%;
+}
+
+.eyeImg {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  object-fit: cover;
+
+}
+
+.recent {
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+}
+
+.unseenCount {
+  background-color: red;
+  height: fit-content;
+  width: fit-content;
+  border-radius: 10px;
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+  margin: 2.5%;
+  color: white
+    /* color:red; */
 
 
-    }
+}
 
-    .clearUser{
-      height:85%;
-      width:10%;
-      border-radius: 5px;
-      margin: 2%;
-      object-fit: cover;
-      
-      background-color: #b58abc;
-    }
-    .clearUserBtn:hover{
-      height:18px;
-      width:18px;
-    }
-  #chatItem{
-    display: flex;
-  }
-  #chatItemtrue{
-    display: flex;
-    background-color: #b58abc;
-  }
+.clearUser {
+  height: 85%;
+  width: 10%;
+  border-radius: 5px;
+  margin: 2%;
+  object-fit: cover;
 
-  .clearUserBtn{
-    height:60%;
-    width:70%;
-    border-radius: 50%;
-    margin-left: 15%;
-    margin-top: 23%;
-    object-fit: cover;
-    cursor: pointer;
-    
-   
-  }
+  background-color: #b58abc;
+}
+
+.clearUserBtn:hover {
+  width: 90%;
+  margin-left: 0;
+  margin-top: 0;
+}
+
+#chatItem {
+  display: flex;
+}
+
+#chatItemtrue {
+  display: flex;
+  background-color: #b58abc;
+}
+
+.clearUserBtn {
+  height: 60%;
+  width: 70%;
+
+  margin-left: 15%;
+  margin-top: 23%;
+  object-fit: cover;
+  cursor: pointer;
+
+
+}

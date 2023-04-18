@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { images } from '../../../Images';
-import { arrayUnion, doc, getDoc, serverTimestamp, setDoc, updateDoc ,onSnapshot} from '@firebase/firestore'
+import { arrayUnion, doc, getDoc, serverTimestamp, setDoc, updateDoc, onSnapshot } from '@firebase/firestore'
 import { AuthContext } from '../../../Context/AuthContext';
 import { db } from '../../../firebase';
 import { ChatContext } from '../../../Context/ChatContext';
 import Modal from '../../Atoms/Modal';
 import "./styles.css"
+import { STRINGS } from '../../../Shared/Constants';
 export default function SearchingUser({ showUserModal, setShowUserModal, combinedId, users, groupName }) {
     const { currentUser } = useContext(AuthContext);
     const [userName, setUserName] = useState("")
@@ -17,13 +18,13 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     const selectedListRef = useRef()
 
     useEffect(() => {
-        const unSub =data?.chatId&& onSnapshot(doc(db, "chats",data?.chatId ), (doc) => {
-            data?.chatId&&doc?.exists() && setMessages(doc?.data()?.messages);
-         });
-         return () => {
-            data?.chatId&&  unSub();
-         };
-       }, [data?.chatId, data?.groupId]);
+        const unSub = data?.chatId && onSnapshot(doc(db, "chats", data?.chatId), (doc) => {
+            data?.chatId && doc?.exists() && setMessages(doc?.data()?.messages);
+        });
+        return () => {
+            data?.chatId && unSub();
+        };
+    }, [data?.chatId, data?.groupId]);
 
     useEffect(() => {
         !userName && setUserList(users)
@@ -58,9 +59,9 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
         await updateDoc(doc(db, "channels", data?.groupId),
             {
                 participants: arrayUnion({
-            
                     uid: user.uid,
-                 
+                    name:user.displayName,
+                    email:user.email
                 })
             })
         await updateDoc(doc(db, "userChannels", user.uid), {
@@ -72,7 +73,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
             }
         });
         setUserName("")
-        setUserList(userList.filter(val => selectedList.some(value => value.uid != val.uid)))
+        setUserList(userList.filter(val => selectedList.some(value => value.uid !== val.uid)))
         setSelectedList([])
     }
 
@@ -87,28 +88,28 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
         try {
             const res = await getDoc(doc(db, "chats", combinedId));
             const response = await getDoc(doc(db, "userChats", currentUser?.uid));
-            console.log("llllllllllsfkjdl")
-            if (!res.exists()||!Object.keys(response?.data()).includes(combinedId)) {
+
+            if (!res.exists() || !Object.keys(response?.data()).includes(combinedId)) {
                 //create a chat in chats collection
                 //create user chats
                 (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: user.uid,
-                                           },
+                    },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
 
                 (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", user?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: currentUser?.uid,
-                       
+
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
-                (!data.chatId.includes("undefined")) && await setDoc(doc(db, "chats", combinedId), { messages: [messages] });
+                (!data.chatId.includes("undefined")) && await setDoc(doc(db, "chats", combinedId), { messages: [] });
             }
         } catch (err) { console.log(err, "err<><><><><><>>,") }
-        dispatch({ type: "MEMBERSADDEDSTATUS", payload: false })
+        dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
         setUserName("")
         setSelectedList([])
     };

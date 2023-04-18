@@ -10,6 +10,7 @@ import "./styles.css"
 import { ChatContext } from "../../../Context/ChatContext";
 
 import { AuthContext } from "../../../Context/AuthContext";
+import { STRINGS } from "../../../Shared/Constants";
 const EditUserProfile = ({ setShow }) => {
     const [err, setErr] = useState("");
     const [nameErrMessage, setNameErrMessage] = useState(false);
@@ -32,7 +33,7 @@ const EditUserProfile = ({ setShow }) => {
     }, [])
 
     const handleSubmit = async () => {
-        dispatch({ type: "RESET" });
+        dispatch({ type: STRINGS.RESET });
         if (displayName.trim() === "") {
             setNameBlankInput(true)
         }
