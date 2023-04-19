@@ -60,6 +60,10 @@ const Channels = () => {
 
   const handleSelect = async (u) => {
     dispatch({ type: STRINGS.CHANGE_USER, payload: u });
+
+    data?.channelNameId&&await updateDoc(doc(db, "userChannels", currentUser?.uid), {
+      [data?.channelNameId + ".unseen"]: 0
+    })
   };
 
 
@@ -85,20 +89,20 @@ const Channels = () => {
               className="channelsDiv"
               key={channels[0]}
               onClick={() => {
-                setSelected(channels[1].channelInfo.channelNameId)
-                handleSelect(channels[1].channelInfo);
-                setChannelName(channels[1].channelInfo.channelName)
+                setSelected(channels[1]?.channelInfo?.channelNameId)
+                handleSelect(channels[1]?.channelInfo);
+                setChannelName(channels[1]?.channelInfo?.channelName)
 
               }} >
 
               <ol className="userChannalInfo">
-                <span className="channelInfo"># {channels[1].channelInfo.channelName}</span>
+                <span className="channelInfo"># {channels[1]?.channelInfo?.channelName}</span>
                 {channels[1]?.lastMessage?.text && <label className="lastmessage" style={{ color: `gold` }}>{channels[1]?.lastMessage?.text}</label>}
                 {!channels[1]?.lastMessage?.text && channels[1]?.lastMessage?.img ? <p className="lastmessage">{channels[1]?.lastMessage?.img}</p> : null}
                 {!channels[1]?.lastMessage?.text && channels[1]?.lastMessage?.pdf ? <p className="lastmessage">{channels[1]?.lastMessage?.pdf}</p> : null}
               </ol>
-              {/* {<div className="unseenCount">{channels[1]?.unseenCount}</div>} */}
-              {channels[1].channelInfo.channelNameId == selected && <img className="eyeImg" src={images.eye} alt=""></img>}
+              {channels[1]?.unseen>0&&<div className="unseenCount">{channels[1]?.unseen}</div>}
+              {channels[1]?.channelInfo?.channelNameId == selected && <img className="eyeImg" src={images.eye} alt=""></img>}
             </div>
           ))}
         </div>}

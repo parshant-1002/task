@@ -38,7 +38,7 @@ const Chat = () => {
   }
   
   }, [data])
-console.log(users,"llllllllllllllllllllllllllllllllllllllllll")
+
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
       setGroupMembers(doc?.data())
@@ -47,7 +47,7 @@ console.log(users,"llllllllllllllllllllllllllllllllllllllllll")
       data?.groupId && unSub();
     };
   }, [data, details]);
-
+  
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, "userChannels", currentUser?.uid), (doc) => {
       setGroupName(doc?.data())
@@ -146,7 +146,7 @@ console.log(users,"llllllllllllllllllllllllllllllllllllllllll")
                   }} />
                 </div>
                 :
-                !data?.user.uid && <label>Member</label>}
+                !data?.user?.uid && <label>Member</label>}
               <img className="img1" src={images.more} alt="" onClick={() => {
                 setDetails(true)
               }} />

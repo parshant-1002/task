@@ -15,8 +15,9 @@ export default function Sidebar() {
   const {dispatch}=useContext(ChatContext)
   const {currentUser}=useContext(AuthContext)
   const [chatList,setChatList]=useState([])
+  const [ChannelList,setChannelList]=useState([])
   const [totalUnseenText,setTotalUnseenText]=useState()
-
+  const [totalUnseenGroupText,setTotalUnseenGroupText]=useState()
   useEffect(() => {
     const getChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser?.uid), (doc) => {
@@ -30,12 +31,26 @@ export default function Sidebar() {
 
     currentUser?.uid && getChats();
   }, [currentUser?.uid]);
- 
+  useEffect(() => {
+    const getChats = () => {
+      const unsub = onSnapshot(doc(db, "userChannels", currentUser?.uid), (doc) => {
+        setChannelList(Object.values(doc.data()))
+     
+      });
+      return () => {
+        unsub();
+      };
+    };
+
+    currentUser?.uid && getChats();
+  }, [currentUser?.uid]);
   useEffect(() => {
     setTotalUnseenText(chatList.reduce((acc,val)=>acc+val?.unseen?.unseen,0))
   }, [chatList])
 
-
+  useEffect(() => {
+    setTotalUnseenGroupText(ChannelList.reduce((acc,val)=>acc+val?.unseen,0))
+  }, [ChannelList])
 
   return (
     <div className='sidebar'>
@@ -46,6 +61,7 @@ export default function Sidebar() {
           setShowDirectMessage(false)
         }} >
           Channels  </label>
+          { totalUnseenGroupText>0 &&<label className='totalUnseenCount'>{totalUnseenGroupText} </label>}
         {showChannels && <img className='close' src={images.crossWhite} alt="close" onClick={() =>
         { setShowChannels(false)
         dispatch({type:"RESET"})}

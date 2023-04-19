@@ -71,6 +71,8 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                 groupId: combinedId,
                 date: serverTimestamp()
             }
+            ,
+            [data?.channelNameId + ".unseen"]:0
         });
         setUserName("")
         setUserList(userList.filter(val => selectedList.some(value => value.uid !== val.uid)))

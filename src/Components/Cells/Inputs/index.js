@@ -26,6 +26,7 @@ const Input = () => {
   const [fileUrl, setFileUrl] = useState(false);
   const [messageList, setMessages] = useState([])
   const [unseen, setUnseen] = useState();
+  const [unseenGroupChat, setUnseenGroupChat] = useState();
   const [groupMembers, setGroupMembers] = useState([])
 
   const { currentUser } = useContext(AuthContext);
@@ -42,7 +43,7 @@ const Input = () => {
     return () => {
       (data?.groupId || data?.chatId) && unSub();
     };
-  }, [data?.chatId, data?.groupId,id]);
+  }, [data?.chatId, data?.groupId, id]);
 
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
@@ -58,18 +59,35 @@ const Input = () => {
     setImg(null)
   }, [data])
 
+
+
   useEffect(() => {
-    setUnseen(messageList?.length ? messageList?.filter(val => val.senderId === currentUser.uid && val.status === false).length : 0)
-  }, [messageList,currentUser.uid])
+       setUnseen(messageList?.length ? messageList?.filter(val => val.senderId === currentUser.uid && val.status === false).length : 0)
+    }, [messageList, currentUser.uid])
 
   useEffect(() => {
     updateUnseenStatus(unseen)
   }, [unseen])
-  
+
   const updateUnseenStatus = async (unseenCount) => {
     (!data.chatId.includes("undefined")) && unseenCount && await updateDoc(doc(db, "userChats", data.user.uid), {
       [data.groupId || data?.chatId + ".unseen.unseen"]: unseenCount
     })
+  
+  }
+
+
+  const updateGroupUnseenStatus = async (uid) => {
+    console.log("in increment before getting res sjdflksdfklsdfklsf<><>>><.")
+    const res=await getDoc(doc(db,"userChannels",uid))
+    console.log(res?.data()?.[data?.channelNameId]?.unseen,uid, currentUser?.uid,"get res in increment sjdflksdfklsdfklsf<><>>><.")
+    if(uid!==currentUser?.uid){
+      data?.groupId&&await updateDoc(doc(db, "userChannels", uid), {
+        [data.channelNameId + ".unseen"]: res?.data()?.[data?.channelNameId]?.unseen+1
+      })
+    }
+    const res1=await getDoc(doc(db,"userChannels",uid))
+    console.log(res1?.data()?.[data?.channelNameId]?.unseen,"res after update sjdflksdfklsdfklsf<><>>><.")
   }
 
   const updateLastTextInGroup = async (ids) => {
@@ -80,40 +98,31 @@ const Input = () => {
         file: file && fileName
       },
       [data?.channelNameId + ".date"]: serverTimestamp(),
+     
     });
   }
-   const handleAddUser = async () => {
-      
-      
+  const handleAddUser = async () => {
+    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data?.user?.uid), {
+      [data?.chatId + ".userInfo"]: {
+        uid: currentUser?.uid,
+      },
+      [data?.chatId + ".date"]: serverTimestamp(),
+    });
+  };
 
-         
-          
+  const handleSend = async (e) => {
 
-                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data?.user?.uid), {
-                    [data?.chatId + ".userInfo"]: {
-                        uid: currentUser?.uid,
-                       
-                    },
-                    [data?.chatId + ".date"]: serverTimestamp(),
-                });
-            
-            
-
-  
-    };
-
-  const handleSend = async () => {
     setFileStatus(false)
-      if (file || img) {
+    if (file || img) {
       setLoading(true)
       const storageRef = ref(storage, uuid());
-      const uploadTask = uploadBytesResumable(storageRef, file||img);
+      const uploadTask = uploadBytesResumable(storageRef, file || img);
       uploadTask.then(
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             setLoading(false)
             setFileUrl(downloadURL)
-            await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
+            await updateDoc(doc(db, "chats", data?.groupId || data?.chatId), {
               messages: arrayUnion({
                 id: uuid(),
                 text,
@@ -121,7 +130,7 @@ const Input = () => {
                 date: time,
                 img: img && downloadURL,
                 file: file && downloadURL,
-                fileName:( fileName||imgName )&& (imgName|| fileName),
+                fileName: (fileName || imgName) && (imgName || fileName),
                 status: false,
                 membersSeenGroupText: []
               }),
@@ -143,21 +152,25 @@ const Input = () => {
       });
     }
     const response = await getDoc(doc(db, "userChats", currentUser?.uid));
-      
+
     if (Object.keys(response?.data()).includes(data?.chatId)) {
-    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
-      [data.groupId || data?.chatId + ".lastMessage"]: {
-        text: text,
-        img: imgName,
-        file: fileName
-      },
-      [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
-    });
-    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
-      [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
-    });}
+      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
+        [data.groupId || data?.chatId + ".lastMessage"]: {
+          text: text,
+          img: imgName,
+          file: fileName
+        },
+        [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
+      });
+      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
+        [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
+      });
+    }
     handleAddUser()
-    groupMembers.map(val => updateLastTextInGroup(val.uid))
+    groupMembers.map(val => updateLastTextInGroup(val?.uid))
+    groupMembers.map(val =>  updateGroupUnseenStatus (val?.uid))
+
+
     setText("");
     setImg(null);
     setFile(null);
@@ -166,10 +179,14 @@ const Input = () => {
     setFileUrl("")
   };
 
+
+
+
+
   return (
     <div className="inputdata">
 
-      <div   className="inputText" >
+      <div className="inputText" >
         <InputEmoji
           value={text}
           onChange={setText}

@@ -81,7 +81,8 @@ export default function AddUserAndChannel({ title }) {
               channelName,
               groupId: combinedId,
               date: serverTimestamp()
-            }
+            },
+            [channelName + ".unseen"]:0
           });
         }
       } catch (err) { console.log(err.message, "error") }
