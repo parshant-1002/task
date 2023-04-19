@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import AddUserAndChannel from '../../Components/Cells/AddUserAndChannel'
+import AddUserAndChannel from '../../Components/Cells/AddChatsAndChannels'
 import Channels from '../../Components/Cells/ChannelList'
 import Chats from '../../Components/Cells/ChatList'
 import Navbar from '../../Components/Atoms/Navbar'
@@ -12,7 +12,7 @@ import { AuthContext } from '../../Context/AuthContext'
 export default function Sidebar() {
   const [showDirectMessage, setShowDirectMessage] = useState(false)
   const [showChannels, setShowChannels] = useState(false)
-  const {dispatch,data}=useContext(ChatContext)
+  const {dispatch}=useContext(ChatContext)
   const {currentUser}=useContext(AuthContext)
   const [chatList,setChatList]=useState([])
   const [totalUnseenText,setTotalUnseenText]=useState()

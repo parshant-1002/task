@@ -22,12 +22,15 @@ export default function AddUserAndChannel({ title }) {
   const handleKey=(e)=>{
     if(e.code==="Enter"){
       addChannel()
-      setShowChannelModal()
+      if(channelName?.length>2&&isNaN(channelName)){
+        setShowChannelModal(false)
+
+      }
     }
   }
 
   const handleGetRegisteredUsers = () => {
-    const details = data?.users && (data?.users) || []
+    const details = data?.users && ((data?.users) || [])
     const g = []
     details?.length && details?.map(val => g.push(val?.userInfo?.uid))
     handleGetRegisteredUsersOneByOne(g)
@@ -38,10 +41,9 @@ export default function AddUserAndChannel({ title }) {
       const querySnapshot = await getDocs(collection(db, "users"))
       const r = []
       querySnapshot.forEach((doc) => {
-
         r.push(doc.data())
       });
-      const y = r.filter(val => (!x.some(value => value == val.uid) && val.uid != currentUser?.uid))
+      const y = r.filter(val => (!x.some(value => value === val.uid) && val.uid !== currentUser?.uid))
       setUsers(y);
     } catch (err) {
       console.log(err, "Error in getting User Details")
@@ -51,7 +53,7 @@ export default function AddUserAndChannel({ title }) {
   const addChannel = async () => {
     //check whether the group(chats in firestore) exists, if not create
 
-    if (channelName.length > 2 && (channelName.split("").some(val => isNaN(val)))) {
+    if (channelName?.length > 2 && (channelName.split("").some(val => isNaN(val)))) {
       setError("")
 
       const combinedId = currentUser?.uid + channelName

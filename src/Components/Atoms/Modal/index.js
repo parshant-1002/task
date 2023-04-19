@@ -34,7 +34,14 @@ export default function Modal({ children, show, setEditedGroupName = ()=>{}, str
                             addChannel && addChannel()
                             data?.groupId &&  addUser()
                             handleSelect()
-                            setShow && setShow(false)
+                            if(channelName?.length<3||!isNaN(channelName)){
+                                setShow && setShow(true)
+                            }
+                            else{
+                                setShow && setShow(false)
+
+                            }
+                   
                             handleEditGroupName && handleEditGroupName()
                             handleGroupNameEdit && handleGroupNameEdit()
                             dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })

@@ -37,12 +37,14 @@
 }
 
 .totalUnseenCount{
-    background-color: red;
-    height:fit-content;
-    width:fit-content;
+    background-color: rgb(251, 246, 246);
+    height: fit-content;
+    width: fit-content;
     border-radius: 10px;
-  padding-left: 1.5%;
-  padding-right: 1.5%;
+    padding-left: 1.5%;
+    padding-right: 1.5%;
     margin: 2.5%;
-    color:white
+    color: rgb(10, 7, 7)
+      /* color:red; */
+  
 }
