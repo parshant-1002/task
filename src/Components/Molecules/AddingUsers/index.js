@@ -6,7 +6,7 @@ import { db } from '../../../firebase';
 import { ChatContext } from '../../../Context/ChatContext';
 import Modal from '../../Atoms/Modal';
 import "./styles.css"
-import { STRINGS } from '../../../Shared/Constants';
+import { COLLECTION_NAME, STRINGS } from '../../../Shared/Constants';
 export default function SearchingUser({ showUserModal, setShowUserModal, combinedId, users, groupName }) {
     const { currentUser } = useContext(AuthContext);
     const [userName, setUserName] = useState("")
@@ -18,7 +18,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     const selectedListRef = useRef()
 
     useEffect(() => {
-        const unSub = data?.chatId && onSnapshot(doc(db, "chats", data?.chatId), (doc) => {
+        const unSub = data?.chatId && onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, data?.chatId), (doc) => {
             data?.chatId && doc?.exists() && setMessages(doc?.data()?.messages);
         });
         return () => {
@@ -56,7 +56,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
         selectedList?.map(val => addUsersInChannelOneByOne(val))
     }
     const addUsersInChannelOneByOne = async (user) => {
-        await updateDoc(doc(db, "channels", data?.groupId),
+        await updateDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId),
             {
                 participants: arrayUnion({
                     uid: user.uid,
@@ -64,7 +64,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                     email:user.email
                 })
             })
-        await updateDoc(doc(db, "userChannels", user.uid), {
+        await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, user.uid), {
             [data?.channelNameId + ".channelInfo"]: {
                 channelNameId: data?.channelNameId,
                 channelName: groupName,
@@ -88,27 +88,27 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
             ? currentUser?.uid + user.uid
             : user.uid + currentUser?.uid;
         try {
-            const res = await getDoc(doc(db, "chats", combinedId));
-            const response = await getDoc(doc(db, "userChats", currentUser?.uid));
+            const res = await getDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId));
+            const response = await getDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid));
 
             if (!res.exists() || !Object.keys(response?.data()).includes(combinedId)) {
                 //create a chat in chats collection
                 //create user chats
-                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
+                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: user.uid,
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
 
-                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", user?.uid), {
+                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, user?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: currentUser?.uid,
 
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
-                (!data.chatId.includes("undefined")) && await setDoc(doc(db, "chats", combinedId), { messages: [] });
+                (!data.chatId.includes("undefined")) && await setDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId), { messages: [] });
             }
         } catch (err) { console.log(err, "err<><><><><><>>,") }
         dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })

@@ -23,3 +23,10 @@ export const LINK={
     REDIRECT_URL_AFTER_VERIFICATION:'https://slackapp-chicmic.netlify.app/login'
 }
 
+export const COLLECTION_NAME={
+    USERS:"USERS",
+    CHAT_LIST:"CHAT_LIST",
+    CHANNEL_LIST:"CHANNEL_LIST",
+    CHAT_DATA:"CHAT_DATA",
+    CHANNELS_DATA:"CHANNELS_DATA"
+}

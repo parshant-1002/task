@@ -5,7 +5,7 @@ import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import { images } from "../../../Images";
 import "./styles.css"
-import { STRINGS } from "../../../Shared/Constants";
+import { COLLECTION_NAME, STRINGS } from "../../../Shared/Constants";
 const Channels = () => {
   const [channels, setChannels] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -17,7 +17,7 @@ const Channels = () => {
 
   useEffect(() => {
     const getChannels = () => {
-      const unsub = onSnapshot(doc(db, "userChannels", currentUser?.uid), (doc) => {
+      const unsub = onSnapshot(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), (doc) => {
         setChannels(doc.data())
         doc.exists() && setVisible(true)
       });
@@ -30,7 +30,7 @@ const Channels = () => {
 
   useEffect(() => {
 
-    const unSub = onSnapshot(doc(db, "chats", data?.groupId || data?.chatId), (doc) => {
+    const unSub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, data?.groupId || data?.chatId), (doc) => {
       doc?.exists() && setMessages(doc?.data().messages);
     });
     return () => {
@@ -49,7 +49,7 @@ const Channels = () => {
         val.membersSeenGroupText.push(currentUser?.uid)
       }
     })
-    seenData?.length && await updateDoc(doc(db, "chats", data?.groupId), {
+    seenData?.length && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, data?.groupId), {
       messages: seenData
     })
   }
@@ -61,7 +61,7 @@ const Channels = () => {
   const handleSelect = async (u) => {
     dispatch({ type: STRINGS.CHANGE_USER, payload: u });
 
-    data?.channelNameId&&await updateDoc(doc(db, "userChannels", currentUser?.uid), {
+    data?.channelNameId&&await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
       [channelName + ".unseen"]: 0,
       [channelName+".lastMessage"]:{
         img:"",
@@ -76,9 +76,9 @@ const Channels = () => {
 
 
   const getGroupMemberDetails = async (x) => {
-    const groupData = await getDoc(doc(db, "userChannels", currentUser?.uid))
+    const groupData = await getDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid))
     const groupId = groupData?.data()?.[x]?.["channelInfo"]?.groupId
-    const res = groupId && await getDoc(doc(db, "channels", groupId))
+    const res = groupId && await getDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, groupId))
     dispatch({ type: STRINGS.GETGROUPMEMBERS, payload: res?.data()?.["participants"] })
 
   }

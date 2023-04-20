@@ -10,8 +10,9 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import "./styles.css"
 import Modal from "../../Atoms/Modal";
 import Display from "../../Atoms/Display";
-import InputFile from "../../Atoms/InputFile";
+import InputFile from "./fileInput";
 import AttachmentPreview from "../../Atoms/AttachmentPreview";
+import { COLLECTION_NAME } from "../../../Shared/Constants";
 
 const Input = () => {
   const [text, setText] = useState("");
@@ -37,7 +38,7 @@ const Input = () => {
   const id = data?.groupId || data?.chatId
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
+    const unSub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, id), (doc) => {
       doc?.exists() && setMessages(doc?.data().messages);
     });
     return () => {
@@ -46,7 +47,7 @@ const Input = () => {
   }, [data?.chatId, data?.groupId, id]);
 
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
+    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
       doc?.exists() && setGroupMembers(doc?.data()["participants"])
     });
     return () => {
@@ -70,7 +71,7 @@ const Input = () => {
   }, [unseen])
 
   const updateUnseenStatus = async (unseenCount) => {
-    (!data.chatId.includes("undefined")) && unseenCount && await updateDoc(doc(db, "userChats", data.user.uid), {
+    (!data.chatId.includes("undefined")) && unseenCount && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data.user.uid), {
       [data.groupId || data?.chatId + ".unseen.unseen"]: unseenCount
     })
 
@@ -79,10 +80,10 @@ const Input = () => {
 
   const updateGroupUnseenStatus = async (uid) => {
 
-    const res = await getDoc(doc(db, "userChannels", uid))
+    const res = await getDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, uid))
 
     if (uid !== currentUser?.uid) {
-      data?.groupId && await updateDoc(doc(db, "userChannels", uid), {
+      data?.groupId && await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, uid), {
         [data.channelNameId + ".unseen"]: res?.data()?.[data?.channelNameId]?.unseen + 1
       })
     }
@@ -91,7 +92,7 @@ const Input = () => {
   }
 
   const updateLastTextInGroup = async (ids) => {
-    ((data.chatId.includes("undefined")) && ids !== currentUser?.uid) && await updateDoc(doc(db, "userChannels", ids), {
+    ((data.chatId.includes("undefined")) && ids !== currentUser?.uid) && await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, ids), {
       [data?.channelNameId + ".lastMessage"]: {
         text,
         img: img && imgName,
@@ -102,7 +103,7 @@ const Input = () => {
     });
   }
   const handleAddUser = async () => {
-    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data?.user?.uid), {
+    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data?.user?.uid), {
       [data?.chatId + ".userInfo"]: {
         uid: currentUser?.uid,
       },
@@ -122,7 +123,7 @@ const Input = () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             setLoading(false)
             setFileUrl(downloadURL)
-            await updateDoc(doc(db, "chats", data?.groupId || data?.chatId), {
+            await updateDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, data?.groupId || data?.chatId), {
               messages: arrayUnion({
                 id: uuid(),
                 text,
@@ -143,7 +144,7 @@ const Input = () => {
     }
 
     else {
-      text.trim() && await updateDoc(doc(db, "chats", data.groupId || data.chatId), {
+      text.trim() && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, data.groupId || data.chatId), {
         messages: arrayUnion({
           id: uuid(),
           text,
@@ -156,10 +157,10 @@ const Input = () => {
 
 
     }
-    const response = await getDoc(doc(db, "userChats", currentUser?.uid));
+    const response = await getDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid));
 
     if (Object.keys(response?.data()).includes(data?.chatId)) {
-      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", data.user.uid), {
+      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data.user.uid), {
         [data.groupId || data?.chatId + ".lastMessage"]: {
           text: text,
           img: imgName,
@@ -167,7 +168,7 @@ const Input = () => {
         },
         [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
       });
-      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChats", currentUser?.uid), {
+      (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid), {
         [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
       });
     }
@@ -195,7 +196,7 @@ const Input = () => {
         <InputEmoji
           value={text}
           onChange={setText}
-          cleanOnEnter
+          // cleanOnEnter
           onEnter={() => { handleSend() }}
           placeholder="Type a message"
           borderColor="white"

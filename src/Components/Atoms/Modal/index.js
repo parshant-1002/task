@@ -3,9 +3,8 @@ import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
 import { STRINGS } from '../../../Shared/Constants';
-export default function Modal({ children, show, setEditedGroupName = ()=>{}, string, type="",handleEditGroupName, editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel, addUser=()=>{}, handleSelect=()=>{}, showHead, showFoot }) {
+export default function Modal({ children, show, setEditedGroupName = () => { }, string, type = "", handleEditGroupName, editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel, addUser = () => { }, handleSelect = () => { }, showHead, showFoot }) {
     const { data, dispatch } = useContext(ChatContext);
-
     return (
         <div>
 
@@ -25,29 +24,35 @@ export default function Modal({ children, show, setEditedGroupName = ()=>{}, str
                             setShow(false)
                             setSelectedList && setSelectedList([])
                             setEditedGroupName && setEditedGroupName("")
-                            dispatch({ type:  STRINGS.MEMBERSADDEDSTATUS, payload: false })
-                           
+                            dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
+
                         }}>
                             Close
                         </button>
                         {selectedList?.length || channelName || editedGroupName ? <button className='btnProceed' onClick={() => {
                             addChannel && addChannel()
-                            data?.groupId &&  addUser()
+                            data?.groupId && addUser()
                             handleSelect()
-                            if(channelName?.length<3||!isNaN(channelName)){
+                            if (channelName?.length < 3 || !isNaN(channelName)) {
                                 setShow && setShow(true)
                             }
-                            else{
+                            else {
                                 setShow && setShow(false)
 
                             }
-                   
+                            if (editedGroupName?.length < 3 || !isNaN(editedGroupName)) {
+                                setShow && setShow(true)
+                            }
+                            else {
+                                setShow && setShow(false)
+
+                            }
                             handleEditGroupName && handleEditGroupName()
                             handleGroupNameEdit && handleGroupNameEdit()
                             dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
-                           title==="User" &&dispatch({ type: STRINGS.RESET })
-                        }} >{type=="editGroupName"?<>Edit</>:<>Add</>}</button> : null}
-                            {console.log(string==true,string==false,addUser,handleSelect,"addchannel")}
+                            title === "User" && dispatch({ type: STRINGS.RESET })
+                        }} >{type == "editGroupName" ? <>Edit</> : <>Add</>}</button> : null}
+                        {console.log(string == true, string == false, addUser, handleSelect, "addchannel")}
 
                     </div>}
                 </div>

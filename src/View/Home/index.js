@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 
 
-import Header from '../../Components/Cells/Header'
+import Header from '../../Components/Molecules/Header'
 import Sidebar from '../Sidebar'
 import "./styles.css"
-import Chat from '../../Components/Cells/ChatSection'
+import Chat from '../../Components/Molecules/ChatSection'
 import { AuthContext } from '../../Context/AuthContext'
 
 export default function Home() {

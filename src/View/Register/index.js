@@ -9,7 +9,7 @@ import "./styles.css"
 import { validEmail } from "../../Shared/Utilities";
 import { ChatContext } from "../../Context/ChatContext";
 import PasswordView from "../../Components/Atoms/passwordView";
-import { LINK, Messages, STRINGS } from "../../Shared/Constants";
+import { COLLECTION_NAME, LINK, Messages, STRINGS } from "../../Shared/Constants";
 const Register = () => {
   const [err, setErr] = useState("");
   const [nameErrMessage, setNameErrMessage] = useState(false);
@@ -84,14 +84,14 @@ const Register = () => {
                   photoURL: downloadURL,
                 });
                 //create user on firestore
-                await setDoc(doc(db, "users", res.user.uid), {
+                await setDoc(doc(db, COLLECTION_NAME?.USERS, res.user.uid), {
                   uid: res.user.uid,
                   displayName,
                   email,
                   photoURL: downloadURL,
                 });
-                await setDoc(doc(db, "userChannels", res.user.uid), {});
-                await setDoc(doc(db, "userChats", res.user.uid), {});
+                await setDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, res.user.uid), {});
+                await setDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, res.user.uid), {});
               } catch (err) {
                 console.log(err);
              

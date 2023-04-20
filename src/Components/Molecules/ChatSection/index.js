@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import Details from "../../Atoms/ChannelOrUserDetails";
+import Details from "../ChannelOrUserDetails";
 import { images } from "../../../Images";
-import Messages from "../Messages";
+import Messages from "../../Cells/Messages";
 import Input from "../Inputs";
 import { ChatContext } from "../../../Context/ChatContext";
 import { arrayUnion, collection, deleteField, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
@@ -10,7 +10,8 @@ import { AuthContext } from "../../../Context/AuthContext";
 import SearchingUser from "../AddingUsers";
 import "./styles.css"
 import Modal from "../../Atoms/Modal";
-import { STRINGS } from "../../../Shared/Constants";
+import { COLLECTION_NAME, STRINGS } from "../../../Shared/Constants";
+import SetAndEditChannelName from "../../Atoms/SetAndEditChannelName";
 
 const Chat = () => {
   const [showUserModal, setShowUserModal] = useState(false)
@@ -23,10 +24,10 @@ const Chat = () => {
   const [users, setUsers] = useState([])
   const combinedId = currentUser?.uid + data?.channelNameId
   const [editedGroupName, setEditedGroupName] = useState("")
-
+  const [error, setError] = useState("")
 
   useEffect(() => {
-    const q =data?.user?.uid&& query(collection(db, "users"),where("uid","==",data?.user?.uid))
+    const q =data?.user?.uid&& query(collection(db, COLLECTION_NAME?.USERS),where("uid","==",data?.user?.uid))
     const unsubscribe =data?.user?.uid&& onSnapshot(q, (querySnapshot) => {
       const r = []
       querySnapshot.forEach((doc) => {
@@ -40,7 +41,7 @@ const Chat = () => {
   }, [data])
 
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
+    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
       setGroupMembers(doc?.data())
     });
     return () => {
@@ -49,7 +50,7 @@ const Chat = () => {
   }, [data, details]);
   
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, "userChannels", currentUser?.uid), (doc) => {
+    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), (doc) => {
       setGroupName(doc?.data())
       if (!doc?.data()[data?.channelNameId]?.channelInfo?.channelName) {
         dispatch({ type: STRINGS.RESET })
@@ -66,38 +67,38 @@ const Chat = () => {
   }, [data])
 
 
-  const handleKey = (e) => {
-    if (e.code === "Enter") {
-      handleEditGroupName()
-      setEditModal(false)
-    }
-  }
+
 
   const handleEditGroupNamePerMember = async (x) => {
-    await updateDoc(doc(db, 'userChannels', x), {
+    await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, x), {
       [data?.channelNameId + ".channelInfo.channelName"]: editedGroupName
     });
   }
 
   const handleEditGroupName = async () => {
-    await updateDoc(doc(db, 'userChannels', currentUser?.uid), {
+    if (editedGroupName?.length > 2 && (editedGroupName.split("").some(val => isNaN(val)))) {
+      setError("")
+    await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
       [data?.channelNameId + ".channelInfo.channelName"]: editedGroupName
     });
-    data?.groupId && await updateDoc(doc(db, 'channels', data?.groupId), {
+    data?.groupId && await updateDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), {
       groupname: editedGroupName
     });
     groupMembers["participants"]?.map(val => handleEditGroupNamePerMember(val.uid))
-    setEditedGroupName(data?.channelName)
+    setEditedGroupName(data?.channelName)}
+    else{
+      setError("Enter Character more than 2 and should include alphabets")
+    }
   }
 
   const handleDeleteGroupMembers = async (x) => {
-    const participantsRef = doc(db, 'channels', data?.groupId);
+    const participantsRef = doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId);
     const filteredParticipants = groupMembers && groupMembers["participants"]?.filter(val => val.uid !== x)
     setGroupMembers({ ...groupMembers, participants: filteredParticipants })
     await updateDoc(participantsRef, {
       participants: groupMembers.participants.filter(val => val.uid !== x)
     });
-    await updateDoc(doc(db, 'userChannels', x), {
+    await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, x), {
       [data?.channelNameId]: deleteField()
     });
   }
@@ -110,7 +111,7 @@ const Chat = () => {
 
   const handleGetUsersOneByOne = async (x) => {
     try {
-      const querySnapshot = await getDocs(collection(db, "users"))
+      const querySnapshot = await getDocs(collection(db, COLLECTION_NAME?.USERS))
       const r = []
       querySnapshot.forEach((doc) => {
         r.push(doc.data())
@@ -153,9 +154,8 @@ const Chat = () => {
             </div>
           </div>
           <Modal show={editModal} type={"editGroupName"} setShow={setEditModal} showHead={true} showFoot={true} title={"Edit Channel Name"} editedGroupName={editedGroupName} setEditedGroupName={setEditedGroupName} handleEditGroupName={handleEditGroupName}>
-            <div className="editGroupNameInput">
-              <input value={editedGroupName} onKeyDown={handleKey} onChange={(e) => { setEditedGroupName(e.target.value) }}></input>
-            </div>
+          <SetAndEditChannelName type={"editChannelName"} editedGroupName={editedGroupName}  setEditedGroupName={setEditedGroupName} setError={setError} error={error} handleEditGroupName={handleEditGroupName} setEditModal={setEditModal} />
+           
           </Modal>
           <SearchingUser groupName={groupName[data?.channelNameId]?.channelInfo?.channelName} showUserModal={showUserModal} setShowUserModal={setShowUserModal} combinedId={combinedId} users={users} groupMembers={groupMembers} />
           {details ? <Details

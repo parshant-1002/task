@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react'
 import "./styles.css"
 import { images } from '../../../Images'
 import { ChatContext } from '../../../Context/ChatContext'
-import Modal from '../Modal'
+import Modal from '../../Atoms/Modal'
 import { AuthContext } from '../../../Context/AuthContext'
 import { collection, deleteDoc, deleteField, doc, onSnapshot, query, updateDoc, } from 'firebase/firestore'
 import { db } from '../../../firebase'
-import { STRINGS } from '../../../Shared/Constants'
+import { COLLECTION_NAME, STRINGS } from '../../../Shared/Constants'
 export default function Details({ userName, groupName, userImage, userId, groupMembers, setDetails, userMail, handleDeleteGroupMembers, createrId }) {
   const { data, dispatch } = useContext(ChatContext)
   const { currentUser } = useContext(AuthContext)
@@ -18,18 +18,18 @@ export default function Details({ userName, groupName, userImage, userId, groupM
   }
 
   const handleDeleteGroupData = async (x) => {
-    await updateDoc(doc(db, 'userChannels', x), {
+    await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, x), {
       [data?.channelNameId]: deleteField()
     });
   }
 
-  const handleDeleteGroup = async () => {
-    await deleteDoc(doc(db, "channels", (createrId + groupName)))
-    await deleteDoc(doc(db, "chats", (createrId + groupName)))
+  const handleDeleteGroup = async () => { 
+    await deleteDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, (createrId + groupName)))
+    await deleteDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, (createrId + groupName)))
     groupData?.length && groupData?.map(val => handleDeleteGroupData(val.uid))
   }
   useEffect(() => {
-    const q = query(collection(db, "users"))
+    const q = query(collection(db, COLLECTION_NAME?.USERS))
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const r = []
       querySnapshot.forEach((doc) => {
@@ -43,7 +43,7 @@ export default function Details({ userName, groupName, userImage, userId, groupM
 
   }, [data])
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
+    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
       doc?.exists() && setGroupData(doc?.data()["participants"])
     });
     return () => {

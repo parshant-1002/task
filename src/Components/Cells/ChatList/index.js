@@ -5,7 +5,7 @@ import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
 import { images } from "../../../Images";
-import { STRINGS } from "../../../Shared/Constants";
+import { COLLECTION_NAME, STRINGS } from "../../../Shared/Constants";
 
 const Chats = ({ showDirectMessage }) => {
   const [chats, setChats] = useState({});
@@ -23,7 +23,7 @@ const Chats = ({ showDirectMessage }) => {
 
   useEffect(() => {
     const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", currentUser?.uid), (doc) => {
+      const unsub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid), (doc) => {
         setChats(doc.data())
         doc.exists() && setVisible(true)
         showDirectMessage && dispatch({ type: STRINGS.GETUSERS, payload: (Object.values(doc.data())) })
@@ -37,7 +37,7 @@ const Chats = ({ showDirectMessage }) => {
   }, [currentUser?.uid]);
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
+    const unSub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, id), (doc) => {
       doc?.exists() && setMessages(doc?.data().messages);
     });
     return () => {
@@ -47,7 +47,7 @@ const Chats = ({ showDirectMessage }) => {
 
 
 useEffect(() => {
-  const q = query(collection(db, "users"))
+  const q = query(collection(db, COLLECTION_NAME?.USERS))
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
     const r = []
     querySnapshot.forEach((doc) => {
@@ -71,14 +71,14 @@ useEffect(() => {
 
 const removeUser=async()=>{
 setSelected(null)
-await updateDoc(doc(db,"userChats",currentUser?.uid),{
+await updateDoc(doc(db,COLLECTION_NAME?.CHAT_LIST,currentUser?.uid),{
   [data?.chatId]:deleteField()
 })
 // dispatch({type:STRINGS.RESET})
 }
 
 const resetSeenStatus=async(id)=>{
-    await updateDoc(doc(db,"userChats",currentUser?.uid),{
+    await updateDoc(doc(db,COLLECTION_NAME?.CHAT_LIST,currentUser?.uid),{
       [chatId+".unseen"]:{
         unseen:0
       },
@@ -91,7 +91,7 @@ const resetSeenStatus=async(id)=>{
     } 
  const updateStatus=async()=>{
   messageList?.map((val,i)=>{if(messageList[i].senderId!=currentUser.uid){messageList[i]["status"]=true}})
-   await updateDoc(doc(db,"chats",chatId),{
+   await updateDoc(doc(db,COLLECTION_NAME?.CHAT_DATA,chatId),{
     messages:messageList
 });
  

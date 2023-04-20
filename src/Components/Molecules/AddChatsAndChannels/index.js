@@ -5,29 +5,21 @@ import { ChatContext } from '../../../Context/ChatContext'
 import { db } from '../../../firebase'
 import Modal from '../../Atoms/Modal'
 import SearchingUser from '../AddingUsers'
-
 import "./styles.css"
-import { STRINGS } from '../../../Shared/Constants'
+import { COLLECTION_NAME, STRINGS } from '../../../Shared/Constants'
+import SetAndEditChannelName from '../../Atoms/SetAndEditChannelName'
+
 export default function AddUserAndChannel({ title }) {
   const [showUserModal, setShowUserModal] = useState(false)
   const [showChannelModal, setShowChannelModal] = useState(false)
   const [channelName, setChannelName] = useState()
-  const { currentUser} = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [users, setUsers] = useState([])
   const [error, setError] = useState("")
   const [string, setString] = useState("")
-  const { data,dispatch } = useContext(ChatContext)
+  const { data, dispatch } = useContext(ChatContext)
 
 
-  const handleKey=(e)=>{
-    if(e.code==="Enter"){
-      addChannel()
-      if(channelName?.length>2&&isNaN(channelName)){
-        setShowChannelModal(false)
-
-      }
-    }
-  }
 
   const handleGetRegisteredUsers = () => {
     const details = data?.users && ((data?.users) || [])
@@ -38,7 +30,7 @@ export default function AddUserAndChannel({ title }) {
 
   const handleGetRegisteredUsersOneByOne = async (x) => {
     try {
-      const querySnapshot = await getDocs(collection(db, "users"))
+      const querySnapshot = await getDocs(collection(db, COLLECTION_NAME?.USERS))
       const r = []
       querySnapshot.forEach((doc) => {
         r.push(doc.data())
@@ -58,31 +50,31 @@ export default function AddUserAndChannel({ title }) {
 
       const combinedId = currentUser?.uid + channelName
       try {
-        const res = await getDoc(doc(db, "chats", combinedId), { messages: [] });
+        const res = await getDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId), { messages: [] });
         if (!res.exists()) {
           //create a chat in chats collection
-          await setDoc(doc(db, "chats", combinedId), { messages: [] });
-          await setDoc(doc(db, "channels", combinedId),
+          await setDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId), { messages: [] });
+          await setDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, combinedId),
             {
               createdBy: { name: currentUser?.displayName, id: currentUser?.uid, email: currentUser?.email },
               groupname: channelName,
               participants: [{
                 name: currentUser?.displayName,
                 uid: currentUser?.uid,
-                email:currentUser?.email
-            }],
+                email: currentUser?.email
+              }],
               createdAt: serverTimestamp(),
             }
           )
           //create user chats
-          await updateDoc(doc(db, "userChannels", currentUser?.uid), {
-            [channelName+ ".channelInfo"]: {
-              channelNameId:   channelName,
+          await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
+            [channelName + ".channelInfo"]: {
+              channelNameId: channelName,
               channelName,
               groupId: combinedId,
               date: serverTimestamp()
             },
-            [channelName + ".unseen"]:0
+            [channelName + ".unseen"]: 0
           });
         }
       } catch (err) { console.log(err.message, "error") }
@@ -93,34 +85,24 @@ export default function AddUserAndChannel({ title }) {
     }
   }
 
-
   return (
     <div className='addChannel'>
       <label className='channelLabel'> {title}</label>
-      {title == "Channel" ? <button className='channelButton' onClick={() => { setShowChannelModal(true)
-      
-       }} >Add</button> : <button className='channelButton' onClick={() => {
-        setShowUserModal(true)
-        handleGetRegisteredUsers()
-        setString(false)
-        dispatch({ type: STRINGS.RESET });
-      }} >Add</button>}
+      {title === "Channel" ? <button className='channelButton' onClick={() => {
+        setShowChannelModal(true)
+      }} >Add</button>
+        :
+        <button className='channelButton' onClick={() => {
+          setShowUserModal(true)
+          handleGetRegisteredUsers()
+          setString(false)
+          dispatch({ type: STRINGS.RESET });
+        }} >Add</button>}
 
       <Modal show={showChannelModal} setShow={setShowChannelModal} error={error} setError={setError} title={title} channelName={channelName} setChannelName={setChannelName} addChannel={addChannel} showHead={true} showFoot={true} >
-        <div>
-          <label>Enter {title} name</label>
-          <div>
-            <input value={channelName} onKeyDown={handleKey} onChange={(e) => {
-              setChannelName(e.target.value)
-              setError("")
-            }}></input>
-            {error && <label className='error'>{error}</label>}
-          </div>
-        </div>
+        <SetAndEditChannelName titl={title} channelName={channelName} addChannel={addChannel} setShowChannelModal={setShowChannelModal} setChannelName={setChannelName} setError={setError} error={error} />
       </Modal>
-
-      <SearchingUser  string={string} showUserModal={showUserModal} setShowUserModal={setShowUserModal} users={users} />
-
+      <SearchingUser string={string} showUserModal={showUserModal} setShowUserModal={setShowUserModal} users={users} />
     </div>
   )
 }

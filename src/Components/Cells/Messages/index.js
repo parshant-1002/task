@@ -4,15 +4,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import { auth, db } from "../../../firebase";
-import Message from "../../Atoms/MessageList";
+import Message from "./MessageList";
 import "./styles.css"
+import { COLLECTION_NAME } from "../../../Shared/Constants";
 const Messages = () => {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
   const id = data?.groupId || data?.chatId
   const { currentUser } = useContext(AuthContext)
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", id), (doc) => {
+    const unSub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, id), (doc) => {
       doc?.exists() && setMessages(doc?.data().messages);
     });
     return () => {

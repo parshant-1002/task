@@ -59,3 +59,9 @@
     border-width: thin;
     border-radius: 5px;
 }
+.messimage {
+    height: 24px;
+    cursor: pointer;
+    
+ 
+}

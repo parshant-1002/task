@@ -3,12 +3,14 @@ import { signOut } from "firebase/auth"
 import { auth, db } from '../../../firebase'
 import { AuthContext } from '../../../Context/AuthContext'
 import "./styles.css"
-import Modal from '../Modal'
+import Modal from '../../Atoms/Modal'
 import { useNavigate } from 'react-router-dom'
 
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { images } from '../../../Images'
-import EditUserProfile from '../../Cells/EditUserProfile'
+import EditUserProfile from './EditUserProfile'
+import { COLLECTION_NAME } from '../../../Shared/Constants'
+import CurrentUserProfile from './CurrentUserProfile'
 
 export default function Navbar() {
   const { currentUser } = useContext(AuthContext)
@@ -18,7 +20,7 @@ export default function Navbar() {
   const [users, setUsers] = useState([])
   const navigate = useNavigate()
   useEffect(() => {
-    const q = currentUser?.uid && query(collection(db, "users"), where("uid", "==", currentUser?.uid))
+    const q = currentUser?.uid && query(collection(db, COLLECTION_NAME?.USERS), where("uid", "==", currentUser?.uid))
     const unsubscribe = currentUser?.uid && onSnapshot(q, (querySnapshot) => {
       const r = []
       querySnapshot.forEach((doc) => {
@@ -44,23 +46,8 @@ export default function Navbar() {
         <span className='profileNavName'>{currentUser?.displayName}</span>
         <img className='profilepic' src={users[0]?.photoURL} alt="" onClick={() => { setShow(true) }} />
         <Modal show={show} setShow={setShow} showHead={false} showFoot={false} >
-          <div className='profile'>
-
-          <img className='showPic' src={users[0]?.photoURL} alt="" />
-          <div className='pname'>
-            <div>
-
-            <label className='profilename'>Name:{users[0]?.displayName}</label>
-            <img className='editbtn' src={images?.profileEdit} alt="" onClick={() => {
-              setShowProfileEditModal(true)
-              setShow(false)
-            }} />
-            </div>
-            <label className='profilemail'>{users[0]?.email}</label>
-            <button className='logoutbtn' onClick={logout}>logout</button>
-            <button className='closeBtn' onClick={() => setShow(false)}>Close</button>
-          </div>
-            </div>
+          <CurrentUserProfile users={users} images={images} logout={logout} setShowProfileEditModal={setShowProfileEditModal} setShow={setShow} />
+         
         </Modal>
         <Modal show={showProfileEditModal} setShow={setShowProfileEditModal} showHead={true} showFoot={false} title={"Profile Update"}>
           <EditUserProfile setShow={setShowProfileEditModal}/>

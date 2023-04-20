@@ -5,8 +5,9 @@ import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
 import { images } from "../../../Images";
-import Display from "../Display";
-import Modal from "../Modal";
+
+import Modal from "../../Atoms/Modal";
+import { COLLECTION_NAME } from "../../../Shared/Constants";
 const Message = ({ message }) => {
   const { data } = useContext(ChatContext)
   const { currentUser } = useContext(AuthContext);
@@ -17,37 +18,32 @@ const Message = ({ message }) => {
   const lastMessageLocation = useRef();
 
 
-    useEffect(() => {handleSelect()}, [message])
+  useEffect(() => { handleSelect() }, [message])
 
   const handleSelect = async () => {
-  
-    try{
-  
-       updateDoc(doc(db, "userChannels", currentUser?.uid), {
+
+    try {
+
+      data?.channelNameId && updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
         [data?.channelNameId + ".unseen"]: 0,
-        [data?.channelNameId+".lastMessage"]:{
-          img:"",
-          pdf:"",
-          text:""
+        [data?.channelNameId + ".lastMessage"]: {
+          img: "",
+          pdf: "",
+          text: ""
         }
 
-      }
-      )
-   
-    }catch(err){
-alert(err)
+      })
+    } catch (err) {
+      alert(err)
     }
   };
 
-
-
   useEffect(() => {
     get()
-
   }, []);
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, "channels", data?.groupId), (doc) => {
-      doc?.exists()&& setGroupMembers(doc?.data()["participants"])
+    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
+      doc?.exists() && setGroupMembers(doc?.data()["participants"])
     });
     return () => {
       data?.groupId && unSub();
@@ -58,7 +54,7 @@ alert(err)
   }, [message]);
 
   const get = async () => {
-    const res = await getDoc(doc(db, "users", message.senderId))
+    const res = await getDoc(doc(db, COLLECTION_NAME?.USERS, message.senderId))
     setGotData(res.data())
   }
 
