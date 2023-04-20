@@ -62,8 +62,8 @@ const Input = () => {
 
 
   useEffect(() => {
-       setUnseen(messageList?.length ? messageList?.filter(val => val.senderId === currentUser.uid && val.status === false).length : 0)
-    }, [messageList, currentUser.uid])
+    setUnseen(messageList?.length ? messageList?.filter(val => val.senderId === currentUser.uid && val.status === false).length : 0)
+  }, [messageList, currentUser.uid])
 
   useEffect(() => {
     updateUnseenStatus(unseen)
@@ -73,32 +73,32 @@ const Input = () => {
     (!data.chatId.includes("undefined")) && unseenCount && await updateDoc(doc(db, "userChats", data.user.uid), {
       [data.groupId || data?.chatId + ".unseen.unseen"]: unseenCount
     })
-  
+
   }
 
 
   const updateGroupUnseenStatus = async (uid) => {
-    console.log("in increment before getting res sjdflksdfklsdfklsf<><>>><.")
-    const res=await getDoc(doc(db,"userChannels",uid))
-    console.log(res?.data()?.[data?.channelNameId]?.unseen,uid, currentUser?.uid,"get res in increment sjdflksdfklsdfklsf<><>>><.")
-    if(uid!==currentUser?.uid){
-      data?.groupId&&await updateDoc(doc(db, "userChannels", uid), {
-        [data.channelNameId + ".unseen"]: res?.data()?.[data?.channelNameId]?.unseen+1
+
+    const res = await getDoc(doc(db, "userChannels", uid))
+
+    if (uid !== currentUser?.uid) {
+      data?.groupId && await updateDoc(doc(db, "userChannels", uid), {
+        [data.channelNameId + ".unseen"]: res?.data()?.[data?.channelNameId]?.unseen + 1
       })
     }
-    const res1=await getDoc(doc(db,"userChannels",uid))
-    console.log(res1?.data()?.[data?.channelNameId]?.unseen,"res after update sjdflksdfklsdfklsf<><>>><.")
+
+
   }
 
   const updateLastTextInGroup = async (ids) => {
-    (data.chatId.includes("undefined")) && await updateDoc(doc(db, "userChannels", ids), {
+    ((data.chatId.includes("undefined")) && ids !== currentUser?.uid) && await updateDoc(doc(db, "userChannels", ids), {
       [data?.channelNameId + ".lastMessage"]: {
         text,
         img: img && imgName,
         file: file && fileName
       },
       [data?.channelNameId + ".date"]: serverTimestamp(),
-     
+
     });
   }
   const handleAddUser = async () => {
@@ -136,6 +136,9 @@ const Input = () => {
               }),
             });
           });
+          handleAddUser()
+          groupMembers.map(val => updateLastTextInGroup(val?.uid))
+          groupMembers.map(val => updateGroupUnseenStatus(val?.uid))
         });
     }
 
@@ -150,6 +153,8 @@ const Input = () => {
           membersSeenGroupText: []
         }),
       });
+
+
     }
     const response = await getDoc(doc(db, "userChats", currentUser?.uid));
 
@@ -166,9 +171,9 @@ const Input = () => {
         [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
       });
     }
-    handleAddUser()
-    groupMembers.map(val => updateLastTextInGroup(val?.uid))
-    groupMembers.map(val =>  updateGroupUnseenStatus (val?.uid))
+    text.trim() && groupMembers.map(val => updateGroupUnseenStatus(val?.uid))
+    text.trim() && handleAddUser()
+    text.trim() && groupMembers.map(val => updateLastTextInGroup(val?.uid))
 
 
     setText("");

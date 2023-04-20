@@ -62,7 +62,12 @@ const Channels = () => {
     dispatch({ type: STRINGS.CHANGE_USER, payload: u });
 
     data?.channelNameId&&await updateDoc(doc(db, "userChannels", currentUser?.uid), {
-      [data?.channelNameId + ".unseen"]: 0
+      [channelName + ".unseen"]: 0,
+      [channelName+".lastMessage"]:{
+        img:"",
+        pdf:"",
+        text:""
+      }
     })
   };
 

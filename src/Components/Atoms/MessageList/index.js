@@ -15,6 +15,32 @@ const Message = ({ message }) => {
   const [show, setShow] = useState(false)
   // const date = new Date()
   const lastMessageLocation = useRef();
+
+
+    useEffect(() => {handleSelect()}, [message])
+
+  const handleSelect = async () => {
+  
+    try{
+  
+       updateDoc(doc(db, "userChannels", currentUser?.uid), {
+        [data?.channelNameId + ".unseen"]: 0,
+        [data?.channelNameId+".lastMessage"]:{
+          img:"",
+          pdf:"",
+          text:""
+        }
+
+      }
+      )
+   
+    }catch(err){
+alert(err)
+    }
+  };
+
+
+
   useEffect(() => {
     get()
 

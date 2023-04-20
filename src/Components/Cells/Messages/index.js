@@ -21,22 +21,7 @@ const Messages = () => {
   }, [data?.chatId, data?.groupId]);
 
 
-  useEffect(() => {handleSelect()}, [messages])
 
-  const handleSelect = async () => {
-    console.log("before updating to 0 sjdflksdfklsdfklsf<><>>><.")
-    try{
-  
-       updateDoc(doc(db, "userChannels", currentUser?.uid), {
-        [data?.channelNameId + ".unseen"]: 0
-
-      }
-      )
-      console.log("after updating to 0 sjdflksdfklsdfklsf<><>>><.")
-    }catch(err){
-alert(err)
-    }
-  };
   return (
     <div className="messages">
       {messages?.map((m) => (
