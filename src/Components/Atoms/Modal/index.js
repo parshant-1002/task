@@ -1,13 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
-import "bootstrap/dist/css/bootstrap.min.css";
 import { STRINGS } from '../../../Shared/Constants';
-export default function Modal({ children, show, setEditedGroupName = () => { }, string, type = "", handleEditGroupName, editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel=()=>{}, addUser = () => { }, handleSelect = () => { }, showHead, showFoot }) {
+export default function Modal({ children, show, setEditedGroupName = () => { }, string, type = "", handleEditGroupName=()=>{}, editedGroupName,  setShow, channelName, title, selectedList, setSelectedList=()=>{}, addChannel=()=>{}, addUser = () => { }, handleSelect = () => { }, showHead, showFoot }) {
     const { data, dispatch } = useContext(ChatContext);
     return (
         <div>
-
             {/* header */}
             {show && <div className='modalData' >
                 <div className='modalContent' >
@@ -25,7 +23,6 @@ export default function Modal({ children, show, setEditedGroupName = () => { }, 
                             setSelectedList && setSelectedList([])
                             setEditedGroupName && setEditedGroupName("")
                             dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
-
                         }}>
                             Close
                         </button>
@@ -45,15 +42,12 @@ export default function Modal({ children, show, setEditedGroupName = () => { }, 
                             }
                             else {
                                 setShow && setShow(false)
-
                             }
                             handleEditGroupName && handleEditGroupName()
-                            handleGroupNameEdit && handleGroupNameEdit()
                             dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
                             title === "User" && dispatch({ type: STRINGS.RESET })
                         }} >{type == "editGroupName" ? <>Edit</> : <>Add</>}</button> : null}
                         {console.log(string == true, string == false, addUser, handleSelect, "addchannel")}
-
                     </div>}
                 </div>
             </div>}
