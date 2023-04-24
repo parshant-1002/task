@@ -6,7 +6,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import "./styles.css"
-import { validEmail } from "../../Shared/Utilities";
+import { validPassword, errMessages, validEmail } from "../../Shared/Utilities";
 import { ChatContext } from "../../Context/ChatContext";
 import PasswordView from "../../Components/Atoms/passwordView";
 import { COLLECTION_NAME, LINK, Messages, STRINGS } from "../../Shared/Constants";
@@ -28,10 +28,16 @@ const Register = () => {
   const [file, setFile] = useState("")
   const [passwordView, setPasswordView] = useState("password")
 
-
+ const setDefault=()=>{
+  setNameBlankInput(false)
+  setNameErrMessage(false)
+  setErr("")
+  setLoading("")
+ }
   const handleSubmit = async () => {
     setErr("")
     dispatch({ type: STRINGS.RESET });
+    
     if (displayName.trim() === "") {
       setNameBlankInput(true)
     }
@@ -44,6 +50,7 @@ const Register = () => {
     if (!file) {
       setFileBlankInput(true)
     }
+
     else {
       if (!isNaN(displayName)) {
         setNameErrMessage(Messages.notValidUser)
@@ -51,7 +58,7 @@ const Register = () => {
       else if (!validEmail.test(email)) {
         setEmailErrMessage(Messages.notValidMail);
       }
-      else if (password.length < 6 || !password.split("").some(val => isNaN(val))) {
+      else if (!validPassword.test(password)) {
         setPasswordErrMessage(Messages.notValidPassword);
       }
       else if (!file) {
@@ -113,15 +120,13 @@ const Register = () => {
         <span className="title">Register</span>
         <input className="inputRegister" type="text" placeholder="UserName" value={displayName} onChange={(e) => {
           setDisplayName(e.target.value.trim())
-          setNameBlankInput(false)
-          setNameErrMessage(false)
+          setDefault()
         }} />
         {nameBlankInput && <label className="registerError">*UserName Required</label>}
         {!nameBlankInput && nameErrMessage && <label className="registerError">{nameErrMessage}</label>}
         <input className="inputRegister" type="email" placeholder="email" value={email} onChange={(e) => {
           setEmail(e.target.value)
-          setEmailBlankInput(false)
-          setEmailErrMessage(false)
+          setDefault()
         }} />
         {emailBlankInput && <label className="registerError">*Email Required</label>}
         {!emailBlankInput && emailErrMessage && <label className="registerError">{emailErrMessage}</label>}
@@ -129,8 +134,7 @@ const Register = () => {
 
           <input className="passwordInputRegister" type={passwordView} placeholder="password" value={password} onChange={(e) => {
             setPassword(e.target.value)
-            setPasswordBlankInput(false)
-            setPasswordErrMessage(false)
+            setDefault()
           }} />
           <PasswordView setPasswordView={setPasswordView} />
 
@@ -139,8 +143,7 @@ const Register = () => {
         {!passwordBlankInput && passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
         <input className="inputRegister" accept="image/*" style={{ display: "none" }} type="file" id="file" onChange={(e) => {
           setFile(e.target.files[0])
-          setFileBlankInput(false)
-          setFileErrMessage(false)
+          setDefault()
         }} />
         <label className="label" htmlFor="file">
           {file ? <img className="img" src={URL.createObjectURL(file)} alt="" /> : <img className="img" src={images.addAvatar} alt="" />}
@@ -150,7 +153,7 @@ const Register = () => {
         {!fileBlankInput && fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
         <button className="Signup" onClick={() => { handleSubmit() }}>Sign up</button>
         {!err && loading && <label className="registerError">{loading}</label>}
-        {err && <label className="registerError">{err}</label>}
+        {err && <label className="registerError">{errMessages(err)}</label>}
         <p className="p">
           You do have an account? <Link className="Link" to="/login">Login</Link>
         </p>

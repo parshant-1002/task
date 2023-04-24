@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { ChatContext } from '../../Context/ChatContext'
-import { validEmail } from "../../Shared/Utilities";
+import { validPassword, errMessages, validEmail } from "../../Shared/Utilities";
 import "./styles.css"
 import PasswordView from "../../Components/Atoms/passwordView";
 import { LINK, Messages, STRINGS, URL } from "../../Shared/Constants";
@@ -17,7 +17,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showVerificationButton, setShowVerificationButton] = useState(false);
   const [err, setErr] = useState("");
-  const [loaderShow,setLoaderShow]=useState(false)
+  const [loaderShow, setLoaderShow] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordView, setPasswordView] = useState("password")
@@ -32,19 +32,16 @@ const Login = () => {
 
   const handleSendVerificationCode = async () => {
     setLoading(Messages.sendingVerification)
-  
     const res = await signInWithEmailAndPassword(auth, email, password);
     const actionCodeSettings = {
       url: LINK.REDIRECT_URL_AFTER_VERIFICATION,
       handleCodeInApp: true
     };
     await sendEmailVerification(res.user, actionCodeSettings)
-  
     setLoading(Messages.sentVerification)
   }
 
   const handleSubmit = async (e) => {
- 
     setLoading("")
     e.preventDefault();
     const email = e.target[0].value;
@@ -63,7 +60,7 @@ const Login = () => {
       if (!validEmail.test(email)) {
         setEmailErrMessage(Messages.notValidMail);
       }
-      if (password.trim() === "" || password.length < 6 || !password.split("").some(val => isNaN(val))) {
+      if (!validPassword.test(password)) {
         setPasswordErrMessage(Messages.notValidPassword);
       }
       else {
@@ -79,7 +76,7 @@ const Login = () => {
           else {
             localStorage.setItem("Token", (res?._tokenResponse?.idToken))
             setLoaderShow(false)
-           window.location.reload()
+            window.location.reload()
             navigate("/")
           }
         }
@@ -113,16 +110,16 @@ const Login = () => {
           {passwordBlankInput && <label className="registerError">*Password Required</label>}
           {passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
           <button className="Signin">Sign in</button>
-          {err && <span className="loginError">{err}</span>}
+          {err && <span className="loginError">{errMessages(err)}</span>}
         </form>
         {loading && <label className="registerError">{loading}</label>}
         {showVerificationButton && <button className="Verification" onClick={handleSendVerificationCode} >send Verification again</button>}
         <p className="p">You don't have an account? <Link className="Link" to="/register">Register</Link></p>
         {err === "Firebase: Error (auth/wrong-password)." || err === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)." ? <button className="resetBtn" type="button" onClick={triggerResetPassword}>Reset password</button> : null}
-        {console.log(email, password)}
+
       </div>
 
-      <Loader show={loaderShow}/>
+      <Loader show={loaderShow} />
     </div>
   );
 };

@@ -11,7 +11,7 @@ export const STRINGS={
 export const Messages={
     notValidUser:"Enter valid UserName",
     notValidMail:"email is invalid",
-    notValidPassword:"password is invalid (Enter more than 6 characters and include both number and character)",
+    notValidPassword:"password is invalid (Enter Both numbers and alphabets ,Atleast one special character and uppercase)",
     chooseAvatar:"Choose Avatar",
     sendingVerification:"Sending Verification Link",
     sentVerification:"Verification Link Sent",

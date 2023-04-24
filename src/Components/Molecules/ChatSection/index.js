@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Details from "../ChannelOrUserDetails";
+import Details from "../../Cells/ChannelOrUserDetails";
 import { images } from "../../../Images";
 import Messages from "../../Cells/Messages";
 import Input from "../Inputs";
