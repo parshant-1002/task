@@ -13,7 +13,7 @@ export default function InputFile(props) {
 
         if (e.target.value) {
 
-          if (e.target.files[0]?.size > 10000000) {
+          if (e.target.files[0]?.size > 10000000000) {
             props?.setInvalid(true)
           }
           else {

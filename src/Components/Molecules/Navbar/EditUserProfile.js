@@ -79,8 +79,8 @@ const EditUserProfile = ({ setShow }) => {
                     setNameBlankInput(false)
                     setNameErrMessage(false)
                 }} />
-                {nameBlankInput && <label className="registerError">*UserName Required</label>}
-                {!nameBlankInput && nameErrMessage && <label className="registerError">{nameErrMessage}</label>}
+                {nameBlankInput && <label className="editProfileError">*UserName Required</label>}
+                {!nameBlankInput && nameErrMessage && <label className="editProfileError">{nameErrMessage}</label>}
             </div>
             <div className="fileInput">
                 <input accept="image/*" style={{ display: "none" }} type="file" id="file" onChange={(e) => {
@@ -93,13 +93,13 @@ const EditUserProfile = ({ setShow }) => {
                     {file ? <img className="img" src={URL.createObjectURL(file)} alt="" /> : <img className="img" src={images.addAvatar} alt="" />}
                     <span>Change avatar</span>
                 </label>
-                {fileBlankInput && <label className="registerError">*Avatar Required</label>}
-                {!fileBlankInput && fileErrMessage && <label className="registerError">{fileErrMessage}</label>}
+                {fileBlankInput && <label className="editProfileError">*Avatar Required</label>}
+                {!fileBlankInput && fileErrMessage && <label className="editProfileError">{fileErrMessage}</label>}
             </div>
             <button className="Update" onClick={() => { handleSubmit() }}>Update</button>
             <button className="closeProfile" onClick={() => { setShow(false) }}>Cancle</button>
             {!err && loader && <Loader show={loader}/>}
-            {err && <label className="registerError">{err}</label>}
+            {err && <label className="editProfileError">{err}</label>}
             
         </div>
     );

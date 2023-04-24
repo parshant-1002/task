@@ -82,11 +82,11 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
         setSelectedList([])
     }
 
-    const handleAdd = () => {
+    const handleAddUsersInChatList = () => {
         if (selectedList?.length)
-            selectedList?.map(val => handleAdd2(val))
+            selectedList?.map(val => handleAddUsersInChatListOneByOne(val))
     }
-    const handleAdd2 = async (user) => {
+    const handleAddUsersInChatListOneByOne = async (user) => {
         const combinedId = currentUser?.uid > user.uid
             ? currentUser?.uid + user.uid
             : user.uid + currentUser?.uid;
@@ -125,7 +125,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
 
     return (
         <>
-        <Modal show={showUserModal} setShow={setShowUserModal} title={"users"} handleSelect={handleAdd} setSelectedList={setSelectedList} selectedList={selectedList} addUser={addUsersInChannel} showHead={true} showFoot={true}  >
+        <Modal show={showUserModal} setShow={setShowUserModal} title={"users"} handleAddUsersInChatList={handleAddUsersInChatList} setSelectedList={setSelectedList} selectedList={selectedList} addUsersInChannel={addUsersInChannel} showHead={true} showFoot={true}  >
             {users?.length ?
                 <div>
                     <div >

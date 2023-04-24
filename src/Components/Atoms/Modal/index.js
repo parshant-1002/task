@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext} from 'react'
 import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import { STRINGS } from '../../../Shared/Constants';
-export default function Modal({ children, show, setEditedGroupName = () => { }, string, type = "", handleEditGroupName=()=>{}, editedGroupName,  setShow, channelName, title, selectedList, setSelectedList=()=>{}, addChannel=()=>{}, addUser = () => { }, handleSelect = () => { }, showHead, showFoot }) {
+export default function Modal({ children, show, setEditedGroupName = () => { }, type = "", handleEditGroupName=()=>{}, editedGroupName,  setShow=()=>{}, channelName, title, selectedList, setSelectedList=()=>{}, addChannel=()=>{}, handleAddUsersInChatList = () => { }, addUsersInChannel=()=>{}, showHead, showFoot }) {
     const { data, dispatch } = useContext(ChatContext);
     return (
         <div>
@@ -28,8 +28,8 @@ export default function Modal({ children, show, setEditedGroupName = () => { }, 
                         </button>
                         {selectedList?.length || channelName || editedGroupName ? <button className='btnProceed' onClick={() => {
                             addChannel()
-                            data?.groupId && addUser()
-                            handleSelect()
+                            data?.groupId && addUsersInChannel()
+                            handleAddUsersInChatList()
                             if (channelName?.length < 3 || !isNaN(channelName)) {
                                 setShow && setShow(true)
                             }
@@ -46,8 +46,8 @@ export default function Modal({ children, show, setEditedGroupName = () => { }, 
                             handleEditGroupName && handleEditGroupName()
                             dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
                             title === "User" && dispatch({ type: STRINGS.RESET })
-                        }} >{type == "editGroupName" ? <>Edit</> : <>Add</>}</button> : null}
-                        {console.log(string == true, string == false, addUser, handleSelect, "addchannel")}
+                        }} >{type === "editGroupName" ? <>Edit</> : <>Add</>}</button> : null}
+                        
                     </div>}
                 </div>
             </div>}

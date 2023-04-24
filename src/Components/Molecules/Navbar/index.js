@@ -14,8 +14,7 @@ import CurrentUserProfile from './CurrentUserProfile'
 
 export default function Navbar() {
   const { currentUser } = useContext(AuthContext)
-
-  const [show, setShow] = useState(false)
+  const [showCurrentUserProfile, setShowCurrentUserProfile] = useState(false)
   const [showProfileEditModal, setShowProfileEditModal] = useState(false)
   const [users, setUsers] = useState([])
   const navigate = useNavigate()
@@ -44,13 +43,12 @@ export default function Navbar() {
     <div className='navbar'>
       <div className="user">
         <span className='profileNavName'>{currentUser?.displayName}</span>
-        <img className='profilepic' src={users[0]?.photoURL} alt="" onClick={() => { setShow(true) }} />
-        <Modal show={show} setShow={setShow} showHead={false} showFoot={false} >
-          <CurrentUserProfile users={users} images={images} logout={logout} setShowProfileEditModal={setShowProfileEditModal} setShow={setShow} />
-         
+        <img className='profilepic' src={users[0]?.photoURL} alt="" onClick={() => { setShowCurrentUserProfile(true) }} />
+        <Modal show={showCurrentUserProfile} setShow={setShowCurrentUserProfile} showHead={false} showFoot={false} >
+          <CurrentUserProfile users={users} images={images} logout={logout} setShowProfileEditModal={setShowProfileEditModal} setShow={setShowCurrentUserProfile} />
         </Modal>
         <Modal show={showProfileEditModal} setShow={setShowProfileEditModal} showHead={true} showFoot={false} title={"Profile Update"}>
-          <EditUserProfile setShow={setShowProfileEditModal}/>
+          <EditUserProfile setShow={setShowProfileEditModal} />
         </Modal>
       </div>
     </div>
