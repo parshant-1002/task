@@ -5,25 +5,20 @@ import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 import "./styles.css"
 import { images } from "../../../Images";
-
 import Modal from "../../Atoms/Modal";
 import { COLLECTION_NAME } from "../../../Shared/Constants";
+
 const Message = ({ message }) => {
   const { data } = useContext(ChatContext)
   const { currentUser } = useContext(AuthContext);
   const [gotdata, setGotData] = useState()
   const [groupMembers, setGroupMembers] = useState([])
   const [show, setShow] = useState(false)
-  // const date = new Date()
   const lastMessageLocation = useRef();
 
-
   useEffect(() => { handleSelect() }, [message])
-
   const handleSelect = async () => {
-
     try {
-
       data?.channelNameId && updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
         [data?.channelNameId + ".unseen"]: 0,
         [data?.channelNameId + ".lastMessage"]: {
@@ -31,7 +26,6 @@ const Message = ({ message }) => {
           pdf: "",
           text: ""
         }
-
       })
     } catch (err) {
       alert(err)
@@ -41,6 +35,7 @@ const Message = ({ message }) => {
   useEffect(() => {
     get()
   }, []);
+
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
       doc?.exists() && setGroupMembers(doc?.data()["participants"])
@@ -49,6 +44,7 @@ const Message = ({ message }) => {
       data?.groupId && unSub();
     };
   }, [data]);
+
   useEffect(() => {
     lastMessageLocation.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
@@ -67,7 +63,6 @@ const Message = ({ message }) => {
           {data?.groupId && message.senderId === currentUser.uid && <img className="messageSeenDetails" src={images.messageSeenDetails} alt="" onClick={() => { setShow(true) }}></img>}
           {gotdata && <img className="senderimg" src={gotdata?.photoURL} alt="" />}
         </div>
-
         <div className="messageContent">
           <div className="userDetails">
             {gotdata && <label className="senderName">    {gotdata.displayName}</label>}
@@ -98,7 +93,6 @@ const Message = ({ message }) => {
                     </h7>)))
                 }) : <h1>no user</h1>}
             </div>
-
           </Modal>
         </div>
       </div>

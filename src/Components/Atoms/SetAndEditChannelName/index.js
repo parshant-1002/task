@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function SetAndEditChannelName({ setEditModal=()=>{}, handleEditGroupName=()=>{},editedGroupName = "", setEditedGroupName = () => { }, setShowChannelModal = () => { }, type, title, addChannel = () => { }, channelName, setChannelName = () => { }, setError = () => { }, error }) {
+export default function SetAndEditChannelName({ setEditModal = () => { }, handleEditGroupName = () => { }, editedGroupName = "", setEditedGroupName = () => { }, setShowChannelModal = () => { }, type, title, addChannel = () => { }, channelName, setChannelName = () => { }, setError = () => { }, error }) {
     const handleKey = (e) => {
         if (e.code === "Enter") {
             addChannel()
@@ -12,13 +12,12 @@ export default function SetAndEditChannelName({ setEditModal=()=>{}, handleEditG
 
     const handleKeyToEditChannelName = (e) => {
         if (e.code === "Enter") {
-          handleEditGroupName()
-          if (editedGroupName?.length > 2 && isNaN(editedGroupName)) {
-            setEditModal(false)
+            handleEditGroupName()
+            if (editedGroupName?.length > 2 && isNaN(editedGroupName)) {
+                setEditModal(false)
+            }
         }
-         
-        }
-      }
+    }
 
     return (
         <>

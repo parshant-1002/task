@@ -1,14 +1,15 @@
 
 import Home from "./View/Home";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate  } from "react-router-dom"
 import Register from "./View/Register";
 import Login from "./View/Login";
 
 import { auth } from "./firebase";
+import Loader from "./Components/Atoms/Loader";
 
 
 function App() {
-    
+
   localStorage.setItem("auth",JSON.stringify(auth))
 
   const token=(localStorage.getItem("Token"))
@@ -19,15 +20,12 @@ function App() {
     }
     else{
       return children
-
     }
-  
-  };
+    };
   const AuthRoute = ({ children }) => {
     if (token) {
       return <Navigate to="/" />;
     }
-
     return children
   };
   return (
@@ -35,7 +33,7 @@ function App() {
       <Routes>
         <Route>
           <Route
-          reload="true"
+      
             index
             element={
               <ProtectedRoute>
@@ -72,12 +70,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-    
         </Route>
       </Routes>
-
     </BrowserRouter>
-
   );
 }
 

@@ -8,6 +8,7 @@ import "./styles.css"
 import { ChatContext } from "../../../Context/ChatContext";
 import { AuthContext } from "../../../Context/AuthContext";
 import { COLLECTION_NAME, STRINGS } from "../../../Shared/Constants";
+import Loader from "../../Atoms/Loader";
 const EditUserProfile = ({ setShow }) => {
     const [err, setErr] = useState("");
     const [nameErrMessage, setNameErrMessage] = useState(false);
@@ -36,7 +37,7 @@ const EditUserProfile = ({ setShow }) => {
             else {
                 setNameBlankInput(false)
                 try {
-                    setLoader("Updating")
+                    setLoader(true)
                     const date = new Date().getTime();
                     const storageRef = ref(storage, `${displayName + date}`);
                     await uploadBytesResumable(storageRef, file).then(() => {
@@ -53,7 +54,7 @@ const EditUserProfile = ({ setShow }) => {
                                     displayName,
                                     photoURL: file ? downloadURL : currentUser?.photoURL,
                                 });
-                                setLoader("")
+                                setLoader(false)
                                 setShow(false)
                             } catch (err) {
                                 console.log(err);
@@ -97,8 +98,9 @@ const EditUserProfile = ({ setShow }) => {
             </div>
             <button className="Update" onClick={() => { handleSubmit() }}>Update</button>
             <button className="closeProfile" onClick={() => { setShow(false) }}>Cancle</button>
-            {!err && loader && <label className="registerError">{loader}</label>}
+            {!err && loader && <Loader show={loader}/>}
             {err && <label className="registerError">{err}</label>}
+            
         </div>
     );
 };

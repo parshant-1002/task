@@ -8,6 +8,7 @@ import SearchingUser from '../AddingUsers'
 import "./styles.css"
 import { COLLECTION_NAME, STRINGS } from '../../../Shared/Constants'
 import SetAndEditChannelName from '../../Atoms/SetAndEditChannelName'
+import Loader from '../../Atoms/Loader'
 
 export default function AddUserAndChannel({ title }) {
   const [showUserModal, setShowUserModal] = useState(false)
@@ -17,6 +18,7 @@ export default function AddUserAndChannel({ title }) {
   const [users, setUsers] = useState([])
   const [error, setError] = useState("")
   const [string, setString] = useState("")
+  const [loader, setLoader] = useState(false)
   const { data, dispatch } = useContext(ChatContext)
 
 
@@ -46,10 +48,12 @@ export default function AddUserAndChannel({ title }) {
     //check whether the group(chats in firestore) exists, if not create
 
     if (channelName?.length > 2 && (channelName.split("").some(val => isNaN(val)))) {
-      setError("")
+   
 
       const combinedId = currentUser?.uid + channelName
       try {
+        setError("")
+        setLoader(true)
         const res = await getDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId), { messages: [] });
         if (!res.exists()) {
           //create a chat in chats collection
@@ -79,6 +83,7 @@ export default function AddUserAndChannel({ title }) {
         }
       } catch (err) { console.log(err.message, "error") }
       setChannelName("");
+      setLoader(false)
     }
     else {
       setError("Enter Character more than 2 and should include alphabets")
@@ -103,6 +108,7 @@ export default function AddUserAndChannel({ title }) {
         <SetAndEditChannelName titl={title} channelName={channelName} addChannel={addChannel} setShowChannelModal={setShowChannelModal} setChannelName={setChannelName} setError={setError} error={error} />
       </Modal>
       <SearchingUser string={string} showUserModal={showUserModal} setShowUserModal={setShowUserModal} users={users} />
+    <Loader show={loader}/>
     </div>
   )
 }

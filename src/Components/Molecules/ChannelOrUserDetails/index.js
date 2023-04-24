@@ -108,8 +108,6 @@ export default function Details({ userName, groupName, userImage, userId, groupM
                   </div>
 
                 </div>
-
-
                 <div >
                   {data?.groupId.includes(currentUser?.uid)
                     ?

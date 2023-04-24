@@ -7,6 +7,7 @@ import { validEmail } from "../../Shared/Utilities";
 import "./styles.css"
 import PasswordView from "../../Components/Atoms/passwordView";
 import { LINK, Messages, STRINGS, URL } from "../../Shared/Constants";
+import Loader from "../../Components/Atoms/Loader";
 const Login = () => {
   const [emailErrMessage, setEmailErrMessage] = useState(false);
   const { dispatch } = useContext(ChatContext);
@@ -16,12 +17,13 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showVerificationButton, setShowVerificationButton] = useState(false);
   const [err, setErr] = useState("");
+  const [loaderShow,setLoaderShow]=useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordView, setPasswordView] = useState("password")
   const navigate = useNavigate();
 
-  const triggerResetEmail = async () => {
+  const triggerResetPassword = async () => {
     setErr("")
     setLoading(Messages.sendingPasswordResetLink)
     await sendPasswordResetEmail(auth, email);
@@ -30,16 +32,19 @@ const Login = () => {
 
   const handleSendVerificationCode = async () => {
     setLoading(Messages.sendingVerification)
+  
     const res = await signInWithEmailAndPassword(auth, email, password);
     const actionCodeSettings = {
       url: LINK.REDIRECT_URL_AFTER_VERIFICATION,
       handleCodeInApp: true
     };
     await sendEmailVerification(res.user, actionCodeSettings)
+  
     setLoading(Messages.sentVerification)
   }
 
   const handleSubmit = async (e) => {
+ 
     setLoading("")
     e.preventDefault();
     const email = e.target[0].value;
@@ -55,7 +60,6 @@ const Login = () => {
       setPasswordBlankInput(true)
     }
     else {
-
       if (!validEmail.test(email)) {
         setEmailErrMessage(Messages.notValidMail);
       }
@@ -64,21 +68,23 @@ const Login = () => {
       }
       else {
         try {
+          setLoaderShow(true)
           const res = await signInWithEmailAndPassword(auth, email, password);
-      
+
           if (!res?.user?.emailVerified) {
+            setLoaderShow(false)
             setErr("email not verified")
             setShowVerificationButton(true)
           }
-
-         
-          else{
+          else {
             localStorage.setItem("Token", (res?._tokenResponse?.idToken))
-            window.location.reload()
+            setLoaderShow(false)
+           window.location.reload()
             navigate("/")
           }
         }
         catch (err) {
+          setLoaderShow(false)
           setErr(err.message);
         }
       }
@@ -90,24 +96,20 @@ const Login = () => {
         <span className="logo">Slack</span>
         <span className="title">Login</span>
         <form className="form" onSubmit={handleSubmit}>
-
           <input className="input" type="email" placeholder="email" onChange={() => {
             setEmailBlankInput(false)
             setEmailErrMessage(false)
           }} />
-
           {emailBlankInput && <label className="loginError">*Email Required</label>}
           {emailErrMessage && <label className="loginError">{emailErrMessage}</label>}
-          <div className="passwordInput">
 
+          <div className="passwordInput">
             <input className="passwordInputLogin" type={passwordView} placeholder="password" onChange={() => {
               setPasswordBlankInput(false)
               setPasswordErrMessage(false)
             }} />
             <PasswordView setPasswordView={setPasswordView} />
-
           </div>
-
           {passwordBlankInput && <label className="registerError">*Password Required</label>}
           {passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
           <button className="Signin">Sign in</button>
@@ -116,9 +118,11 @@ const Login = () => {
         {loading && <label className="registerError">{loading}</label>}
         {showVerificationButton && <button className="Verification" onClick={handleSendVerificationCode} >send Verification again</button>}
         <p className="p">You don't have an account? <Link className="Link" to="/register">Register</Link></p>
-        {err === "Firebase: Error (auth/wrong-password)." || err === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)." ? <button className="resetBtn" type="button" onClick={triggerResetEmail}>Reset password</button> : null}
+        {err === "Firebase: Error (auth/wrong-password)." || err === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)." ? <button className="resetBtn" type="button" onClick={triggerResetPassword}>Reset password</button> : null}
         {console.log(email, password)}
       </div>
+
+      <Loader show={loaderShow}/>
     </div>
   );
 };

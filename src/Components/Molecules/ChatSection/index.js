@@ -4,7 +4,7 @@ import { images } from "../../../Images";
 import Messages from "../../Cells/Messages";
 import Input from "../Inputs";
 import { ChatContext } from "../../../Context/ChatContext";
-import { arrayUnion, collection, deleteField, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { collection, deleteField, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { AuthContext } from "../../../Context/AuthContext";
 import SearchingUser from "../AddingUsers";
@@ -27,17 +27,17 @@ const Chat = () => {
   const [error, setError] = useState("")
 
   useEffect(() => {
-    const q =data?.user?.uid&& query(collection(db, COLLECTION_NAME?.USERS),where("uid","==",data?.user?.uid))
-    const unsubscribe =data?.user?.uid&& onSnapshot(q, (querySnapshot) => {
+    const q = data?.user?.uid && query(collection(db, COLLECTION_NAME?.USERS), where("uid", "==", data?.user?.uid))
+    const unsubscribe = data?.user?.uid && onSnapshot(q, (querySnapshot) => {
       const r = []
       querySnapshot.forEach((doc) => {
-          r.push(doc.data());
+        r.push(doc.data());
       });
-      setUsers(r);})
-  return ()=>{
-    data?.user?.uid&& unsubscribe()
-  }
-  
+      setUsers(r);
+    })
+    return () => {
+      data?.user?.uid && unsubscribe()
+    }
   }, [data])
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const Chat = () => {
       data?.groupId && unSub();
     };
   }, [data, details]);
-  
+
   useEffect(() => {
     const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), (doc) => {
       setGroupName(doc?.data())
@@ -63,11 +63,7 @@ const Chat = () => {
 
   useEffect(() => {
     setDetails(false)
-
   }, [data])
-
-
-
 
   const handleEditGroupNamePerMember = async (x) => {
     await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, x), {
@@ -78,15 +74,16 @@ const Chat = () => {
   const handleEditGroupName = async () => {
     if (editedGroupName?.length > 2 && (editedGroupName.split("").some(val => isNaN(val)))) {
       setError("")
-    await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
-      [data?.channelNameId + ".channelInfo.channelName"]: editedGroupName
-    });
-    data?.groupId && await updateDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), {
-      groupname: editedGroupName
-    });
-    groupMembers["participants"]?.map(val => handleEditGroupNamePerMember(val.uid))
-    setEditedGroupName(data?.channelName)}
-    else{
+      await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
+        [data?.channelNameId + ".channelInfo.channelName"]: editedGroupName
+      });
+      data?.groupId && await updateDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), {
+        groupname: editedGroupName
+      });
+      groupMembers["participants"]?.map(val => handleEditGroupNamePerMember(val.uid))
+      setEditedGroupName(data?.channelName)
+    }
+    else {
       setError("Enter Character more than 2 and should include alphabets")
     }
   }
@@ -128,8 +125,8 @@ const Chat = () => {
         <img className="bgImage" src={images.bg} alt="" />
         : <div className="chat">
           <div className="chatInfo">
-            {data?.user?.uid? <img className="dp" src={users[0]?.photoURL} alt="" /> : <label>#</label>}
-           {data?.user?.uid? <label className="userName">    {users[0]?.displayName}</label> :<label className="userName">    {groupName && groupName[data?.channelNameId]?.channelInfo?.channelName}</label>}
+            {data?.user?.uid ? <img className="dp" src={users[0]?.photoURL} alt="" /> : <label>#</label>}
+            {data?.user?.uid ? <label className="userName">    {users[0]?.displayName}</label> : <label className="userName">    {groupName && groupName[data?.channelNameId]?.channelInfo?.channelName}</label>}
             <div className="chatIcons">
               {data?.groupId && data?.groupId?.includes(currentUser?.uid) && !data?.user?.uid
                 ?
@@ -154,8 +151,8 @@ const Chat = () => {
             </div>
           </div>
           <Modal show={editModal} type={"editGroupName"} setShow={setEditModal} showHead={true} showFoot={true} title={"Edit Channel Name"} editedGroupName={editedGroupName} setEditedGroupName={setEditedGroupName} handleEditGroupName={handleEditGroupName}>
-          <SetAndEditChannelName type={"editChannelName"} editedGroupName={editedGroupName}  setEditedGroupName={setEditedGroupName} setError={setError} error={error} handleEditGroupName={handleEditGroupName} setEditModal={setEditModal} />
-           
+            <SetAndEditChannelName type={"editChannelName"} editedGroupName={editedGroupName} setEditedGroupName={setEditedGroupName} setError={setError} error={error} handleEditGroupName={handleEditGroupName} setEditModal={setEditModal} />
+
           </Modal>
           <SearchingUser groupName={groupName[data?.channelNameId]?.channelInfo?.channelName} showUserModal={showUserModal} setShowUserModal={setShowUserModal} combinedId={combinedId} users={users} groupMembers={groupMembers} />
           {details ? <Details

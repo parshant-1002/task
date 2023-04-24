@@ -7,6 +7,7 @@ import { ChatContext } from '../../../Context/ChatContext';
 import Modal from '../../Atoms/Modal';
 import "./styles.css"
 import { COLLECTION_NAME, STRINGS } from '../../../Shared/Constants';
+import Loader from '../../Atoms/Loader';
 export default function SearchingUser({ showUserModal, setShowUserModal, combinedId, users, groupName }) {
     const { currentUser } = useContext(AuthContext);
     const [userName, setUserName] = useState("")
@@ -14,6 +15,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     const [userList, setUserList] = useState()
     const [selectedList, setSelectedList] = useState([])
     const { data, dispatch } = useContext(ChatContext);
+    const [loader, setLoader] = useState(false)
     const [messages, setMessages] = useState([]);
     const selectedListRef = useRef()
 
@@ -29,7 +31,6 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     useEffect(() => {
         !userName && setUserList(users)
     }, [userName, users])
-
 
     useEffect(() => {
         setSelectedList([])
@@ -56,12 +57,13 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
         selectedList?.map(val => addUsersInChannelOneByOne(val))
     }
     const addUsersInChannelOneByOne = async (user) => {
+        setLoader(true)
         await updateDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId),
             {
                 participants: arrayUnion({
                     uid: user.uid,
-                    name:user.displayName,
-                    email:user.email
+                    name: user.displayName,
+                    email: user.email
                 })
             })
         await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, user.uid), {
@@ -72,8 +74,9 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                 date: serverTimestamp()
             }
             ,
-            [data?.channelNameId + ".unseen"]:0
+            [data?.channelNameId + ".unseen"]: 0
         });
+        setLoader(false)
         setUserName("")
         setUserList(userList.filter(val => selectedList.some(value => value.uid !== val.uid)))
         setSelectedList([])
@@ -88,27 +91,24 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
             ? currentUser?.uid + user.uid
             : user.uid + currentUser?.uid;
         try {
+            setLoader(true)
             const res = await getDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId));
             const response = await getDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid));
-
             if (!res.exists() || !Object.keys(response?.data()).includes(combinedId)) {
-                //create a chat in chats collection
-                //create user chats
                 (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: user.uid,
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
-
                 (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, user?.uid), {
                     [combinedId + ".userInfo"]: {
                         uid: currentUser?.uid,
-
                     },
                     [combinedId + ".date"]: serverTimestamp(),
                 });
                 (!data.chatId.includes("undefined")) && await setDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId), { messages: [] });
+            setLoader(false)
             }
         } catch (err) { console.log(err, "err<><><><><><>>,") }
         dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
@@ -124,6 +124,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     };
 
     return (
+        <>
         <Modal show={showUserModal} setShow={setShowUserModal} title={"users"} handleSelect={handleAdd} setSelectedList={setSelectedList} selectedList={selectedList} addUser={addUsersInChannel} showHead={true} showFoot={true}  >
             {users?.length ?
                 <div>
@@ -169,5 +170,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
                 </div>
                 : <h1>No User Left</h1>}
         </Modal>
+        <Loader show={loader}/>
+        </>
     )
 }

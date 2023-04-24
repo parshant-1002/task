@@ -6,23 +6,24 @@ import { initializeAuth, browserLocalPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyD8awnumo5566d5FY8BPSgGPvv5AODDrAk",
+  apiKey: "AIzaSyCWxn2Vn-dgwOH24ab0tiUr3fZs3V8wMh4",
 
-  authDomain: "automation-9122d.firebaseapp.com",
+  authDomain: "slack-f9265.firebaseapp.com",
 
-  databaseURL: "https://automation-9122d-default-rtdb.firebaseio.com",
+  databaseURL: "https://slack-f9265-default-rtdb.asia-southeast1.firebasedatabase.app",
 
-  projectId: "automation-9122d",
+  projectId: "slack-f9265",
 
-  storageBucket: "automation-9122d.appspot.com",
+  storageBucket: "slack-f9265.appspot.com",
 
-  messagingSenderId: "1072831635727",
+  messagingSenderId: "650810530715",
 
-  appId: "1:1072831635727:web:72e6ce49815401d5ce1e7a",
+  appId: "1:650810530715:web:c84597301ff3469fc5df3e",
 
-  measurementId: "G-7JLZ5MVLFT"
+  measurementId: "G-5RG2D69CRX"
 
 };
+
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);

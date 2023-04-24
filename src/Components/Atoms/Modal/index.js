@@ -3,7 +3,7 @@ import { ChatContext } from '../../../Context/ChatContext';
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
 import { STRINGS } from '../../../Shared/Constants';
-export default function Modal({ children, show, setEditedGroupName = () => { }, string, type = "", handleEditGroupName, editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel, addUser = () => { }, handleSelect = () => { }, showHead, showFoot }) {
+export default function Modal({ children, show, setEditedGroupName = () => { }, string, type = "", handleEditGroupName, editedGroupName, handleGroupNameEdit, setShow, channelName, title, selectedList, setSelectedList, addChannel=()=>{}, addUser = () => { }, handleSelect = () => { }, showHead, showFoot }) {
     const { data, dispatch } = useContext(ChatContext);
     return (
         <div>
@@ -30,7 +30,7 @@ export default function Modal({ children, show, setEditedGroupName = () => { }, 
                             Close
                         </button>
                         {selectedList?.length || channelName || editedGroupName ? <button className='btnProceed' onClick={() => {
-                            addChannel && addChannel()
+                            addChannel()
                             data?.groupId && addUser()
                             handleSelect()
                             if (channelName?.length < 3 || !isNaN(channelName)) {

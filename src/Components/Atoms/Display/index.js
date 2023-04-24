@@ -25,11 +25,7 @@ export default function Display({ children, show, setShow, title, showHead, show
                             setImgUrl && setImgUrl("")
                             setFileUrl && setFileUrl("")
                             dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
-
-                        }}>
-                            Cancel
-                        </button  >
-
+                        }}> Cancel  </button  >
                         <button className='btnProceed' onClick={
                             () => {
                                 handleSend()
