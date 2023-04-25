@@ -7,12 +7,14 @@ export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const change = onAuthStateChanged(auth, (user) => {
-      
-      setCurrentUser(user);
+    const change = onAuthStateChanged(auth, async(user) => {
+     user!=null&& await localStorage.setItem("user",JSON.stringify(user))
+     const currentUserData=await JSON.parse(localStorage.getItem("user"))
+     setCurrentUser(currentUserData);
     });
-
+    
     change();
+
    
   }, []);
 

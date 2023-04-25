@@ -26,42 +26,29 @@ export default function Router() {
         <BrowserRouter>
             <Routes>
                 <Route>
-                    <Route
-                        index
-                        element={
-                            <ProtectedRoute>
-                                <Home />
-                            </ProtectedRoute>
-                        }
+                    <Route index element={
+                        <ProtectedRoute>
+                            <Home />
+                        </ProtectedRoute>
+                    }
                     />
-                    <Route
-                        path="login"
-                        index
-                        element={
-                            <AuthRoute>
-                                <Login />
-
-                            </AuthRoute>
-                        }
+                    <Route path="login" index element={
+                        <AuthRoute>
+                            <Login />
+                        </AuthRoute>
+                    }
                     />
-                    <Route
-                        path="register"
-                        index
-                        element={
-                            <AuthRoute>
-                                <Register />
-
-                            </AuthRoute>
-                        }
+                    <Route path="register" index element={
+                        <AuthRoute>
+                            <Register />
+                        </AuthRoute>
+                    }
                     />
-                    <Route
-                        path="*"
-                        index
-                        element={
-                            <ProtectedRoute>
-                                <Login />
-                            </ProtectedRoute>
-                        }
+                    <Route path="*" index element={
+                        <ProtectedRoute>
+                            <Login />
+                        </ProtectedRoute>
+                    }
                     />
                 </Route>
             </Routes>

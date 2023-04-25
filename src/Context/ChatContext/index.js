@@ -3,7 +3,6 @@ import { AuthContext } from "../AuthContext";
 import { STRINGS } from "../../Shared/Constants";
 
 export const ChatContext = createContext();
-
 export const ChatContextProvider = ({ children }) => {
   const { currentUser } = useContext(AuthContext);
   const INITIAL_STATE = {
@@ -14,7 +13,6 @@ export const ChatContextProvider = ({ children }) => {
     users: [],
     members: [],
     membersAddedStatus: false,
-    userData: ""
   };
 
   const chatReducer = (state, action) => {
@@ -41,10 +39,7 @@ export const ChatContextProvider = ({ children }) => {
         return {
           ...state, membersAddedStatus: action?.payload
         }
-      case STRINGS.SETUSERDATA:
-        return {
-          ...state, userData: action?.payload
-        }
+    
       case STRINGS.RESET:
         return {
           user: {},
