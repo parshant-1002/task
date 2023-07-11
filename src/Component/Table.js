@@ -7,7 +7,7 @@ export default function Table({ listData, setListData, inputData, setInputData }
   const handleSort = (heading, type) => {
     const list = [...listData]; // Create a new copy of listData
     list.sort((a, b) => {
-      const comparison = (a[heading.value] > b[heading.value]) ? 1 : -1;
+      let comparison = (a[heading.value] > b[heading.value]) ? 1 : -1;
       if (a[heading.value] == b[heading.value]) comparison = 0;
       return (type === ASC) ? comparison : -comparison;
     });
