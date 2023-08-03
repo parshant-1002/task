@@ -3,21 +3,19 @@ export default function Content() {
 
     const [input, setInput] = useState("")
     const [list, setList] = useState([])
-    const update = (e) => {
+    const handleChangeTodo = (e) => {
         setInput(e.target.value)
     }
 
     const handleKeyDownforSubmit = (event) => {
         if (event.key === 'Enter') {
-            update2();
+            handleAddTodo();
         }
     };
 
-    const update2 = () => {
-        if (!(input.length == "")) {
-            setList((x) => {
-                return [...x, input]
-            })
+    const handleAddTodo = () => {
+        if (input) {
+            setList((x) => ([...x, input]))
         }
         setInput("")
     }
@@ -36,24 +34,25 @@ export default function Content() {
                     id="text"
                     placeholder='Enter here to do'
                     onKeyDown={handleKeyDownforSubmit}
-                    onChange={update}
+                    onChange={handleChangeTodo}
                     value={input}
                 />
                 <button
                     className="btn btn-success h-25 w-5 p-3 mx-4 "
-                    onClick={update2}
+                    onClick={handleAddTodo}
                 >Submit
                 </button>
             </div>
             <div className="row justify-content-center mx-5 my-5">
-                <ul className="col-auto col-md-5">
+                <ul className="col-auto col-md-7">
                     {list.map((val, i) =>
                         <li
-                            className="h-100w-100 float-left p-1"
+                            key={val + i}
+                            className="w-100 d-flex p-1 border border-dark m-2 rounded"
                         >
                             <label className='w-100'>{val}</label>
                             <button
-                                class="btn  border border-dar flex-right   btn-danger m-1  "
+                                class="btn w-25 border border-dar flex-right btn-danger m-1  "
                                 onClick={() => deletetodo(i)}>
                                 Delete
                             </button>
