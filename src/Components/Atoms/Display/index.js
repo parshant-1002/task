@@ -1,9 +1,27 @@
+// libs
 import React, { useContext, useState } from 'react'
+
+// context
 import { ChatContext } from '../../../Context/ChatContext';
+
+// styles
 import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
+
+// consts
 import { STRINGS } from '../../../Shared/Constants';
-export default function Display({ children, show, setShow, title, showHead, showFoot, setImgUrl, setFileUrl, handleSend }) {
+
+export default function Display({
+    children,
+    show,
+    setShow,
+    title,
+    showHead,
+    showFoot,
+    setImgUrl,
+    setFileUrl,
+    handleSend
+}) {
     const { dispatch } = useContext(ChatContext);
 
     return (

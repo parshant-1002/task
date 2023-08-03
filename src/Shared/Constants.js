@@ -3,7 +3,25 @@ export const STRINGS = {
     GETUSERS: "GETUSERS",
     GETGROUPMEMBERS: "GETGROUPMEMBERS",
     MEMBERSADDEDSTATUS: "MEMBERSADDEDSTATUS",
-    RESET: "RESET"
+    RESET: "RESET",
+}
+export const TEXT = {
+    DONT_HAVE_ACCOUNT: "You don't have an account?",
+    REGISTER: "Register",
+    WRONG_PASSWORD_ERR_MSG: {
+        FIRST: "Firebase: Error (auth/wrong-password).",
+        SECOND: "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)."
+    },
+    PASSWORD: "password",
+    EMAIL: "email",
+    SLACK: "Slack",
+    USERNAME: "UserName",
+    USERNAME_REQUIRED: "*UserName Required",
+    ADD_AVATAR: "Add an avatar",
+    LOGIN: "Login",
+    DO_YOU_HAVE_ACCOUNT: "You do have an account? ",
+    CHANNELS: "Channels",
+    DIRECT_MESSAGE: "Direct Message",
 }
 
 export const Messages = {
@@ -14,7 +32,11 @@ export const Messages = {
     sendingVerification: "Sending Verification Link",
     sentVerification: "Verification Link Sent",
     sendingPasswordResetLink: "Sending Password Reset Link ",
-    sentPasswordResetLink: " Password Reset Sent"
+    sentPasswordResetLink: " Password Reset Sent",
+    emailNotVerified: "Email not verified",
+    emailRequired: "*Email Required",
+    passwordRequired: "*Password Required",
+    avatarRequired: "*Avatar Required",
 }
 
 export const LINK = {
@@ -27,4 +49,15 @@ export const COLLECTION_NAME = {
     CHANNEL_LIST: "CHANNEL_LIST",
     CHAT_DATA: "CHAT_DATA",
     CHANNELS_DATA: "CHANNELS_DATA"
+}
+
+export const LOCALSTORAGE_KEY_NAME = {
+    TOKEN: "Token",
+}
+
+export const BUTTON_TEXT = {
+    SIGN_IN: "Sign In",
+    SEND_VERIFICATION_AGAIN: "send Verification again",
+    RESET_PASSWORD: "Reset password",
+    SIGN_UP: "Sign Up",
 }

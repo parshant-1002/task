@@ -1,10 +1,30 @@
-import React, { useContext } from 'react'
-import { ChatContext } from '../../../Context/ChatContext';
+// libs
+import React from 'react'
+
+// styles
 import "./styles.css"
-import { STRINGS } from '../../../Shared/Constants';
+
+// components
 import ModalFooter from './ModalFooter';
-export default function Modal({ children, show, setEditedGroupName = () => { }, type = "", handleEditGroupName = () => { }, editedGroupName, setShow = () => { }, channelName, title, selectedList, setSelectedList = () => { }, addChannel = () => { }, handleAddUsersInChatList = () => { }, addUsersInChannel = () => { }, showHead, showFoot }) {
-    const { data, dispatch } = useContext(ChatContext);
+
+export default function Modal({
+    children,
+    show,
+    setEditedGroupName = () => { },
+    type = "",
+    handleEditGroupName = () => { },
+    editedGroupName,
+    setShow = () => { },
+    channelName,
+    title,
+    selectedList,
+    setSelectedList = () => { },
+    addChannel = () => { },
+    handleAddUsersInChatList = () => { },
+    addUsersInChannel = () => { },
+    showHead,
+    showFoot
+}) {
     return (
         <div>
             {/* header */}

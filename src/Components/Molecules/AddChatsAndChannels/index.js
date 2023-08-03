@@ -48,7 +48,7 @@ export default function AddUserAndChannel({ title }) {
     //check whether the group(chats in firestore) exists, if not create
 
     if (channelName?.length > 2 && (channelName.split("").some(val => isNaN(val)))) {
-   
+
 
       const combinedId = currentUser?.uid + channelName
       try {
@@ -104,11 +104,36 @@ export default function AddUserAndChannel({ title }) {
           dispatch({ type: STRINGS.RESET });
         }} >Add</button>}
 
-      <Modal show={showChannelModal} setShow={setShowChannelModal} error={error} setError={setError} title={title} channelName={channelName} setChannelName={setChannelName} addChannel={addChannel} showHead={true} showFoot={true} >
-        <SetAndEditChannelName titl={title} channelName={channelName} addChannel={addChannel} setShowChannelModal={setShowChannelModal} setChannelName={setChannelName} setError={setError} error={error} />
+      <Modal
+        show={showChannelModal}
+        setShow={setShowChannelModal}
+        error={error}
+        setError={setError}
+        title={title}
+        channelName={channelName}
+        setChannelName={setChannelName}
+        addChannel={addChannel}
+        showHead={true}
+        showFoot={true} >
+        <SetAndEditChannelName
+          title={title}
+          channelName={channelName}
+          addChannel={addChannel}
+          setShowChannelModal={setShowChannelModal}
+          setChannelName={setChannelName}
+          setError={setError}
+          error={error}
+
+        />
       </Modal>
-      <SearchingUser string={string} showUserModal={showUserModal} setShowUserModal={setShowUserModal} users={users} />
-    <Loader show={loader}/>
+      <SearchingUser
+        string={string}
+        showUserModal={showUserModal}
+        setShowUserModal={setShowUserModal}
+        users={users}
+
+      />
+      <Loader show={loader} />
     </div>
   )
 }

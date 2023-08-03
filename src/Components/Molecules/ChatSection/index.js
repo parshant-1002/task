@@ -113,7 +113,7 @@ const Chat = () => {
       querySnapshot.forEach((doc) => {
         r.push(doc.data())
       });
-      setUsers(r.filter(val => (!x.some(value => value === val.uid) && val.uid !== currentUser?.uid)));
+      setUsers(r.filter(val => (!x.some(value => value === val.uid) && (val.uid !== currentUser?.uid))));
     } catch (err) {
       alert(err, "Error in getting User Details")
     }
@@ -126,7 +126,13 @@ const Chat = () => {
         : <div className="chat">
           <div className="chatInfo">
             {data?.user?.uid ? <img className="dp" src={users[0]?.photoURL} alt="" /> : <label>#</label>}
-            {data?.user?.uid ? <label className="userName">    {users[0]?.displayName}</label> : <label className="userName">    {groupName && groupName[data?.channelNameId]?.channelInfo?.channelName}</label>}
+            {data?.user?.uid ?
+              <label className="userName">
+                {users[0]?.displayName}
+              </label>
+              : <label className="userName">
+                {groupName && groupName[data?.channelNameId]?.channelInfo?.channelName}
+              </label>}
             <div className="chatIcons">
               {data?.groupId && data?.groupId?.includes(currentUser?.uid) && !data?.user?.uid
                 ?
@@ -150,11 +156,36 @@ const Chat = () => {
               }} />
             </div>
           </div>
-          <Modal show={editModal} type={"editGroupName"} setShow={setEditModal} showHead={true} showFoot={true} title={"Edit Channel Name"} editedGroupName={editedGroupName} setEditedGroupName={setEditedGroupName} handleEditGroupName={handleEditGroupName}>
-            <SetAndEditChannelName type={"editChannelName"} editedGroupName={editedGroupName} setEditedGroupName={setEditedGroupName} setError={setError} error={error} handleEditGroupName={handleEditGroupName} setEditModal={setEditModal} />
+          <Modal
+            show={editModal}
+            type={"editGroupName"}
+            setShow={setEditModal}
+            showHead={true}
+            showFoot={true}
+            title={"Edit Channel Name"}
+            editedGroupName={editedGroupName}
+            setEditedGroupName={setEditedGroupName}
+            handleEditGroupName={handleEditGroupName}
+          >
+            <SetAndEditChannelName
+              type={"editChannelName"}
+              editedGroupName={editedGroupName}
+              setEditedGroupName={setEditedGroupName}
+              setError={setError}
+              error={error}
+              handleEditGroupName={handleEditGroupName}
+              setEditModal={setEditModal}
+            />
 
           </Modal>
-          <SearchingUser groupName={groupName[data?.channelNameId]?.channelInfo?.channelName} showUserModal={showUserModal} setShowUserModal={setShowUserModal} combinedId={combinedId} users={users} groupMembers={groupMembers} />
+          <SearchingUser
+            groupName={groupName[data?.channelNameId]?.channelInfo?.channelName}
+            showUserModal={showUserModal}
+            setShowUserModal={setShowUserModal}
+            combinedId={combinedId}
+            users={users}
+            groupMembers={groupMembers}
+          />
           {details ? <Details
             userName={users[0]?.displayName}
             groupName={groupName[data?.channelNameId]?.channelInfo?.channelName}

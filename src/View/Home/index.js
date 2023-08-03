@@ -1,29 +1,26 @@
-import React, { useContext, useEffect } from 'react'
+// libs
+import React from 'react'
 
-
+// components
 import Header from '../../Components/Molecules/Header'
-import Sidebar from '../Sidebar'
-import "./styles.css"
 import Chat from '../../Components/Molecules/ChatSection'
-import { AuthContext } from '../../Context/AuthContext'
+import Sidebar from '../Sidebar'
+
+// styles
+import "./styles.css"
 
 export default function Home() {
-  const { currentUser } = useContext(AuthContext);
-
   return (
     <>
       <Header />
       <div className='main'>
-        
         <div className='sideDiv'>
           <Sidebar />
         </div>
         <div className='content'>
           <Chat />
         </div>
-
       </div>
     </>
-
   )
 }

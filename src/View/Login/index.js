@@ -1,122 +1,251 @@
+// libs
 import React, { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword
+} from "firebase/auth";
 import { auth } from "../../firebase";
+
+// context
 import { ChatContext } from '../../Context/ChatContext'
+
+// utils
 import { validPassword, errMessages, validEmail } from "../../Shared/Utilities";
 import "./styles.css"
-import PasswordView from "../../Components/Atoms/passwordView";
-import { LINK, Messages, STRINGS, URL } from "../../Shared/Constants";
-import Loader from "../../Components/Atoms/Loader";
-const Login = () => {
-  const [emailErrMessage, setEmailErrMessage] = useState(false);
-  const { dispatch } = useContext(ChatContext);
-  const [emailBlankInput, setEmailBlankInput] = useState(false);
-  const [passwordBlankInput, setPasswordBlankInput] = useState(false);
-  const [passwordErrMessage, setPasswordErrMessage] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showVerificationButton, setShowVerificationButton] = useState(false);
-  const [err, setErr] = useState("");
-  const [loaderShow, setLoaderShow] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [passwordView, setPasswordView] = useState("password")
-  const navigate = useNavigate();
 
+// components
+import Loader from "../../Components/Atoms/Loader";
+import PasswordView from "../../Components/Atoms/passwordView";
+
+// consts
+import {
+  BUTTON_TEXT,
+  LINK,
+  LOCALSTORAGE_KEY_NAME,
+  Messages,
+  STRINGS,
+  TEXT
+} from "../../Shared/Constants";
+
+const defaultErrMessageStatus = {
+  email: "",
+  password: "",
+}
+const defaultBlankInputStatus = {
+  email: "",
+  password: "",
+}
+
+const defaultMessages = {
+  loading: "",
+  errorText: "",
+}
+
+const Login = () => {
+  // hooks
+  const navigate = useNavigate();
+  const { dispatch } = useContext(ChatContext);
+
+  // states
+  const [isShowErrMessage, setIsShowErrMessage] = useState(defaultErrMessageStatus);
+  const [blankInputStatus, setBlankInputStatus] = useState(defaultBlankInputStatus);
+  const [message, setMessage] = useState(defaultMessages);
+
+  const [showVerificationButton, setShowVerificationButton] = useState(false);
+  const [loaderShow, setLoaderShow] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordView, setPasswordView] = useState("password");
+  const isShowPasswordResetButton = (
+    message.errorText === TEXT.WRONG_PASSWORD_ERR_MSG.FIRST ||
+    message.errorText === TEXT.WRONG_PASSWORD_ERR_MSG.SECOND
+  );
   const triggerResetPassword = async () => {
-    setErr("")
-    setLoading(Messages.sendingPasswordResetLink)
+    setMessage({
+      loading: Messages.sendingPasswordResetLink,
+      errorText: ""
+    });
     await sendPasswordResetEmail(auth, email);
-    setLoading(Messages.sentPasswordResetLink)
+    setMessage(((prevState) => (
+      {
+        ...prevState,
+        loading: Messages.sentPasswordResetLink
+      }
+    )));
   }
 
   const handleSendVerificationCode = async () => {
-    setLoading(Messages.sendingVerification)
+    setMessage(((prevState) => (
+      {
+        ...prevState,
+        loading: Messages.sendingVerification
+      }
+    )));
     const res = await signInWithEmailAndPassword(auth, email, password);
     const actionCodeSettings = {
       url: LINK.REDIRECT_URL_AFTER_VERIFICATION,
       handleCodeInApp: true
     };
-    await sendEmailVerification(res.user, actionCodeSettings)
-    setLoading(Messages.sentVerification)
+    await sendEmailVerification(res.user, actionCodeSettings);
+    setMessage(((prevState) => (
+      {
+        ...prevState,
+        loading: Messages.sentVerification
+      }
+    )));
   }
 
   const handleSubmit = async (e) => {
-    setLoading("")
     e.preventDefault();
-    const email = e.target[0].value;
-    setEmail(email)
-    const password = e.target[1].value;
-    setPassword(password)
-    dispatch({ type: STRINGS.RESET });
-
-    if (email.trim() === "") {
-      setEmailBlankInput(true)
+  
+    const email = e.target[0].value.trim();
+    const password = e.target[1].value.trim();
+  
+    // Input validation
+    if (!email) {
+      setBlankInputStatus((prevState) => ({ ...prevState, email: true }));
+      return;
     }
-    if (password.trim() === "") {
-      setPasswordBlankInput(true)
+  
+    if (!password) {
+      setBlankInputStatus((prevState) => ({ ...prevState, password: true }));
+      return;
     }
-    else {
-      if (!validEmail.test(email)) {
-        setEmailErrMessage(Messages.notValidMail);
+  
+    if (!validEmail.test(email)) {
+      setIsShowErrMessage((prevErrState) => ({ ...prevErrState, email: Messages.notValidMail }));
+      return;
+    }
+  
+    if (!validPassword.test(password)) {
+      setIsShowErrMessage((prevErrState) => ({ ...prevErrState, password: Messages.notValidPassword }));
+      return;
+    }
+  
+    // All inputs are valid
+    try {
+      setMessage((prevState) => ({ ...prevState, loading: "" }));
+      setEmail(email);
+      setPassword(password);
+      setLoaderShow(true);
+      dispatch({ type: STRINGS.RESET });
+  
+      const res = await signInWithEmailAndPassword(auth, email, password);
+  
+      if (!res?.user?.emailVerified) {
+        message.errorText(Messages.emailNotVerified);
+        setShowVerificationButton(true);
+      } else {
+        localStorage.setItem(LOCALSTORAGE_KEY_NAME.TOKEN, res?._tokenResponse?.idToken);
+        window.location.reload();
+        navigate("/");
       }
-      if (!validPassword.test(password)) {
-        setPasswordErrMessage(Messages.notValidPassword);
-      }
-      else {
-        try {
-          setLoaderShow(true)
-          const res = await signInWithEmailAndPassword(auth, email, password);
-
-          if (!res?.user?.emailVerified) {
-            setLoaderShow(false)
-            setErr("email not verified")
-            setShowVerificationButton(true)
-          }
-          else {
-            localStorage.setItem("Token", (res?._tokenResponse?.idToken))
-            setLoaderShow(false)
-            window.location.reload()
-            navigate("/")
-          }
-        }
-        catch (err) {
-          setLoaderShow(false)
-          setErr(err.message);
-        }
-      }
+    } catch (err) {
+      message.errorText(err.message);
+    } finally {
+      setLoaderShow(false);
     }
   };
+  
+
+  const handleResetErrors = {
+    email: () => {
+      setBlankInputStatus(((prevState) => (
+        { ...prevState, email: false }
+      )));
+      setIsShowErrMessage(((prevErrState) => (
+        { ...prevErrState, email: "" }
+      )));
+    },
+    password: () => {
+      setBlankInputStatus(((prevState) => (
+        { ...prevState, password: false }
+      )));
+      setIsShowErrMessage(((prevErrState) => (
+        { ...prevErrState, password: "" }
+      )));
+    }
+  };
+
   return (
     <div className="formContainer">
       <div className="formWrapper">
         <span className="logo">Slack</span>
         <span className="title">Login</span>
         <form className="form" onSubmit={handleSubmit}>
-          <input className="input" type="email" placeholder="email" onChange={() => {
-            setEmailBlankInput(false)
-            setEmailErrMessage(false)
-          }} />
-          {emailBlankInput && <label className="loginError">*Email Required</label>}
-          {emailErrMessage && <label className="loginError">{emailErrMessage}</label>}
+          <input
+            className="input"
+            type={TEXT.EMAIL}
+            placeholder={TEXT.EMAIL}
+            onChange={handleResetErrors.email}
+          />
+          {blankInputStatus.email && <label className="loginError">{Messages.emailRequired}</label>}
+          {isShowErrMessage.email && <label className="loginError">{isShowErrMessage.email}</label>}
 
           <div className="passwordInput">
-            <input className="passwordInputLogin" type={passwordView} placeholder="password" onChange={() => {
-              setPasswordBlankInput(false)
-              setPasswordErrMessage(false)
-            }} />
+            <input
+              className="passwordInputLogin"
+              type={passwordView}
+              placeholder={TEXT.PASSWORD}
+              onChange={handleResetErrors.password}
+            />
             <PasswordView setPasswordView={setPasswordView} />
           </div>
-          {passwordBlankInput && <label className="registerError">*Password Required</label>}
-          {passwordErrMessage && <label className="registerError">{passwordErrMessage}</label>}
-          <button className="Signin">Sign in</button>
-          {err && <span className="loginError">{errMessages(err)}</span>}
-        </form>
-        {loading && <label className="registerError">{loading}</label>}
-        {showVerificationButton && <button className="Verification" onClick={handleSendVerificationCode} >send Verification again</button>}
-        <p className="p">You don't have an account? <Link className="Link" to="/register">Register</Link></p>
-        {err === "Firebase: Error (auth/wrong-password)." || err === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)." ? <button className="resetBtn" type="button" onClick={triggerResetPassword}>Reset password</button> : null}
 
+          {
+            blankInputStatus.password &&
+            <label className="registerError">
+              {Messages.passwordRequired}
+            </label>
+          }
+          {
+            isShowErrMessage.password &&
+            <label className="registerError">
+              {isShowErrMessage.password}
+            </label>
+          }
+
+          <button className="Signin">{BUTTON_TEXT.SIGN_IN}</button>
+          {
+            message.errorText &&
+            <span className="loginError">
+              {errMessages(message.errorText)}
+            </span>
+          }
+        </form>
+        {
+          message.loading &&
+          <label className="registerError">
+            {message.loading}
+          </label>
+        }
+        {
+          showVerificationButton &&
+          <button
+            className="Verification"
+            onClick={handleSendVerificationCode}
+          >
+            {BUTTON_TEXT.SEND_VERIFICATION_AGAIN}
+          </button>
+        }
+        <p className="p">
+          {TEXT.DONT_HAVE_ACCOUNT}
+          <Link className="Link" to="/register">
+            {TEXT.REGISTER}
+          </Link>
+        </p>
+        {isShowPasswordResetButton
+          ?
+          <button
+            className="resetBtn"
+            type="button"
+            onClick={triggerResetPassword}
+          >
+            {BUTTON_TEXT.RESET_PASSWORD}
+          </button>
+          : null}
       </div>
 
       <Loader show={loaderShow} />

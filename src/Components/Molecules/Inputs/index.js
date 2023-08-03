@@ -3,10 +3,21 @@ import { images } from "../../../Images";
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
 import InputEmoji from 'react-input-emoji'
-import { arrayUnion, doc, getDoc, onSnapshot, serverTimestamp, setDoc, updateDoc, } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { db, storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytesResumable
+} from "firebase/storage";
 import "./styles.css"
 import Modal from "../../Atoms/Modal";
 import Display from "../../Atoms/Display";
@@ -33,9 +44,11 @@ const Input = () => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
 
-  const date = new Date()
-  const time = date.getMinutes() < 10 ? `${date.getHours()}:0${date.getMinutes()}` : `${date.getHours()}:${date.getMinutes()}`
-  const id = data?.groupId || data?.chatId
+  const date = new Date();
+  const time = date.getMinutes() < 10 ?
+    `${date.getHours()}:0${date.getMinutes()}`
+    : `${date.getHours()}:${date.getMinutes()}`
+  const id = (data?.groupId || data?.chatId);
 
   useEffect(() => {
     const unSub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, id), (doc) => {
@@ -47,9 +60,10 @@ const Input = () => {
   }, [data?.chatId, data?.groupId, id]);
 
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
-      doc?.exists() && setGroupMembers(doc?.data()["participants"])
-    });
+    const unSub = data?.groupId &&
+      onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
+        doc?.exists() && setGroupMembers(doc?.data()["participants"])
+      });
     return () => {
       data?.groupId && unSub();
     };
@@ -61,7 +75,8 @@ const Input = () => {
   }, [data])
 
   useEffect(() => {
-    setUnseen(messageList?.length ? messageList?.filter(val => val.senderId === currentUser.uid && val.status === false).length : 0)
+    setUnseen(messageList?.length ? messageList
+      ?.filter(val => (val.senderId === currentUser.uid) && (val.status === false)).length : 0)
   }, [messageList, currentUser.uid])
 
   useEffect(() => {
@@ -69,9 +84,10 @@ const Input = () => {
   }, [unseen])
 
   const updateUnseenStatus = async (unseenCount) => {
-    (!data.chatId.includes("undefined")) && unseenCount && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data.user.uid), {
-      [data.groupId || data?.chatId + ".unseen.unseen"]: unseenCount
-    })
+    ((!data.chatId.includes("undefined")) && unseenCount) &&
+      await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data.user.uid), {
+        [data.groupId || data?.chatId + ".unseen.unseen"]: unseenCount
+      })
   }
 
   const updateGroupUnseenStatus = async (uid) => {
@@ -84,27 +100,29 @@ const Input = () => {
   }
 
   const updateLastTextInGroup = async (ids) => {
-    ((data.chatId.includes("undefined")) && ids !== currentUser?.uid) && await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, ids), {
-      [data?.channelNameId + ".lastMessage"]: {
-        text,
-        img: img && imgName,
-        file: file && fileName
-      },
-      [data?.channelNameId + ".date"]: serverTimestamp(),
-    });
+    ((data.chatId.includes("undefined")) &&
+      ids !== currentUser?.uid) && await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, ids), {
+        [data?.channelNameId + ".lastMessage"]: {
+          text,
+          img: img && imgName,
+          file: file && fileName
+        },
+        [data?.channelNameId + ".date"]: serverTimestamp(),
+      });
   }
   const handleAddUser = async () => {
-    (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data?.user?.uid), {
-      [data?.chatId + ".userInfo"]: {
-        uid: currentUser?.uid,
-      },
-      [data?.chatId + ".date"]: serverTimestamp(),
-    });
+    (!data.chatId.includes("undefined")) &&
+      await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data?.user?.uid), {
+        [data?.chatId + ".userInfo"]: {
+          uid: currentUser?.uid,
+        },
+        [data?.chatId + ".date"]: serverTimestamp(),
+      });
   };
 
   const handleSend = async (e) => {
     setFileStatus(false)
-    try{
+    try {
 
       if (file || img) {
         setLoading(true)
@@ -113,28 +131,28 @@ const Input = () => {
         uploadTask.then(
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            setLoading(false)
-            setFileUrl(downloadURL)
-            await updateDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, data?.groupId || data?.chatId), {
-              messages: arrayUnion({
-                id: uuid(),
-                text,
-                senderId: currentUser?.uid,
-                date: time,
-                img: img && downloadURL,
-                file: file && downloadURL,
-                fileName: (fileName || imgName) && (imgName || fileName),
-                status: false,
-                membersSeenGroupText: []
-              }),
+              setLoading(false)
+              setFileUrl(downloadURL)
+              await updateDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, data?.groupId || data?.chatId), {
+                messages: arrayUnion({
+                  id: uuid(),
+                  text,
+                  senderId: currentUser?.uid,
+                  date: time,
+                  img: img && downloadURL,
+                  file: file && downloadURL,
+                  fileName: (fileName || imgName) && (imgName || fileName),
+                  status: false,
+                  membersSeenGroupText: []
+                }),
+              });
             });
+            handleAddUser()
+            groupMembers.map(val => updateLastTextInGroup(val?.uid))
+            groupMembers.map(val => updateGroupUnseenStatus(val?.uid))
           });
-          handleAddUser()
-          groupMembers.map(val => updateLastTextInGroup(val?.uid))
-          groupMembers.map(val => updateGroupUnseenStatus(val?.uid))
-        });
       }
-      
+
       else {
         text.trim() && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, data.groupId || data.chatId), {
           messages: arrayUnion({
@@ -147,20 +165,23 @@ const Input = () => {
           }),
         });
       }
-      
+
       const response = await getDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid));
+
       if (Object.keys(response?.data()).includes(data?.chatId)) {
-        (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data.user.uid), {
-          [data.groupId || data?.chatId + ".lastMessage"]: {
-            text: text,
-            img: imgName,
-            file: fileName
-          },
-          [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
-        });
-        (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid), {
-          [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
-        });
+        (!data.chatId.includes("undefined")) &&
+          await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, data.user.uid), {
+            [data.groupId || data?.chatId + ".lastMessage"]: {
+              text: text,
+              img: imgName,
+              file: fileName
+            },
+            [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
+          });
+        (!data.chatId.includes("undefined")) &&
+          await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid), {
+            [data.groupId || data?.chatId + ".date"]: serverTimestamp(),
+          });
       }
       text.trim() && groupMembers.map(val => updateGroupUnseenStatus(val?.uid))
       text.trim() && handleAddUser()
@@ -171,18 +192,18 @@ const Input = () => {
       setFileName("")
       setImgUrl("")
       setFileUrl("")
-    }catch(err){
-    alert(err)
+    } catch (err) {
+      alert(err)
     }
-    };
-    
-    return (
+  };
+
+  return (
     <div className="inputdata">
       <div className="inputText" >
         <InputEmoji
           value={text}
           onChange={setText}
-          onEnter={() => { handleSend() }}
+          onEnter={handleSend}
           placeholder="Type a message"
           borderColor="white"
         />
@@ -198,14 +219,33 @@ const Input = () => {
           text={text}
           imgUrl={imgUrl}
           fileUrl={fileUrl}
-          handleSend={handleSend} />
-        {text.trim() || imgUrl || fileUrl ? <img src={images?.send} alt="send" className="sendbutton" onClick={handleSend}></img> : null}
+          handleSend={handleSend}
+        />
+        {(text.trim() || imgUrl || fileUrl) ?
+          <img
+            src={images?.send}
+            alt="send"
+            className="sendbutton"
+            onClick={handleSend}
+          /> : null}
       </div>
 
-      <Display show={fileStatus} setShow={setFileStatus} showFoot={true} setImgUrl={setImgUrl} setFileUrl={setFileUrl} handleSend={handleSend}>
-        <AttachmentPreview img={img} file={file} imgName={imgName} fileName={fileName} />
+      <Display
+        show={fileStatus}
+        setShow={setFileStatus}
+        showFoot={true}
+        setImgUrl={setImgUrl}
+        setFileUrl={setFileUrl}
+        handleSend={handleSend}>
+        <AttachmentPreview
+          img={img}
+          file={file}
+          imgName={imgName}
+          fileName={fileName}
+
+        />
       </Display>
-      <Loader show={loading}/>
+      <Loader show={loading} />
       <Modal show={invalid} setShow={setInvalid} showFoot={true}>
         <label>Choosen Data Is Not Supported</label>
       </Modal>

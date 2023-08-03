@@ -30,7 +30,7 @@ const Channels = () => {
 
   useEffect(() => {
 
-    const unSub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, data?.groupId || data?.chatId), (doc) => {
+    const unSub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, (data?.groupId || data?.chatId)), (doc) => {
       doc?.exists() && setMessages(doc?.data().messages);
     });
     return () => {
@@ -45,7 +45,7 @@ const Channels = () => {
   const updateSeenStatusOfMember = async () => {
     const seenData = JSON.parse(JSON.stringify(messages))
     messages?.length && seenData?.map(val => {
-      if (val.senderId != currentUser?.uid && !val.membersSeenGroupText.includes(currentUser?.uid)) {
+      if (val.senderId !== currentUser?.uid && !val.membersSeenGroupText.includes(currentUser?.uid)) {
         val.membersSeenGroupText.push(currentUser?.uid)
       }
     })
@@ -61,12 +61,12 @@ const Channels = () => {
   const handleSelect = async (u) => {
     dispatch({ type: STRINGS.CHANGE_USER, payload: u });
 
-    data?.channelNameId&&await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
+    data?.channelNameId && await updateDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), {
       [channelName + ".unseen"]: 0,
-      [channelName+".lastMessage"]:{
-        img:"",
-        pdf:"",
-        text:""
+      [channelName + ".lastMessage"]: {
+        img: "",
+        pdf: "",
+        text: ""
       }
     })
   };
@@ -102,12 +102,26 @@ const Channels = () => {
 
               <ol className="userChannalInfo">
                 <span className="channelInfo"># {channels[1]?.channelInfo?.channelName}</span>
-                {channels[1]?.lastMessage?.text && <label className="lastmessage" style={{ color: `gold` }}>{channels[1]?.lastMessage?.text}</label>}
-                {!channels[1]?.lastMessage?.text && channels[1]?.lastMessage?.img ? <p className="lastmessage">{channels[1]?.lastMessage?.img}</p> : null}
-                {!channels[1]?.lastMessage?.text && channels[1]?.lastMessage?.pdf ? <p className="lastmessage">{channels[1]?.lastMessage?.pdf}</p> : null}
+                {channels[1]?.lastMessage?.text &&
+                  <label className="lastmessage"
+                    style={{ color: `gold` }}
+                  >
+                    {channels[1]?.lastMessage?.text}
+                  </label>
+                }
+                {(!channels[1]?.lastMessage?.text && channels[1]?.lastMessage?.img) ?
+                  <p className="lastmessage">{channels[1]?.lastMessage?.img}</p>
+                  : null}
+                {(!channels[1]?.lastMessage?.text && channels[1]?.lastMessage?.pdf) ?
+                  <p className="lastmessage">{channels[1]?.lastMessage?.pdf}</p>
+                  : null}
               </ol>
-              {channels[1]?.unseen>0&&<div className="unseenCount">{channels[1]?.unseen}</div>}
-              {channels[1]?.channelInfo?.channelNameId == selected && <img className="eyeImg" src={images.eye} alt=""></img>}
+              {(channels[1]?.unseen > 0) &&
+                <div className="unseenCount">
+                  {channels[1]?.unseen}
+                </div>}
+              {(channels[1]?.channelInfo?.channelNameId === selected) &&
+                <img className="eyeImg" src={images.eye} alt=""></img>}
             </div>
           ))}
         </div>}

@@ -7,7 +7,17 @@ import { AuthContext } from '../../../Context/AuthContext'
 import { collection, deleteDoc, deleteField, doc, onSnapshot, query, updateDoc, } from 'firebase/firestore'
 import { db } from '../../../firebase'
 import { COLLECTION_NAME, STRINGS } from '../../../Shared/Constants'
-export default function Details({ userName, groupName, userImage, userId, groupMembers, setDetails, userMail, handleDeleteGroupMembers, createrId }) {
+export default function Details({
+  userName,
+  groupName,
+  userImage,
+  userId,
+  groupMembers,
+  setDetails,
+  userMail,
+  handleDeleteGroupMembers,
+  createrId
+}) {
   const { data, dispatch } = useContext(ChatContext)
   const { currentUser } = useContext(AuthContext)
   const [groupData, setGroupData] = useState([])
@@ -23,7 +33,7 @@ export default function Details({ userName, groupName, userImage, userId, groupM
     });
   }
 
-  const handleDeleteGroup = async () => { 
+  const handleDeleteGroup = async () => {
     await deleteDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, (createrId + groupName)))
     await deleteDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, (createrId + groupName)))
     groupData?.length && groupData?.map(val => handleDeleteGroupData(val.uid))

@@ -1,12 +1,11 @@
 import React from 'react'
 import "./styles.css"
-export default function Loader({show}) {
-    console.log(show,"kikhkhjkghjghjvghjghj")
+export default function Loader({ show }) {
   return (
     <>
-   {show && <div className='LoaderDiv'>
-    <div class="loader"></div>
-    </div>}
+      {show && <div className='LoaderDiv'>
+        <div class="loader"></div>
+      </div>}
     </>
   )
 }
