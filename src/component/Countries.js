@@ -1,59 +1,89 @@
+// libs
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+// consts
+import { API, BUTTON_TEXT, MESSAGES, STRINGS } from '../shared/Constants'
+
 export default function Countries() {
+    const navigate = useNavigate()
 
     const [country, setCountry] = useState([])
-    const [current, setCurrent] = useState("")
-    const [err, setErr] = useState("")
-    const nextPage = useNavigate()
+    const [selectedCountry, setSelectedCountry] = useState("")
+    const [errMsg, setErrMsg] = useState("")
 
-    useEffect(() => { getData() }, [])
+    useEffect(() => {
+        getData()
+    }, [])
 
     const handleKeyDownforSubmit = (event) => {
         if (event.key === 'Enter') {
-            next()
+            handleClickNext()
         }
     };
 
-    function next() {
-        if (current == "") {
-            setErr("...Select the country first")
+    function handleClickNext() {
+        if (!selectedCountry) {
+            setErrMsg(MESSAGES.SELECT_COUNTRY)
         }
-        nextPage(`${current}`)
+        navigate(`/${selectedCountry}`)
     }
 
 
 
 
     function getData() {
-        fetch("https://countriesnow.space/api/v0.1/countries/capital ").then((response) => response.json())
+        fetch(API.COUNTRY)
+            .then((response) => response.json())
             .then((val) => setCountry(val.data))
             .catch((errro) => {
-                setErr("Error")
+                setErrMsg(MESSAGES.ERROR_IN_FETCHING_COUNTRIES)
             })
 
     }
 
-    function handleSubmit(e) {
-        setCurrent(e)
+    function handleSubmit(event) {
+        const selectedCountryName = event.target.value;
+        setSelectedCountry(selectedCountryName);
     }
 
     return (
         <>
             <div className="p-5 px-5 mx-5  justify-content-center">
                 <div>
-                    <h1 className="p-2  round rounded-2  bg-white border border-info  w-100">Select country</h1>
+                    <h1
+                        className="p-2  round rounded-2  bg-white border border-info  w-100">
+                        {STRINGS.SELECT_COUNTRY}
+                    </h1>
                 </div>
                 <div>
-                    <select className="form-select-lg border border-info " onKeyDown={handleKeyDownforSubmit} onChange={(e) => handleSubmit(e.target.value)} >
+                    <select
+                        className="form-select-lg border border-info "
+                        onKeyDown={handleKeyDownforSubmit}
+                        onChange={handleSubmit}
+                    >
                         <option>select country</option>
-                        {country.map((val) => <option >{val.name}</option>)}
+                        {country.map((val) => (
+                            <option
+                                key={val}
+                            >
+                                {val.name}
+                            </option>
+                        ))}
                     </select>
-                    <button className="btn btn-info mx-2 " onClick={() => next()}>Next</button>
+                    <button
+                        className="btn btn-info mx-2 "
+                        onClick={handleClickNext}
+                    >
+                        {BUTTON_TEXT.NEXT}
+                    </button>
                 </div>
                 <div>
-                    <h1 className=" px-5 text-warning">{err}</h1>
+                    <h1
+                        className=" px-5 text-warning"
+                    >
+                        {errMsg}
+                    </h1>
                 </div>
             </div>
 
