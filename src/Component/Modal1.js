@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-export default function Modal1({ id,show, data,setData, setId, setEvent, setSearchData,setShow ,setListData}) {
+export default function Modal1({
+  id,
+  show,
+  data,
+  setData,
+  setId,
+  setEvent,
+  setSearchData,
+  setShow,
+  setListData
+}) {
 
   const [cndForErr, setCndForErr] = useState(false);
   const [validFName, setValidFName] = useState(false);
@@ -14,42 +24,38 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
   const [superHeroName, setSuperHeroName] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("Male");
   const [ageMessage, setAgeMessage] = useState("")
-
   const [fnameErr, setFNameErr] = useState("");
   const [lnameErr, setLNameErr] = useState("");
   const [shNameErr, setSHNameErr] = useState("");
   const [emailErr, setEmailErr] = useState("");
   const [err, setErr] = useState("");
 
-
-
   const handleSubmit = () => {
     if (firstName.trim() === "" || lastName.trim() === "" || superHeroName.trim() === "" || age.trim() === "" || email.trim() === "" || gender.trim() === "") {
       setCndForErr(true);
       setErr("enter all credentials are mandatory");
     }
-
     else if (lastName.trim().length < 3 || firstName.trim().length < 3) {
       setCndForErr(true);
       setErr("enter lastname or firstName with atleast more than 2 character");
     }
-    else if( !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)){
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
       setCndForErr(true);
       setErr("Enter valid email");
     }
     else if (firstName.trim() !== "" && lastName.trim() !== "" && age.trim() !== "" && superHeroName.trim() !== "" && email.trim() !== "" && gender.trim() !== "") {
-      const dd=[...data,
-        {
-          id: id,
-          firstName: firstName,
-          lastName: lastName,
-          age: age,
-          email: email,
-          superHeroName: superHeroName,
-          gender: gender
-        }]
+      const dd = [...data,
+      {
+        id: id,
+        firstName: firstName,
+        lastName: lastName,
+        age: age,
+        email: email,
+        superHeroName: superHeroName,
+        gender: gender
+      }]
       setListData(dd);
       setId(id => id + 1);
       setData(dd)
@@ -64,9 +70,6 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
       setShow(false);
       setCndForErr(false);
       setSearchData("");
-     
-
-
     }
     setValidFName(false);
     setValidLName(false);
@@ -135,7 +138,6 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
     setValidFName(false);
     setCndForErr(false);
     let count = e.split("").filter(val => !isNaN(val));
-
     if (e.length > 15) {
       setValidSHName(true);
       setSHNameErr("Enter Character Less than 15");
@@ -144,19 +146,14 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
       setValidSHName(true);
       setSHNameErr("Number limit reached or space limit exceed");
     }
-
     else if (e.split("").some(val => arrOfInvalidCh2.some(item => item == val))) {
       setValidSHName(true);
       setSHNameErr("Can Enter only \"_,*,$,#\"'");
     }
-
-
     else {
       setValidSHName(false);
       setSuperHeroName(e);
-
     }
-
   }
   let invalidCharacter3 = "!#$%^&*()_-+=~`,<>/?;:'{}[]\\|\"\"";
   let arrOfInvalidCh5 = invalidCharacter3.split("");
@@ -168,7 +165,6 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
     setValidFName(false);
     setCndForErr(false);
     if (e.length > 30) {
- 
       setValidEmail(true);
       setEmailErr("Enter valid Email");
     }
@@ -180,26 +176,19 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
       setValidEmail(true);
       setEmailErr("Not enter capital letters ");
     }
-   
     else {
-
       setValidEmail(false);
       setEmail(e);
-
     }
   }
 
-
-
-
   function ageinpt(e) {
-
     setValidEmail(false);
     setValidSHName(false);
     setValidLName(false);
     setValidFName(false);
     setCndForErr(false);
-    if (e < 0 || e > 99||e.includes(".")||e.includes("  ") ||isNaN(e)) {
+    if (e < 0 || e > 99 || e.includes(".") || e.includes("  ") || isNaN(e)) {
 
       setValidAge(true)
       setAgeMessage("Enter age between 0-100 and numeric value")
@@ -216,8 +205,6 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
     setGender(e.target.value);
   }
 
-
-
   return (
     <div>
       <Modal show={show} onHide={() => setShow(false)} animation={true}>
@@ -227,23 +214,47 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
         <Modal.Body>
           <div>
             <h5 className='mx-2'>FirstName</h5>
-            <input type="text" className="form-control my-2 round rounded-4" placeholder='Enter FirstName' value={firstName} onChange={(e) => inputFirstName(e.target.value)}></input>
+            <input
+              type="text"
+              className="form-control my-2 round rounded-4"
+              placeholder='Enter FirstName'
+              value={firstName}
+              onChange={(e) => inputFirstName(e.target.value)}
+            />
             {validFName ? <label className="text-danger">{fnameErr}</label> : null}
           </div>
           <div>
             <h5 className='mx-2'>LastName</h5>
-            <input type="text" className="form-control my-2 round rounded-4" placeholder='Enter LastName' value={lastName} onChange={(e) => inputLastName(e.target.value)}></input>
+            <input
+              type="text"
+              className="form-control my-2 round rounded-4"
+              placeholder='Enter LastName'
+              value={lastName}
+              onChange={(e) => inputLastName(e.target.value)}
+            />
             {validLName ? <label className="text-danger">{lnameErr}</label> : null}
           </div>
 
           <div>
             <h5 className='mx-2'>Superhero Name</h5>
-            <input type="text" className="form-control my-2 round rounded-4" placeholder='Enter Superhero Name' value={superHeroName} onChange={(e) => inputSuperHeroName(e.target.value)}></input>
+            <input
+              type="text"
+              className="form-control my-2 round rounded-4"
+              placeholder='Enter Superhero Name'
+              value={superHeroName}
+              onChange={(e) => inputSuperHeroName(e.target.value)}
+            />
             {validSHName ? <label className="text-danger">{shNameErr}</label> : null}
           </div>
           <div >
             <h5 className='mx-2'>Email</h5>
-            <input type='email' placeholder='Enter Email ' className="form-control my-2 round rounded-4" value={email} onChange={(e) => inputEmail(e.target.value)} ></input>
+            <input
+              type='email'
+              placeholder='Enter Email '
+              className="form-control my-2 round rounded-4"
+              value={email}
+              onChange={(e) => inputEmail(e.target.value)}
+            />
             {validEmail ? <label className="text-danger">{emailErr}</label> : null}
           </div>
           <div >
@@ -289,32 +300,39 @@ export default function Modal1({ id,show, data,setData, setId, setEvent, setSear
           </div>
           <div >
             <h5 className='mx-2'>Age</h5>
-            <input type='text' placeholder='Enter Age' className="form-control my-2 round rounded-4" value={age} onChange={(e) => ageinpt(e.target.value)} ></input>
+            <input
+              type='text'
+              placeholder='Enter Age'
+              className="form-control my-2 round rounded-4"
+              value={age}
+              onChange={(e) => ageinpt(e.target.value)}
+            />
             {validAge ? <label className="text-danger">{ageMessage}</label> : null}
           </div>
           <div className="d-flex justify-content-center">
-
             {cndForErr ? <h5 className="text-danger">{err}</h5> : null}
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => {setShow(false)
-          setCndForErr(false)
-          setValidEmail(false);
-    setValidSHName(false);
-    setValidLName(false);
-    setValidFName(false);
-    setValidAge(false);
-  
-   
+          <Button variant="secondary" onClick={() => {
+            setShow(false)
+            setCndForErr(false)
+            setValidEmail(false);
+            setValidSHName(false);
+            setValidLName(false);
+            setValidFName(false);
+            setValidAge(false);
           }}>
             Close
           </Button>
-          <button className='btn btn-primary my-4' onClick={handleSubmit}>Submit</button>
-
+          <button
+            className='btn btn-primary my-4'
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </Modal.Footer>
       </Modal>
-
-    </div>
+    </div >
   );
 }

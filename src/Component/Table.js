@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function Table({ listData, setListData, inputData, setInputData }) {
+export default function Table({
+  listData,
+  setListData,
+  inputData,
+  setInputData
+}) {
   const ASC = "asc";
   const DEC = "dec";
 
