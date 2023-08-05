@@ -53,7 +53,7 @@ export default function DetailsForm({
       case FIELDS.FIRSTNAME:
       case FIELDS.LASTNAME:
           if (value.length > maxLength) {
-            setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_BELOW_LENGTH_LIMIT }));
+            setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_BELOW_LENGTH_LIMIT(maxLength) }));
           } else if (value.split("").some((val) => !isNaN(val) || invalidChars.some((item) => item === val))) {
           setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_ALPHABETS_ONLY }));
         } else {
@@ -65,7 +65,7 @@ export default function DetailsForm({
       case FIELDS.SUPER_HERO_NAME:
         count = value.split("").filter((val) => !isNaN(val));
         if (value.length > maxLength) {
-          setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_BELOW_LENGTH_LIMIT }));
+          setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_BELOW_LENGTH_LIMIT(maxLength) }));
         } else if (count.length > 5) {
           setErrorState({ [field]: ERROR_MESSAGES.NUMBER_LIMIT_EXCEED });
         } else if (value.split("").some((val) => arrOfInvalidCh.some((item) => item === val))) {
@@ -78,7 +78,7 @@ export default function DetailsForm({
   
       case FIELDS.EMAIL:
         if (value.length > maxLength) {
-          setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_BELOW_LENGTH_LIMIT }));
+          setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_BELOW_LENGTH_LIMIT(maxLength) }));
         } else if (value.split("").some((val) => arrOfInvalidChForEmail.some((item) => item === val))) {
           setErrorState({ [field]: ERROR_MESSAGES.CANT_ENTER_NUMBER });
         } else if (/[A-Z]/.test(value)) {
@@ -91,7 +91,7 @@ export default function DetailsForm({
   
       case FIELDS.AGE:
         if (value.length > maxLength) {
-          setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_BELOW_LENGTH_LIMIT }));
+          setErrorState((prevState) => ({ ...prevState, [field]: errMsg.ENTER_BELOW_LENGTH_LIMIT(maxLength) }));
         } else if (value.includes(".") || value.includes("  ") || isNaN(value)) {
           setErrorState({ [field]: ERROR_MESSAGES.ENTER_AGE_IN_RANGE });
         } else {

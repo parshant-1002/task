@@ -20,7 +20,7 @@ export const ERROR_MESSAGES = {
     ENTER_ALL_FIELDS: "enter all fields are mandatory",
     ENTER_VALID_LENGTH: "enter lastname or firstName with atleast more than 2 character",
     ENTER_VALID_EMAIL: "Enter valid email",
-    ENTER_BELOW_LENGTH_LIMIT: "Enter Character less than 15",
+    ENTER_BELOW_LENGTH_LIMIT: (length)=>(`Enter Character less than ${length+1} only`),
     ENTER_ALPHABETS_ONLY: "Enter alphabets only (do not Enter numeric value , special character or space bar",
     NUMBER_LIMIT_EXCEED: "Number limit reached or space limit exceed",
     CAN_ENTER_SPECIAL_CHARACTERS: "Can Enter only \"_,*,$,#\"'",
