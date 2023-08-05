@@ -5,7 +5,8 @@ import "font-awesome/css/font-awesome.min.css";
 import Modal from "react-bootstrap/Modal";
 // componets
 import Table from "./Table";
-import Modal1 from "./Modal1";
+import DetailsForm from "./DetailsForm";
+import { LOCAL_STORAGE_KEY_NAME, STRING } from "../Shared/constants";
 
 export default function Home() {
 
@@ -19,7 +20,7 @@ export default function Home() {
   const [listData, setListData] = useState([]);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("data")) || [];
+    const data = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_NAME)) || [];
     setData(data);
     setListData(data);
     const randomId = Math.floor(Math.random() * 1000);
@@ -29,7 +30,7 @@ export default function Home() {
 
   useEffect(() => {
     if (data?.length) {
-      localStorage.setItem("data", JSON.stringify(data))
+      localStorage.setItem(LOCAL_STORAGE_KEY_NAME, JSON.stringify(data))
     }
   }, [data]);
 
@@ -53,8 +54,8 @@ export default function Home() {
       val.lastName?.toLowerCase().includes(event) ||
       val.superHeroName?.toLowerCase().includes(event) ||
       val.age?.toString()?.toLowerCase().includes(event) ||
-      val.email?.toLowerCase()?.includes(event) ||
-      val.gender?.toLowerCase()?.includes(event)
+      val.email?.toLowerCase().includes(event) ||
+      val.gender?.toLowerCase().includes(event)
     ));
   
     setListData(newData);
@@ -65,7 +66,7 @@ export default function Home() {
     <>
       <div className=" p-5 mx-5 mt-5">
         <div className="d-flex justify-content-center w-100">
-          <Modal1
+          <DetailsForm
             id={id}
             data={data}
             listData={listData}
@@ -81,7 +82,7 @@ export default function Home() {
           <Modal show={show3} onHide={() => { setShow3(false); }} animation={true} >
             <div className='p-4 border border-black '>
               <div className='d-flex justify-content-center'>
-                <h1 className='text-danger    px-4 py-2'>Sure to delete items</h1>
+                <h1 className='text-danger    px-4 py-2'>{STRING.SURE_TO_DELETE}</h1>
               </div>
               <div className='d-flex justify-content-center'>
                 <button
@@ -101,19 +102,19 @@ export default function Home() {
               className='mx-2 my-2 btn btn-outline-danger  px-4'
               onClick={() => { setShow3(true); }}
             >
-              Delete
+              {STRING.DELETE}
             </button>
             :
             <label
               className="px-4 py-2  m-1 bg-white border border-danger round rounded-2 text-danger ">
-              Select to Delete
+              {STRING.SELECT_TO_DELETE}
             </label>
           }
           <button
             className="mx-2 my-2 btn btn-outline-primary px-4 "
             onClick={() => { setShow(true); }}
           >
-            Add Record
+            {STRING.ADD_RECORD }
           </button>
           <input
             className="mx-2 my-2 px-2 round rounded-4  "
