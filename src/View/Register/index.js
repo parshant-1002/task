@@ -39,7 +39,7 @@ const Register = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [file, setFile] = useState("")
-  const [passwordView, setPasswordView] = useState("password")
+  const [passwordView, setPasswordView] = useState(TEXT.PASSWORD_VIEW_TYPE.PASSWORD)
 
   const setDefault = () => {
     setNameBlankInput(false)
@@ -196,7 +196,10 @@ const Register = () => {
               setPassword(e.target.value)
               setDefault()
             }} />
-          <PasswordView setPasswordView={setPasswordView} />
+          <PasswordView
+            setPasswordView={setPasswordView}
+            passwordView={passwordView}
+          />
 
         </div>
         {passwordBlankInput && <label className="registerError">{Messages.passwordRequired}</label>}
@@ -216,9 +219,9 @@ const Register = () => {
           }} />
 
         <label className="label" htmlFor="file">
-          {file ? 
-          <img className="img" src={URL.createObjectURL(file)} alt="" />
-           : <img className="img" src={images.addAvatar} alt="" />}
+          {file ?
+            <img className="img" src={URL.createObjectURL(file)} alt="" />
+            : <img className="img" src={images.addAvatar} alt="" />}
           <span>{TEXT.ADD_AVATAR}</span>
         </label>
 
@@ -227,10 +230,10 @@ const Register = () => {
 
         {/* Sign Up Button */}
 
-        <button 
-        className="Signup" 
-        onClick={handleSubmit}>
-        {BUTTON_TEXT.SIGN_UP}
+        <button
+          className="Signup"
+          onClick={handleSubmit}>
+          {BUTTON_TEXT.SIGN_UP}
         </button>
         {(!err && loading) && <label className="registerError">{loading}</label>}
         {err && <label className="registerError">{errMessages(err)}</label>}

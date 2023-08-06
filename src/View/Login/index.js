@@ -53,11 +53,11 @@ const Login = () => {
   const [blankInputStatus, setBlankInputStatus] = useState(defaultBlankInputStatus);
   const [message, setMessage] = useState(defaultMessages);
 
-  const [showVerificationButton, setShowVerificationButton] = useState(false);
+  const [showEmailVerificationButton, setShowEmailVerificationButton] = useState(false);
   const [loaderShow, setLoaderShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordView, setPasswordView] = useState("password");
+  const [passwordView, setPasswordView] = useState(TEXT.PASSWORD_VIEW_TYPE.PASSWORD);
   const isShowPasswordResetButton = (
     message.errorText === TEXT.WRONG_PASSWORD_ERR_MSG.FIRST ||
     message.errorText === TEXT.WRONG_PASSWORD_ERR_MSG.SECOND
@@ -83,7 +83,9 @@ const Login = () => {
         loading: Messages.sendingVerification
       }
     )));
+    // function to sign in registered user
     const res = await signInWithEmailAndPassword(auth, email, password);
+    // config to pass redirect url for email verification
     const actionCodeSettings = {
       url: LINK.REDIRECT_URL_AFTER_VERIFICATION,
       handleCodeInApp: true
@@ -99,31 +101,33 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    if (isShowPasswordResetButton) {
+      setShowEmailVerificationButton(false)
+    }
     const email = e.target[0].value.trim();
     const password = e.target[1].value.trim();
-  
+
     // Input validation
     if (!email) {
       setBlankInputStatus((prevState) => ({ ...prevState, email: true }));
       return;
     }
-  
+
     if (!password) {
       setBlankInputStatus((prevState) => ({ ...prevState, password: true }));
       return;
     }
-  
+
     if (!validEmail.test(email)) {
       setIsShowErrMessage((prevErrState) => ({ ...prevErrState, email: Messages.notValidMail }));
       return;
     }
-  
+
     if (!validPassword.test(password)) {
       setIsShowErrMessage((prevErrState) => ({ ...prevErrState, password: Messages.notValidPassword }));
       return;
     }
-  
+
     // All inputs are valid
     try {
       setMessage((prevState) => ({ ...prevState, loading: "" }));
@@ -131,24 +135,34 @@ const Login = () => {
       setPassword(password);
       setLoaderShow(true);
       dispatch({ type: STRINGS.RESET });
-  
+
       const res = await signInWithEmailAndPassword(auth, email, password);
-  
+
       if (!res?.user?.emailVerified) {
-        message.errorText(Messages.emailNotVerified);
-        setShowVerificationButton(true);
+        setMessage(((prevState) => (
+          {
+            ...prevState,
+            errorText: Messages.emailNotVerified
+          }
+        )));
+        setShowEmailVerificationButton(true);
       } else {
         localStorage.setItem(LOCALSTORAGE_KEY_NAME.TOKEN, res?._tokenResponse?.idToken);
         window.location.reload();
         navigate("/");
       }
     } catch (err) {
-      message.errorText(err.message);
+      setMessage(((prevState) => (
+        {
+          ...prevState,
+          errorText: err.message
+        }
+      )));
     } finally {
       setLoaderShow(false);
     }
   };
-  
+
 
   const handleResetErrors = {
     email: () => {
@@ -158,6 +172,7 @@ const Login = () => {
       setIsShowErrMessage(((prevErrState) => (
         { ...prevErrState, email: "" }
       )));
+      setMessage(defaultMessages);
     },
     password: () => {
       setBlankInputStatus(((prevState) => (
@@ -166,6 +181,7 @@ const Login = () => {
       setIsShowErrMessage(((prevErrState) => (
         { ...prevErrState, password: "" }
       )));
+      setMessage(defaultMessages);
     }
   };
 
@@ -191,7 +207,10 @@ const Login = () => {
               placeholder={TEXT.PASSWORD}
               onChange={handleResetErrors.password}
             />
-            <PasswordView setPasswordView={setPasswordView} />
+            <PasswordView
+              setPasswordView={setPasswordView}
+              passwordView={passwordView}
+            />
           </div>
 
           {
@@ -222,7 +241,7 @@ const Login = () => {
           </label>
         }
         {
-          showVerificationButton &&
+          showEmailVerificationButton &&
           <button
             className="Verification"
             onClick={handleSendVerificationCode}

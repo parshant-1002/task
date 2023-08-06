@@ -1,12 +1,22 @@
+// libd
 import React, { useContext, useEffect, useState } from 'react'
-import "./styles.css"
-import { images } from '../../../Images'
-import { ChatContext } from '../../../Context/ChatContext'
-import Modal from '../../Atoms/Modal'
-import { AuthContext } from '../../../Context/AuthContext'
 import { collection, deleteDoc, deleteField, doc, onSnapshot, query, updateDoc, } from 'firebase/firestore'
 import { db } from '../../../firebase'
-import { COLLECTION_NAME, STRINGS } from '../../../Shared/Constants'
+
+// styles
+import "./styles.css"
+
+// consts
+import { images } from '../../../Images'
+import { BUTTON_TEXT, COLLECTION_NAME, STRINGS, TEXT } from '../../../Shared/Constants'
+
+// context
+import { ChatContext } from '../../../Context/ChatContext'
+import { AuthContext } from '../../../Context/AuthContext'
+
+// componnets
+import Modal from '../../Atoms/Modal'
+
 export default function Details({
   userName,
   groupName,
@@ -20,8 +30,30 @@ export default function Details({
 }) {
   const { data, dispatch } = useContext(ChatContext)
   const { currentUser } = useContext(AuthContext)
+
   const [groupData, setGroupData] = useState([])
   const [users, setUsers] = useState([])
+
+  const findingMemberDetails = (val) => (users?.find(value => value.uid === val.uid));
+  const creatorDetails = users?.find(value => value?.uid === createrId);
+  const detailsHeading = userId ? TEXT.USER_DETAILS : TEXT.CHANNEL_DETAILS;
+  const membersHeading = groupData?.length ? `${TEXT.MEMBERS} (${groupMembers?.length})` : "No Members !!!";
+  const createrName = () => {
+    if (createrId === currentUser?.uid) {
+      return `${creatorDetails?.displayName}  (you)`;
+    } else {
+      return creatorDetails?.displayName
+    }
+  }
+  const displayMemberName = (val) => {
+    const memberDetails = findingMemberDetails(val);
+    if (val.uid === currentUser?.uid) {
+      return `${memberDetails?.displayName}  (you)`;
+    } else {
+      return memberDetails?.displayName;
+    }
+  }
+
   const handleCloseDetails = () => {
     setDetails(false)
     dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: true })
@@ -36,8 +68,11 @@ export default function Details({
   const handleDeleteGroup = async () => {
     await deleteDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, (createrId + groupName)))
     await deleteDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, (createrId + groupName)))
-    groupData?.length && groupData?.map(val => handleDeleteGroupData(val.uid))
+    if (groupData?.length) {
+      groupData?.map(val => handleDeleteGroupData(val.uid))
+    }
   }
+
   useEffect(() => {
     const q = query(collection(db, COLLECTION_NAME?.USERS))
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -52,12 +87,18 @@ export default function Details({
     }
 
   }, [data])
+
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
-      doc?.exists() && setGroupData(doc?.data()["participants"])
-    });
+    const unSub = data?.groupId &&
+      onSnapshot(
+        doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
+          doc?.exists() && setGroupData(doc?.data()["participants"])
+        }
+      );
     return () => {
-      data?.groupId && unSub();
+      if (data?.groupId) {
+        unSub();
+      }
     };
   }, [data?.chatId, data?.groupId, groupMembers]);
 
@@ -65,15 +106,22 @@ export default function Details({
     <Modal show={true}    >
       <div className='details'>
         <div className='detailsHeader'>
+          {/* condition display of heading of details  */}
           <div className='head'>
-            {userId ? <h3 className='headingDetails'> User Details</h3> : <h3 className='headingDetails'> Channel Details</h3>}
-            <img className='closeDetails' src={images.crossWhite} alt="" onClick={handleCloseDetails}></img>
-          </div>
-          <div className='detailsHeading'>
-            {!userId && <label> #</label>}
-            {!userId && <label>{" " + groupName}</label>}
-          </div>
+            <h3 className='headingDetails'>
+              {detailsHeading}
+            </h3>
 
+            <img
+              className='closeDetails'
+              src={images.crossWhite}
+              alt=""
+              onClick={handleCloseDetails}
+            />
+          </div>
+          {!userId ? <div className='detailsHeading'>
+            <label>{"# " + groupName}</label>
+          </div> : null}
         </div>
 
         {/* individual Details */}
@@ -91,32 +139,45 @@ export default function Details({
         {!userId && <div className='members'>
           <div className='CreaterDetails'>
 
+            {/* displaying creator name or direct user name  */}
             <h5>
-              <h6>Created By: </h6>
+              <h6>{TEXT.CREATED_BY}</h6>
               <div className="createrName" >
-                Name: {(users?.find(value => value?.uid === createrId))?.displayName}  {createrId === currentUser?.uid && <>   (you)</>}
+                {TEXT.NAME} : {createrName()}
                 <div className="createrMail" >
-                  {(users?.find(value => value?.uid === createrId))?.email}
+                  {creatorDetails?.email}
                 </div>
               </div>
             </h5>
-            <img className="createrDp" src={(users?.find(value => value.uid === createrId))?.photoURL} alt=""></img>
+            {/* displaying dp of channel or user  */}
+            <img
+              className="createrDp"
+              src={creatorDetails?.photoURL}
+              alt=""
+            />
           </div>
-          {groupData?.length ? <h5 className='memberHeading'>Members ({groupMembers?.length})</h5> : <h5 className='memberHeading'>No Members !!!</h5>}
+          {/* displaying members list  */}
+          <h5 className='memberHeading'>
+            {membersHeading}
+          </h5>
           <div className='groupMembersList'>
             {groupData?.length
               ?
               groupData?.map(val => <ol className='memberDetails'>
                 <div className='Member'>
-                  <img className="membersDp" src={(users?.find(value => value.uid === val.uid))?.photoURL} alt=""></img>
+                  <img
+                    className="membersDp"
+                    src={findingMemberDetails(val)?.photoURL}
+                    alt=""
+                  />
                   <div>
-
                     <div>
-                      <label>{(users?.find(value => value?.uid === val.uid))?.displayName}   {val.uid === currentUser?.uid && <>(you)</>}</label>
+                      <label>
+                        {displayMemberName(val)}
+                      </label>
                     </div>
-                    <label>{(users?.find(value => value?.uid === val.uid))?.email}</label>
+                    <label>{findingMemberDetails(val)?.email}</label>
                   </div>
-
                 </div>
                 <div >
                   {data?.groupId.includes(currentUser?.uid)
@@ -124,12 +185,28 @@ export default function Details({
                     <div>
                       {val.uid === currentUser?.uid
                         ?
-                        <button className="deleteGroupButton" onClick={handleDeleteGroup}>Delete Group </button>
+                        <button
+                          className="deleteGroupButton"
+                          onClick={handleDeleteGroup}
+                        >
+                          {BUTTON_TEXT.DELETE_GRP}
+                        </button>
                         :
-                        <img className="deleteIcon" src={images.deleteIcon} alt="" onClick={() => { handleDeleteGroupMembers(val.uid) }} />}
+                        <img
+                          className="deleteIcon"
+                          src={images.deleteIcon}
+                          alt=""
+                          onClick={() => { handleDeleteGroupMembers(val.uid) }}
+                        />}
                     </div>
                     :
-                    val.uid === currentUser?.uid && <button className="deleteGroupButton" onClick={() => { handleDeleteGroupMembers(val.uid) }}>Leave Group </button>}
+                    val.uid === currentUser?.uid &&
+                    <button
+                      className="deleteGroupButton"
+                      onClick={() => { handleDeleteGroupMembers(val.uid) }}>
+                      {BUTTON_TEXT.LEAVE_GRP}
+                    </button>
+                  }
                 </div>
               </ol>)
               :

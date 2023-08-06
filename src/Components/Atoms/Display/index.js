@@ -9,7 +9,7 @@ import "./styles.css"
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // consts
-import { STRINGS } from '../../../Shared/Constants';
+import { BUTTON_TEXT, STRINGS } from '../../../Shared/Constants';
 
 export default function Display({
     children,
@@ -24,33 +24,48 @@ export default function Display({
 }) {
     const { dispatch } = useContext(ChatContext);
 
+    const handleCancel = () => {
+        setShow(false)
+        setImgUrl && setImgUrl("")
+        setFileUrl && setFileUrl("")
+        dispatch(
+            {
+                type: STRINGS.MEMBERSADDEDSTATUS,
+                payload: false
+            })
+    };
+
     return (
         <div>
             {/* header */}
             {show && <div className='channelData' >
                 <div className='channelContent' >
-                    {showHead && <div className="channel-Header">
-                        <label className="channel-Title">{title}</label>
-                    </div>}
+                    {showHead &&
+                        <div className="channel-Header">
+                            <label className="channel-Title">{title}</label>
+                        </div>}
                     {/* Body */}
-                    <div className="channel-Body">
+                    <div
+                        className="channel-Body">
                         {children}
                     </div>
                     {/* Footer */}
-                    {showFoot && <div className="channel-Footer">
-                        <button className="btnClose" onClick={() => {
-                            setShow(false)
-                            setImgUrl && setImgUrl("")
-                            setFileUrl && setFileUrl("")
-                            dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
-                        }}> Cancel  </button  >
-                        <button className='btnProceed' onClick={
-                            () => {
-                                handleSend()
-                            }}>
-                            Send
-                        </button>
-                    </div>}
+                    {showFoot ?
+                        <div className="channel-Footer">
+                            <button
+                                className="btnClose"
+                                onClick={handleCancel}
+                            >
+                                {BUTTON_TEXT.CANCEL}
+                            </button>
+                            <button
+                                className='btnProceed'
+                                onClick={handleSend}
+                            >
+                                {BUTTON_TEXT.SEND}
+                            </button>
+                        </div>
+                        : null}
                 </div>
             </div>}
         </div>

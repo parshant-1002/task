@@ -1,33 +1,47 @@
+// libs
 import React, { useContext, useEffect, useState } from "react";
-import Details from "../../Cells/ChannelOrUserDetails";
-import { images } from "../../../Images";
-import Messages from "../../Cells/Messages";
-import Input from "../Inputs";
-import { ChatContext } from "../../../Context/ChatContext";
 import { collection, deleteField, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../firebase";
-import { AuthContext } from "../../../Context/AuthContext";
+
+// components
 import SearchingUser from "../AddingUsers";
-import "./styles.css"
+import Details from "../../Cells/ChannelOrUserDetails";
+import Messages from "../../Cells/Messages";
+import Input from "../Inputs";
 import Modal from "../../Atoms/Modal";
-import { COLLECTION_NAME, STRINGS } from "../../../Shared/Constants";
 import SetAndEditChannelName from "../../Atoms/SetAndEditChannelName";
 
+// consts
+import { images } from "../../../Images";
+import { COLLECTION_NAME, STRINGS, TEXT } from "../../../Shared/Constants";
+
+// context
+import { ChatContext } from "../../../Context/ChatContext";
+import { AuthContext } from "../../../Context/AuthContext";
+
+// styles
+import "./styles.css"
+
 const Chat = () => {
+  
+  const { data, dispatch } = useContext(ChatContext);
+  const { currentUser } = useContext(AuthContext);
+  
+  const combinedId = currentUser?.uid + data?.channelNameId
+
   const [showUserModal, setShowUserModal] = useState(false)
   const [editModal, setEditModal] = useState(false)
-  const { data, dispatch } = useContext(ChatContext);
   const [details, setDetails] = useState()
-  const { currentUser } = useContext(AuthContext);
   const [groupMembers, setGroupMembers] = useState([])
   const [groupName, setGroupName] = useState([])
   const [users, setUsers] = useState([])
-  const combinedId = currentUser?.uid + data?.channelNameId
   const [editedGroupName, setEditedGroupName] = useState("")
   const [error, setError] = useState("")
 
+  // setting users list
   useEffect(() => {
-    const q = data?.user?.uid && query(collection(db, COLLECTION_NAME?.USERS), where("uid", "==", data?.user?.uid))
+    const q = data?.user?.uid &&
+      query(collection(db, COLLECTION_NAME?.USERS), where("uid", "==", data?.user?.uid))
     const unsubscribe = data?.user?.uid && onSnapshot(q, (querySnapshot) => {
       const r = []
       querySnapshot.forEach((doc) => {
@@ -40,22 +54,26 @@ const Chat = () => {
     }
   }, [data])
 
+  // setting grp members
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
-      setGroupMembers(doc?.data())
-    });
+    const unSub = data?.groupId &&
+      onSnapshot(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId), (doc) => {
+        setGroupMembers(doc?.data())
+      });
     return () => {
       data?.groupId && unSub();
     };
   }, [data, details]);
 
+  // setting grp name
   useEffect(() => {
-    const unSub = data?.groupId && onSnapshot(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), (doc) => {
-      setGroupName(doc?.data())
-      if (!doc?.data()[data?.channelNameId]?.channelInfo?.channelName) {
-        dispatch({ type: STRINGS.RESET })
-      }
-    });
+    const unSub = data?.groupId &&
+      onSnapshot(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid), (doc) => {
+        setGroupName(doc?.data())
+        if (!doc?.data()[data?.channelNameId]?.channelInfo?.channelName) {
+          dispatch({ type: STRINGS.RESET })
+        }
+      });
     return () => {
       data?.groupId && unSub();
     };
@@ -84,13 +102,16 @@ const Chat = () => {
       setEditedGroupName(data?.channelName)
     }
     else {
-      setError("Enter Character more than 2 and should include alphabets")
+      setError(TEXT.ENTER_LIMITED_TEXT)
     }
   }
 
   const handleDeleteGroupMembers = async (x) => {
     const participantsRef = doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId);
-    const filteredParticipants = groupMembers && groupMembers["participants"]?.filter(val => val.uid !== x)
+
+    const filteredParticipants = groupMembers &&
+      groupMembers["participants"]?.filter(val => val.uid !== x)
+
     setGroupMembers({ ...groupMembers, participants: filteredParticipants })
     await updateDoc(participantsRef, {
       participants: groupMembers.participants.filter(val => val.uid !== x)
@@ -115,7 +136,7 @@ const Chat = () => {
       });
       setUsers(r.filter(val => (!x.some(value => value === val.uid) && (val.uid !== currentUser?.uid))));
     } catch (err) {
-      alert(err, "Error in getting User Details")
+      console.log(err, "Error in getting User Details")
     }
   }
 
@@ -125,50 +146,69 @@ const Chat = () => {
         <img className="bgImage" src={images.bg} alt="" />
         : <div className="chat">
           <div className="chatInfo">
-            {data?.user?.uid ? <img className="dp" src={users[0]?.photoURL} alt="" /> : <label>#</label>}
+            {/* profile img or icon  */}
+            {data?.user?.uid ?
+              <img className="dp" src={users[0]?.photoURL} alt="" />
+              :
+              <label>#</label>}
+            {/* User or group Profile name  */}
             {data?.user?.uid ?
               <label className="userName">
                 {users[0]?.displayName}
               </label>
               : <label className="userName">
-                {groupName && groupName[data?.channelNameId]?.channelInfo?.channelName}
+                {groupName &&
+                  groupName[data?.channelNameId]?.channelInfo?.channelName}
               </label>}
+            {/* chat icons edit add info  */}
             <div className="chatIcons">
               {data?.groupId && data?.groupId?.includes(currentUser?.uid) && !data?.user?.uid
                 ?
                 <div>
-                  <label>Admin</label>
-                  <img className="img1" src={images.add} alt="" onClick={() => {
-                    setShowUserModal(true)
-                    setDetails(false)
-                    handleGetUsers()
-                    dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: true })
-                  }} />
-                  <img className="img1" src={images.edit} alt="edit" onClick={() => {
-                    setEditModal(true)
-                    setEditedGroupName(groupMembers["groupname"])
-                  }} />
+                  <label>{TEXT.ADMIN}</label>
+                  <img
+                    className="img1"
+                    src={images.add}
+                    alt=""
+                    onClick={() => {
+                      setShowUserModal(true)
+                      setDetails(false)
+                      handleGetUsers()
+                      dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: true })
+                    }} />
+                  <img
+                    className="img1"
+                    src={images.edit}
+                    alt="edit"
+                    onClick={() => {
+                      setEditModal(true)
+                      setEditedGroupName(groupMembers["groupname"])
+                    }} />
                 </div>
                 :
-                !data?.user?.uid && <label>Member</label>}
-              <img className="img1" src={images.more} alt="" onClick={() => {
-                setDetails(true)
-              }} />
+                !data?.user?.uid && <label>{TEXT.MEMBERS}</label>}
+              <img
+                className="img1"
+                src={images.more}
+                alt=""
+                onClick={() => {
+                  setDetails(true)
+                }} />
             </div>
           </div>
           <Modal
             show={editModal}
-            type={"editGroupName"}
+            type={TEXT.EDIT_GROUP_NAME}
             setShow={setEditModal}
             showHead={true}
             showFoot={true}
-            title={"Edit Channel Name"}
+            title={TEXT.ENTER_CHANNEL_NAME}
             editedGroupName={editedGroupName}
             setEditedGroupName={setEditedGroupName}
             handleEditGroupName={handleEditGroupName}
           >
             <SetAndEditChannelName
-              type={"editChannelName"}
+              type={TEXT.EDIT_CHANNEL_NAME}
               editedGroupName={editedGroupName}
               setEditedGroupName={setEditedGroupName}
               setError={setError}

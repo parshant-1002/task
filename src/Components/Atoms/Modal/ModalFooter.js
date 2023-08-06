@@ -1,6 +1,10 @@
+// libs
 import React, { useContext } from 'react'
-import { STRINGS } from '../../../Shared/Constants'
 
+// consts
+import { BUTTON_TEXT, STRINGS, TEXT } from '../../../Shared/Constants'
+
+// context
 import { ChatContext } from '../../../Context/ChatContext'
 
 export default function ModalFooter({
@@ -18,46 +22,69 @@ export default function ModalFooter({
     handleAddUsersInChatList,
     handleEditGroupName
 }) {
-    const { data, dispatch } = useContext(ChatContext)
+    const { data, dispatch } = useContext(ChatContext);
+    const handleClose = () => {
+        setShow(false)
+        setSelectedList([])
+        setEditedGroupName("")
+        dispatch({
+            type: STRINGS.MEMBERSADDEDSTATUS,
+            payload: false
+        })
+    };
+
+    const conditionToCheckValidLength = (name) => {
+        if (name?.length < 3 || !isNaN(name)) {
+            setShow(true)
+        }
+        else {
+            setShow(false)
+        }
+    };
+
+    const addOrSendData = () => {
+        addChannel();
+        handleAddUsersInChatList();
+        conditionToCheckValidLength(channelName);
+        conditionToCheckValidLength(editedGroupName);
+        handleEditGroupName()
+        dispatch({
+            type: STRINGS.MEMBERSADDEDSTATUS,
+            payload: false
+        })
+        if (title === TEXT.USER) {
+            dispatch({
+                type: STRINGS.RESET
+            })
+        }
+        if (data?.groupId) {
+            addUsersInChannel();
+        }
+    };
+
     return (
         <>
-            {showFoot && <div className="Modal-Footer">
-                <button className="btnClose" onClick={() => {
-                    setShow(false)
-                    setSelectedList([])
-                    setEditedGroupName("")
-                    dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
-                }}>
-                    Close
-                </button>
-                {(selectedList?.length || channelName || editedGroupName)
-                    ? <button
-                        className='btnProceed'
-                        onClick={() => {
-                            addChannel()
-                            data?.groupId && addUsersInChannel()
-                            handleAddUsersInChatList()
-                            if (channelName?.length < 3 || !isNaN(channelName)) {
-                                setShow(true)
-                            }
-                            else {
-                                setShow(false)
-                            }
-                            if (editedGroupName?.length < 3 || !isNaN(editedGroupName)) {
-                                setShow(true)
-                            }
-                            else {
-                                setShow(false)
-                            }
-                            handleEditGroupName()
-                            dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
-                            title === "User" && dispatch({ type: STRINGS.RESET })
-                        }}
-                    >
-                        {(type === "editGroupName") ? <>Edit</> : <>Add</>}
+            {showFoot &&
+                <div className="Modal-Footer">
+                    <button
+                        className="btnClose"
+                        onClick={handleClose}>
+                        {BUTTON_TEXT.CLOSE}
                     </button>
-                    : null}
-            </div>}
+                    {(selectedList?.length || channelName || editedGroupName)
+                        ? <button
+                            className='btnProceed'
+                            onClick={addOrSendData}
+                        >
+                            {(type === TEXT.EDIT_GROUP_NAME)
+                                ?
+                                <>{BUTTON_TEXT.EDIT}</>
+                                :
+                                <>{BUTTON_TEXT.ADD}</>
+                            }
+                        </button>
+                        : null}
+                </div>}
         </>
     )
 }

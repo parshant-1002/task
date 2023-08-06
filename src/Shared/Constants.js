@@ -22,6 +22,26 @@ export const TEXT = {
     DO_YOU_HAVE_ACCOUNT: "You do have an account? ",
     CHANNELS: "Channels",
     DIRECT_MESSAGE: "Direct Message",
+    EDIT_GROUP_NAME: "editGroupName",
+    USER: "User",
+    PASSWORD_VIEW_TYPE: {
+        TEXT: "text",
+        PASSWORD: "password",
+    },
+    EDIT_CHANNEL_NAME: "editChannelName",
+    USER_DETAILS: " User Details",
+    CHANNEL_DETAILS: "Channel Details",
+    CREATED_BY: "Created By: ",
+    NAME: "Name",
+    MEMBERS: "Members",
+    UPDATE_AVATAR: "Update Avatar",
+    UPDATE_NAME: "Update Name",
+    ENTER_USER: "Enter user",
+    SELECTED_USER: " Selected User",    
+    ENTER_LIMITED_TEXT: "Enter Character more than 2 and should include alphabets",
+    ADMIN: "Admin",
+    ENTER_CHANNEL_NAME: "Edit Channel Name",
+    ENTER_VALID_NAME: "Enter valid UserName",
 }
 
 export const Messages = {
@@ -29,6 +49,7 @@ export const Messages = {
     notValidMail: "email is invalid",
     notValidPassword: "password is invalid (Enter Both numbers and alphabets ,Atleast one special character and uppercase)",
     chooseAvatar: "Choose Avatar",
+    changeAvatar: "Change Avatar",
     sendingVerification: "Sending Verification Link",
     sentVerification: "Verification Link Sent",
     sendingPasswordResetLink: "Sending Password Reset Link ",
@@ -37,6 +58,10 @@ export const Messages = {
     emailRequired: "*Email Required",
     passwordRequired: "*Password Required",
     avatarRequired: "*Avatar Required",
+    errorInGettingUsrDetails: "Error in getting User Details",
+    enterCharacterOfLimit: "Enter Character more than 2 and should include alphabets",
+    noSelectedUser: "No Selected Users!!!",
+    noUserLeft: "No Users Left!!!",
 }
 
 export const LINK = {
@@ -53,6 +78,7 @@ export const COLLECTION_NAME = {
 
 export const LOCALSTORAGE_KEY_NAME = {
     TOKEN: "Token",
+    USER: "user"
 }
 
 export const BUTTON_TEXT = {
@@ -60,4 +86,17 @@ export const BUTTON_TEXT = {
     SEND_VERIFICATION_AGAIN: "send Verification again",
     RESET_PASSWORD: "Reset password",
     SIGN_UP: "Sign Up",
+    SEND: "Send",
+    CANCEL: "Cancel",
+    CLOSE: "Close",
+    EDIT: "Edit",
+    ADD: "Add",
+    DELETE_GRP: "Delete Group",
+    LEAVE_GRP: "Leave Group",
+    UPDATE: "Update",
+    LOGOUT: "logout",
 }
+
+export const ROUTES = {
+    LOGIN: "/login",
+} 

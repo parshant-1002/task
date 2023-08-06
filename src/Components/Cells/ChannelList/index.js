@@ -1,11 +1,19 @@
+// libs
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
+import { db } from "../../../firebase";
+
+// context
 import { AuthContext } from "../../../Context/AuthContext";
 import { ChatContext } from "../../../Context/ChatContext";
-import { db } from "../../../firebase";
+
+// consts
 import { images } from "../../../Images";
-import "./styles.css"
 import { COLLECTION_NAME, STRINGS } from "../../../Shared/Constants";
+
+// styles
+import "./styles.css";
+
 const Channels = () => {
   const [channels, setChannels] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -71,10 +79,6 @@ const Channels = () => {
     })
   };
 
-
-
-
-
   const getGroupMemberDetails = async (x) => {
     const groupData = await getDoc(doc(db, COLLECTION_NAME?.CHANNEL_LIST, currentUser?.uid))
     const groupId = groupData?.data()?.[x]?.["channelInfo"]?.groupId
@@ -82,7 +86,6 @@ const Channels = () => {
     dispatch({ type: STRINGS.GETGROUPMEMBERS, payload: res?.data()?.["participants"] })
 
   }
-
 
   return (
     <div>{

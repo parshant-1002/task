@@ -1,4 +1,7 @@
-import React from 'react'
+// libs
+import React from 'react';
+
+// styles
 import "./styles.css"
 export default function Loader({ show }) {
   return (

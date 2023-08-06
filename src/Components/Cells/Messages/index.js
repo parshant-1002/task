@@ -16,6 +16,7 @@ import { COLLECTION_NAME } from "../../../Shared/Constants";
 const Messages = () => {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
+  
   const id = data?.groupId || data?.chatId
   useEffect(() => {
     const unSub = onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, id), (doc) => {

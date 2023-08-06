@@ -1,32 +1,38 @@
+// libs
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { images } from '../../../Images';
 import { arrayUnion, doc, getDoc, serverTimestamp, setDoc, updateDoc, onSnapshot } from '@firebase/firestore'
-import { AuthContext } from '../../../Context/AuthContext';
 import { db } from '../../../firebase';
+
+// consts
+import { images } from '../../../Images';
+import { COLLECTION_NAME, Messages, STRINGS, TEXT } from '../../../Shared/Constants';
+
+// context
+import { AuthContext } from '../../../Context/AuthContext';
 import { ChatContext } from '../../../Context/ChatContext';
+
+// components
 import Modal from '../../Atoms/Modal';
-import "./styles.css"
-import { COLLECTION_NAME, STRINGS } from '../../../Shared/Constants';
 import Loader from '../../Atoms/Loader';
-export default function SearchingUser({ showUserModal, setShowUserModal, combinedId, users, groupName }) {
+
+// styles
+import "./styles.css";
+
+export default function SearchingUser(
+    {
+        showUserModal,
+        setShowUserModal,
+        combinedId,
+        users,
+        groupName
+    }) {
     const { currentUser } = useContext(AuthContext);
+    const selectedListRef = useRef()
     const [userName, setUserName] = useState("")
-    const [err, setErr] = useState()
     const [userList, setUserList] = useState()
     const [selectedList, setSelectedList] = useState([])
     const { data, dispatch } = useContext(ChatContext);
     const [loader, setLoader] = useState(false)
-    const [messages, setMessages] = useState([]);
-    const selectedListRef = useRef()
-
-    useEffect(() => {
-        const unSub = data?.chatId && onSnapshot(doc(db, COLLECTION_NAME?.CHAT_DATA, data?.chatId), (doc) => {
-            data?.chatId && doc?.exists() && setMessages(doc?.data()?.messages);
-        });
-        return () => {
-            data?.chatId && unSub();
-        };
-    }, [data?.chatId, data?.groupId]);
 
     useEffect(() => {
         !userName && setUserList(users)
@@ -41,7 +47,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     }, [selectedList]);
 
     const handleDeleteSelectedUsers = (x) => {
-        setSelectedList(selectedList.filter(val => val.uid != x.uid))
+        setSelectedList(selectedList.filter(val => val.uid !== x.uid))
         setUserList([...userList, x])
     }
 
@@ -56,6 +62,7 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
     const addUsersInChannel = () => {
         selectedList?.map(val => addUsersInChannelOneByOne(val))
     }
+
     const addUsersInChannelOneByOne = async (user) => {
         setLoader(true)
         await updateDoc(doc(db, COLLECTION_NAME?.CHANNELS_DATA, data?.groupId),
@@ -95,20 +102,23 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
             const res = await getDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId));
             const response = await getDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid));
             if (!res.exists() || !Object.keys(response?.data()).includes(combinedId)) {
-                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid), {
-                    [combinedId + ".userInfo"]: {
-                        uid: user.uid,
-                    },
-                    [combinedId + ".date"]: serverTimestamp(),
-                });
-                (!data.chatId.includes("undefined")) && await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, user?.uid), {
-                    [combinedId + ".userInfo"]: {
-                        uid: currentUser?.uid,
-                    },
-                    [combinedId + ".date"]: serverTimestamp(),
-                });
-                (!data.chatId.includes("undefined")) && await setDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId), { messages: [] });
-            setLoader(false)
+                (!data.chatId.includes("undefined")) &&
+                    await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, currentUser?.uid), {
+                        [combinedId + ".userInfo"]: {
+                            uid: user.uid,
+                        },
+                        [combinedId + ".date"]: serverTimestamp(),
+                    });
+                (!data.chatId.includes("undefined")) &&
+                    await updateDoc(doc(db, COLLECTION_NAME?.CHAT_LIST, user?.uid), {
+                        [combinedId + ".userInfo"]: {
+                            uid: currentUser?.uid,
+                        },
+                        [combinedId + ".date"]: serverTimestamp(),
+                    });
+                (!data.chatId.includes("undefined")) &&
+                    await setDoc(doc(db, COLLECTION_NAME?.CHAT_DATA, combinedId), { messages: [] });
+                setLoader(false)
             }
         } catch (err) { console.log(err, "err<><><><><><>>,") }
         dispatch({ type: STRINGS.MEMBERSADDEDSTATUS, payload: false })
@@ -125,52 +135,65 @@ export default function SearchingUser({ showUserModal, setShowUserModal, combine
 
     return (
         <>
-        <Modal show={showUserModal} setShow={setShowUserModal} title={"users"} handleAddUsersInChatList={handleAddUsersInChatList} setSelectedList={setSelectedList} selectedList={selectedList} addUsersInChannel={addUsersInChannel} showHead={true} showFoot={true}  >
-            {users?.length ?
-                <div>
-                    <div >
-                        <label>Enter user</label>
-                        <input value={userName} onChange={(e) => {
-                            setUserName(e.target.value)
-                            handleSearch()
-                        }
-                        }></input>
-                    </div>
-                    {err && <span>User not found!</span>}
-                    <h3> Selected User</h3>
-                    <div className='usersDisplay'>
-                        {selectedList?.length ? selectedList.map(val => {
-                            return (
-                                <div className="selectedUsers" >
-                                    <li ref={selectedListRef} className="SelectedList">
-                                        <img className="userImage" src={val.photoURL} alt="" />
-
-                                        <span className="userName">{val.displayName}</span>
-                                        <span className="userName">{val.email}</span>
-                                        <img className="deleteBtnnn" src={images.deleteIcon} alt="delete" onClick={() => handleDeleteSelectedUsers(val)}></img>
-                                    </li>
-                                </div>
-                            )
-                        }) : <h6>No Selected Users!!!</h6>}
-                    </div>
-                    <h3> Select User</h3>
-                    <div className='usersDisplay'>
-                        {userList?.length ? userList.map(val => {
-                            return (
-                                <div className="userData" onClick={() => { handleSelect(val) }}>
-                                    <img className="userImage" src={val.photoURL} alt="" />
-                                    <div className="userChatInfo">
-                                        <span className="userName">{val.displayName}</span>
-                                        <span className="userName">{val.email}</span>
+            <Modal
+                show={showUserModal}
+                setShow={setShowUserModal}
+                title={TEXT.USER}
+                handleAddUsersInChatList={handleAddUsersInChatList}
+                setSelectedList={setSelectedList}
+                selectedList={selectedList}
+                addUsersInChannel={addUsersInChannel}
+                showHead={true}
+                showFoot={true}
+            >
+                {users?.length ?
+                    <div>
+                        <div >
+                            <label>{TEXT.ENTER_USER}</label>
+                            <input value={userName} onChange={(e) => {
+                                setUserName(e.target.value)
+                                handleSearch()
+                            }
+                            }></input>
+                        </div>
+                        <h3>{TEXT.SELECTED_USER}</h3>
+                        <div className='usersDisplay'>
+                            {selectedList?.length ? selectedList.map(val => {
+                                return (
+                                    <div className="selectedUsers" >
+                                        <li ref={selectedListRef} className="SelectedList">
+                                            <img className="userImage" src={val.photoURL} alt="" />
+                                            <span className="userName">{val.displayName}</span>
+                                            <span className="userName">{val.email}</span>
+                                            <img
+                                                className="deleteBtnnn"
+                                                src={images.deleteIcon}
+                                                alt="delete"
+                                                onClick={() => handleDeleteSelectedUsers(val)}
+                                            />
+                                        </li>
                                     </div>
-                                </div>
-                            )
-                        }) : <h6>No Users Left!!!</h6>}
+                                )
+                            }) : <h6>{Messages.noSelectedUser}</h6>}
+                        </div>
+                        <h3> {TEXT.SELECTED_USER}</h3>
+                        <div className='usersDisplay'>
+                            {userList?.length ? userList.map(val => {
+                                return (
+                                    <div className="userData" onClick={() => { handleSelect(val) }}>
+                                        <img className="userImage" src={val.photoURL} alt="" />
+                                        <div className="userChatInfo">
+                                            <span className="userName">{val.displayName}</span>
+                                            <span className="userName">{val.email}</span>
+                                        </div>
+                                    </div>
+                                )
+                            }) : <h6>{Messages.noUserLeft}</h6>}
+                        </div>
                     </div>
-                </div>
-                : <h1>No User Left</h1>}
-        </Modal>
-        <Loader show={loader}/>
+                    : <h1>{Messages.noUserLeft}</h1>}
+            </Modal>
+            <Loader show={loader} />
         </>
     )
 }
